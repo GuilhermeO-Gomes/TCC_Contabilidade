@@ -75,5 +75,35 @@ public class TelaPlanoDeContas extends JFrame {
         scrollPane.setBorder(BorderFactory.createTitledBorder("Lista de Contas"));
         add(scrollPane, BorderLayout.CENTER);
 
-    }    
+    }   
+
+
+
+
+
+	   private void configurarEventos() {
+        btnAtualizarTela.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                controller.AtualizarTela();
+            }
+        });
+
+        btnAdicionarConta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                controller.AdicionarConta();
+            }
+        });
+
+        btnCancelarConta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                controller.CancelarConta();
+            }
+        });
+
+      
+        tabelaPlanoDeContas.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                controller.preencherTabela();
+            }
+        });
 }

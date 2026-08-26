@@ -20,6 +20,10 @@ import controller.ClienteController;
 
 public class TelaPlanoDeContas extends JFrame {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JButton btnAtualizarTela;
 	private JButton btnAdicionarConta;
 	private JButton btnCancelarConta;

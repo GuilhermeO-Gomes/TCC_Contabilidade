@@ -3,27 +3,20 @@ package dao;
 import model.PlanoContas;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import util.Conexao;
 
 public class PlanoContasDAO {
 
-    private Connection conectar() throws SQLException {
-        return DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/contabilidade",
-                "root",
-                ""
-        );
-    }
-
+   
     public void inserir(PlanoContas plano) {
         String sql = "INSERT INTO plano_contas (conta, descricao, reduzida, saldo, tipo, cc, situacao) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conexao = conectar();
+        try (Connection conexao = Conexao.conectar();
              PreparedStatement stmt = conexao.prepareStatement(sql)) {
 
             stmt.setString(1, plano.getConta());
@@ -44,7 +37,7 @@ public class PlanoContasDAO {
         List<PlanoContas> lista = new ArrayList<>();
         String sql = "SELECT * FROM plano_contas ORDER BY conta";
 
-        try (Connection conexao = conectar();
+        try (Connection conexao = Conexao.conectar();
              PreparedStatement stmt = conexao.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 
@@ -71,7 +64,7 @@ public class PlanoContasDAO {
     public void atualizar(PlanoContas plano) {
         String sql = "UPDATE plano_contas SET descricao = ?, reduzida = ?, saldo = ?, tipo = ?, cc = ?, situacao = ? WHERE conta = ?";
 
-        try (Connection conexao = conectar();
+        try (Connection conexao = Conexao.conectar();
              PreparedStatement stmt = conexao.prepareStatement(sql)) {
 
             stmt.setString(1, plano.getDescricao());
@@ -91,7 +84,7 @@ public class PlanoContasDAO {
     public void excluir(String conta) {
         String sql = "DELETE FROM plano_contas WHERE conta = ?";
 
-        try (Connection conexao = conectar();
+        try (Connection conexao = Conexao.conectar();
              PreparedStatement stmt = conexao.prepareStatement(sql)) {
 
             stmt.setString(1, conta);

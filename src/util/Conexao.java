@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class Conexao {
 	// A primeira parte da URL é padrão do jdbc, a segunda trata-se do endereço do BD, e a terceira parte é o nome do banco
 	// A porta do localhost está como 3306 porque é padrão, mas caso por algum motivo o seu seja diferente, pode mudar para poder executar
-private static final String URL = "jdbc:mysql://localhost:3307/contabilidade";
+private static final String URL = "jdbc:mysql://localhost:3306/contabilidade";
 private static final String USUARIO = "root";
 private static final String SENHA = "";
 

@@ -2,7 +2,10 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -12,96 +15,44 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import controller.PlanoContasController;
 
-public class TelaPlanoDeContas extends JFrame {
+public class TelaPlanoDeContas extends JPanel {
 
     private static final long serialVersionUID = 1L;
-
-    private JButton btnAtualizarTela;
-    private JButton btnAdicionarConta;
-    private JButton btnCancelarConta;
+    private final JTextField codigo = new JTextField(5), descricao = new JTextField(15);
+    private final DefaultTableModel modeloTabela = new DefaultTableModel(
+            new Object[] {"Código", "Descrição", "Conta Superior", "Nível", "Grupo", "Natureza", "Tipo da Conta", "Situação"
+            },
+            0
+    );
 
     private JTable tabelaPlanoDeContas;
-    private DefaultTableModel modeloTabela;
-
     private PlanoContasController controller;
 
     public TelaPlanoDeContas() {
-
-        setTitle("Plano de Contas");
-
-        setSize(700, 450);
-
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        setLocationRelativeTo(null);
-
-        setLayout(new BorderLayout());
-
-        criarComponentes();
-
+    	//Ver o que essas telas fazem no sentido de layout e painel
+    	//Grid é layout flexível
+    	setLayout(new BorderLayout(8,8));
+    	setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        montar_tela();
         controller = new PlanoContasController(this);
-
-        configurarEventos();
-
         controller.carregarTabela();
     }
 
-    private void criarComponentes() {
-
-        JPanel painelBotoes =
-                new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
-
-        btnAtualizarTela = new JButton("Atualizar tela");
-        btnAdicionarConta = new JButton("Adicionar conta");
-        btnCancelarConta = new JButton("Cancelar conta");
-
-        painelBotoes.add(btnAtualizarTela);
-        painelBotoes.add(btnAdicionarConta);
-        painelBotoes.add(btnCancelarConta);
-
-        add(painelBotoes, BorderLayout.SOUTH);
-
-        JPanel painelPlanoContas =
-                new JPanel(new GridLayout(3, 2, 10, 10));
-
-        painelPlanoContas.setBorder(
-                BorderFactory.createTitledBorder("Plano de Contas")
-        );
-
-        add(painelPlanoContas, BorderLayout.NORTH);
-
-        modeloTabela = new DefaultTableModel(
-                new Object[] {
-                        "Conta",
-                        "Descrição",
-                        "Reduzida",
-                        "Superior",
-                        "Nível",
-                        "Saldo",
-                        "Tipo",
-                        "C.C.",
-                        "Natureza",
-                        "Situação",
-                        "Cadastro",
-                        "Movimentação"
-                },
-                0
-        ) {
-
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-
+    private void montar_tela() {
+    	//Aqui começa a ter tela
+    	JPanel layout = new JPanel(new GridBagLayout());
+    	layout.setBorder(BorderFactory.createTitledBorder("Plano de Contas"));
+    	GridBagConstraints organizador = new GridBagConstraints();
+    	//Margem dos componentes dentro de uma célula
+    	organizador.insets = new Insets(4, 4, 4, 4);
+    	organizador.anchor = GridBagConstraints.CENTER;
+    	//Fazer JPanel para todo o container de filtro/pesquisa
         tabelaPlanoDeContas = new JTable(modeloTabela);
-
         JScrollPane scrollPane =
                 new JScrollPane(tabelaPlanoDeContas);
 
@@ -112,28 +63,6 @@ public class TelaPlanoDeContas extends JFrame {
         add(scrollPane, BorderLayout.CENTER);
     }
 
-    private void configurarEventos() {
-
-        btnAtualizarTela.addActionListener(e ->
-                controller.AtualizarTela()
-        );
-
-        btnAdicionarConta.addActionListener(e ->
-                controller.AdicionarConta()
-        );
-
-        btnCancelarConta.addActionListener(e ->
-                controller.CancelarConta()
-        );
-
-        tabelaPlanoDeContas.addMouseListener(new MouseAdapter() {
-
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                controller.preencherTabela();
-            }
-        });
-    }
 
     public JTable getTabelaPlanoDeContas() {
         return tabelaPlanoDeContas;

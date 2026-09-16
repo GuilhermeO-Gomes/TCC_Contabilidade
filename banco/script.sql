@@ -19,7 +19,7 @@ INSERT INTO plano_contas (conta, descricao, reduzida, saldo, tipo, cc, situacao)
 ('1.1.01.002', 'Fundo Fixo Administrativo', 113, 'Devedor', 'Analítica', 'Sim', 'Ativa'),
 ('1.1.02', 'CONTAS BANCÁRIAS', 120, 'Devedor', 'Sintética', 'Não', 'Ativa'),
 ('1.1.02.001', 'Banco Comercial - Conta Corrente', 121, 'Devedor', 'Analítica', 'Não', 'Ativa'),
-('1.1.02.002', 'Banco Digital - Conta Corrente', 122, 'Deveusuariosdor', 'Analítica', 'Não', 'Ativa'),
+('1.1.02.002', 'Banco Digital - Conta Corrente', 122, 'Devedor', 'Analítica', 'Não', 'Ativa'),
 ('1.1.03', 'APLICAÇÕES FINANCEIRAS', 130, 'Devedor', 'Sintética', 'Não', 'Ativa'),
 ('1.1.03.001', 'Aplicação de Liquidez Imediata', 131, 'Devedor', 'Analítica', 'Não', 'Ativa'),
 ('1.1.04', 'CLIENTES', 140, 'Devedor', 'Sintética', 'Não', 'Ativa'),

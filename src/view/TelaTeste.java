@@ -1,5 +1,15 @@
 package view;
-//Tela dedicada para que as telas rodem sem ter o JFrame principal ainda. Para rodar, só colocar sua tela aqui no setContentPane e colocar a TelaTeste no Main.java
-public class TelaTeste {
 
+import javax.swing.JFrame;
+
+public class TelaTeste extends JFrame {
+
+    public TelaTeste() {
+        setTitle("Teste");
+        setSize(1000, 700);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        add(new TelaPlanoDeContas());
+    }
 }

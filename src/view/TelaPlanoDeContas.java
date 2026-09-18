@@ -11,7 +11,9 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -35,7 +37,7 @@ public class TelaPlanoDeContas extends JPanel {
 
     public TelaPlanoDeContas() {
     	//Ver o que essas telas fazem no sentido de layout e painel
-    	//Grid é layout flexível
+    	
     	setLayout(new BorderLayout(8,8));
     	setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         montar_tela();
@@ -45,12 +47,30 @@ public class TelaPlanoDeContas extends JPanel {
 
     private void montar_tela() {
     	//Aqui começa a ter tela
-    	JPanel layout = new JPanel(new GridBagLayout());
-    	layout.setBorder(BorderFactory.createTitledBorder("Plano de Contas"));
+    	//Grid é layout flexível
+    	JPanel painel_principal = new JPanel(new GridBagLayout());
+    	painel_principal.setBorder(BorderFactory.createTitledBorder("Plano de Contas"));
     	GridBagConstraints organizador = new GridBagConstraints();
-    	//Margem dos componentes dentro de uma célula
+    	JPanel painel_formulario = new JPanel(new GridBagLayout());
+    	JLabel lbl_codigo = new JLabel("Código:"), lbl_descricao = new JLabel("Descrição:"), 
+    	titulo_filtro = new JLabel("Filtros/Pesquisa"), 
+    	lbl_grupo = new JLabel("Grupo:"), 
+    	lbl_natureza = new JLabel("Natureza:"), 
+    	lbl_situacao = new JLabel("Situação:");
+    	String[] grupos= {"Ativos", "Passivos", "Custos", "Receita", "Despesa", "Patrimônio liquído"};
+    	JComboBox <String> grupo = new JComboBox<>(grupos);
+    	String[] naturezas = {"Devedora", "Credora"};
+    	JComboBox <String> natureza = new JComboBox<>(naturezas);
+    	String[] situacoes = {"Ativo", "Inativo"};
+    	JComboBox <String> situacao = new JComboBox<>(situacoes);
+    	
+    	organizador.gridx = 0;
+    	organizador.gridy = 0;
+    	painel_formulario.add(titulo_filtro, organizador);
+    	add(painel_formulario, BorderLayout.NORTH);
+    	
     	organizador.insets = new Insets(4, 4, 4, 4);
-    	organizador.anchor = GridBagConstraints.CENTER;
+    	organizador.anchor = GridBagConstraints.WEST;
     	//Fazer JPanel para todo o container de filtro/pesquisa
         tabelaPlanoDeContas = new JTable(modeloTabela);
         JScrollPane scrollPane =

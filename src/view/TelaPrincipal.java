@@ -42,7 +42,7 @@ public class TelaPrincipal extends JFrame {
         painelPrincipal = new JPanel(cardLayout);
 
  
-        painelPrincipal.add(new TelaClientes(), "clientes");
+        painelPrincipal.add(new TelaExerciciosSociais(), "Historico Padrão");
 
 
         add(painelPrincipal);
@@ -65,7 +65,7 @@ public class TelaPrincipal extends JFrame {
         setJMenuBar(barraMenu);
 
         itemClientes.addActionListener(e ->
-            abrirTela("clientes")
+            abrirTela("Historico Padrão")
         );
 
         

@@ -7,14 +7,14 @@ import javax.swing.table.DefaultTableModel;
 
 import dao.PlanoContasDAO;
 import model.PlanoContas;
-import view.TelaPlanoDeContas;
+import view.TelaHistoricoPadrao;
 
 public class PlanoContasController {
 
-    private TelaPlanoDeContas tela;
+    private TelaHistoricoPadrao tela;
     private PlanoContasDAO planoContasDAO;
 
-    public PlanoContasController(TelaPlanoDeContas tela) {
+    public PlanoContasController(TelaHistoricoPadrao tela) {
         this.tela = tela;
         this.planoContasDAO = new PlanoContasDAO();
     }

@@ -49,15 +49,16 @@ public class TelaPlanoDeContas extends JPanel {
     	//Aqui começa a ter tela
     	//Grid é layout flexível
     	JPanel painel_principal = new JPanel(new GridBagLayout());
-    	painel_principal.setBorder(BorderFactory.createTitledBorder("Plano de Contas"));
+    	GridBagConstraints organizador_principal = new GridBagConstraints();
     	GridBagConstraints organizador_form = new GridBagConstraints();
     	//Cima, esquerda, baixo, direita
     	organizador_form.insets = new Insets(4, 4, 4, 4);
     	organizador_form.anchor = GridBagConstraints.WEST;
     	organizador_form.weightx = 0;
     	JPanel painel_formulario = new JPanel(new GridBagLayout());
+    	JPanel botoes_filtro = new JPanel(new FlowLayout(FlowLayout.LEFT, 1, 5));
+    	JPanel botoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 10));
     	painel_formulario.setBorder(BorderFactory.createTitledBorder("Filtros e Pesquisa"));
-    	JPanel filtros = new JPanel(new FlowLayout(FlowLayout.LEFT,4,2));
     	JLabel lbl_codigo = new JLabel("Código:"), lbl_descricao = new JLabel("Descrição:"), 
     	lbl_grupo = new JLabel("Grupo:"), 
     	lbl_natureza = new JLabel("Natureza:"), 
@@ -68,11 +69,13 @@ public class TelaPlanoDeContas extends JPanel {
     	JComboBox <String> natureza = new JComboBox<>(naturezas);
     	String[] situacoes = {"Ativo", "Inativo"};
     	JComboBox <String> situacao = new JComboBox<>(situacoes);
+    	JButton pesquisar = new JButton("Pesquisar conta"), mostrar_todos = new JButton("Mostrar todos"),
+    	criar_conta = new JButton("Adicionar conta"), atualizar_conta = new JButton("Atualizar conta"),
+    	inativar_conta = new JButton("Inativar conta");
     	
     	
     	organizador_form.gridx = 0;
     	organizador_form.gridy = 1;
-    	
     	painel_formulario.add(lbl_codigo, organizador_form);
     	
     	organizador_form.gridx = 1;
@@ -92,22 +95,60 @@ public class TelaPlanoDeContas extends JPanel {
     	organizador_form.weightx = 1;
     	organizador_form.fill = GridBagConstraints.HORIZONTAL;
     	painel_formulario.add(descricao, organizador_form);
-    	//Fazer campos grandes para todos e esquecer FlowLayout
-    	filtros.add(lbl_grupo);
-    	filtros.add(grupo);
-    	filtros.add(lbl_natureza);
-    	filtros.add(natureza);
-    	filtros.add(lbl_situacao);
-    	filtros.add(situacao);
+    	
+    	organizador_form.gridx = 0;
+    	organizador_form.gridy = 3;
+    	organizador_form.weightx = 0;
+    	organizador_form.fill = GridBagConstraints.NONE;
+    	painel_formulario.add(lbl_grupo, organizador_form);
     	
     	organizador_form.gridx = 1;
     	organizador_form.gridy = 3;
     	organizador_form.weightx = 1;
-    	//Este componente ocupa 2 colunas
-    	organizador_form.gridwidth = 2;
     	organizador_form.fill = GridBagConstraints.HORIZONTAL;
-    	painel_formulario.add(filtros, organizador_form);
-    	add(painel_formulario, BorderLayout.NORTH);
+    	painel_formulario.add(grupo, organizador_form);
+    	
+    	organizador_form.gridx = 0;
+    	organizador_form.gridy = 4;
+    	organizador_form.weightx = 0;
+    	organizador_form.fill = GridBagConstraints.NONE;
+    	painel_formulario.add(lbl_natureza, organizador_form);
+    	
+    	organizador_form.gridx = 1;
+    	organizador_form.gridy = 4;
+    	organizador_form.weightx = 1;
+    	organizador_form.fill = GridBagConstraints.HORIZONTAL;
+    	painel_formulario.add(natureza, organizador_form);
+    	
+    	organizador_form.gridx = 0;
+    	organizador_form.gridy = 5;
+    	organizador_form.weightx = 0;
+    	organizador_form.fill = GridBagConstraints.NONE;
+    	painel_formulario.add(lbl_situacao, organizador_form);
+    	
+    	organizador_form.gridx = 1;
+    	organizador_form.gridy = 5;
+    	organizador_form.weightx = 1;
+    	organizador_form.fill = GridBagConstraints.HORIZONTAL;
+    	painel_formulario.add(situacao, organizador_form);
+    	
+    	botoes_filtro.add(pesquisar);
+    	botoes_filtro.add(mostrar_todos);
+    	
+    	
+    	organizador_form.gridx = 1;
+    	organizador_form.gridy = 6;
+    	organizador_form.weightx = 0;
+    	organizador_form.fill = GridBagConstraints.NONE;
+    	organizador_form.anchor = GridBagConstraints.WEST;
+    	painel_formulario.add(botoes_filtro, organizador_form);
+    	
+    	organizador_principal.gridx = 0;
+    	organizador_principal.gridy = 0;
+    	organizador_principal.anchor = GridBagConstraints.WEST;
+    	organizador_principal.weightx = 1;
+    	organizador_principal.fill = GridBagConstraints.HORIZONTAL;
+    	painel_principal.add(painel_formulario, organizador_principal);
     	
     	
     	//Fazer JPanel para todo o container de filtro/pesquisa
@@ -118,8 +159,18 @@ public class TelaPlanoDeContas extends JPanel {
         scrollPane.setBorder(
                 BorderFactory.createTitledBorder("Lista de Contas")
         );
-
-        add(scrollPane, BorderLayout.CENTER);
+        
+        organizador_principal.gridy = 1;
+    	organizador_principal.weighty = 1;
+    	organizador_principal.fill = GridBagConstraints.BOTH;
+        painel_principal.add(scrollPane, organizador_principal);
+        botoes.add(criar_conta);
+        botoes.add(atualizar_conta);
+        botoes.add(inativar_conta);
+        
+        organizador_principal.gridy = 2;
+        painel_principal.add(botoes, organizador_principal);
+        add(painel_principal);
     }
 
 

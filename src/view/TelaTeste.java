@@ -10,6 +10,6 @@ public class TelaTeste extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        add(new TelaPlanoDeContas());
+        add(new TelaAdicionarConta());
     }
 }

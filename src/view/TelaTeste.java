@@ -6,7 +6,7 @@ public class TelaTeste extends JFrame {
 
     public TelaTeste() {
         setTitle("Teste");
-        setSize(1000, 700);
+        setSize(500, 425);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 

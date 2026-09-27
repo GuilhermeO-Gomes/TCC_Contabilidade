@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.FlowLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -48,7 +49,7 @@ public class TelaCentroCustos extends JPanel {
 	    	organizador_form.anchor = GridBagConstraints.WEST;
 	    	organizador_form.weightx = 0;
 	    	JPanel botoes_filtro = new JPanel(new FlowLayout(FlowLayout.LEFT, 1, 5));
-	    	JPanel botoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 10));
+	    	JPanel botoes = new JPanel(new FlowLayout(FlowLayout.LEFT));
 	    	JLabel lbl_codigo = new JLabel("Código:"), lbl_descricao = new JLabel("Descrição:"), 
 	    	lbl_situacao = new JLabel("Situação:");
 	      	String[] situacoes = {"Ativo", "Inativo"};
@@ -88,15 +89,17 @@ public class TelaCentroCustos extends JPanel {
 	                BorderFactory.createTitledBorder("Contas")
 	        );
 	        
-	        organizador_principal.gridy = 1;
-	    	organizador_principal.weighty = 1;
+	        organizador_principal.gridy = 2;
+	    	organizador_principal.weighty = 0;
 	    	organizador_principal.fill = GridBagConstraints.BOTH;
 	        painel_principal.add(scrollPane, organizador_principal);
 	        botoes.add(criar_conta);
 	        botoes.add(atualizar_conta);
 	        botoes.add(inativar_conta);
+	        botoes.add(rateio);
 	        
-	        organizador_principal.gridy = 2;
+	        
+	        organizador_principal.gridy = 1;
 	        painel_principal.add(botoes, organizador_principal);
 	        add(painel_principal);
 	    }

@@ -11,257 +11,184 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
 public class TelaRegrasContabilizacao extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
-    private final JTextField txtCodigo = new JTextField(8);
-    private final JTextField txtDescricaoEvento = new JTextField(30);
-    private final JTextField txtPesquisa = new JTextField(22);
+    private final JTextField txtCod = new JTextField(8),
+            txtDesc = new JTextField(30),
+            txtPesq = new JTextField(22);
 
-    private final JComboBox<String> cmbContaDebito =
-            new JComboBox<>(new String[] {"Selecione uma conta"});
-    private final JComboBox<String> cmbContaCredito =
-            new JComboBox<>(new String[] {"Selecione uma conta"});
-    private final JComboBox<String> cmbFiltroSituacao =
-            new JComboBox<>(new String[] {"Todas", "Ativas", "Inativas"});
+    private final JComboBox<String> cbDeb = new JComboBox<>(new String[] {"Selecione uma conta"}),
+            cbCred = new JComboBox<>(new String[] {"Selecione uma conta"}),
+            cbSit = new JComboBox<>(new String[] {"Todas", "Ativas", "Inativas"});
 
-    private final JCheckBox checkAtiva =
-            new JCheckBox("Regra ativa", true);
+    private final JCheckBox chkAtiva = new JCheckBox("Regra ativa", true);
 
-    private final JButton btnNovo = new JButton("Novo");
-    private final JButton btnSalvar = new JButton("Salvar");
-    private final JButton btnAtualizar = new JButton("Atualizar");
-    private final JButton btnInativarAtivar =
-            new JButton("Inativar/Ativar");
-    private final JButton btnLimpar = new JButton("Limpar");
-    private final JButton btnPesquisar = new JButton("Pesquisar");
-    private final JButton btnMostrarTodos =
-            new JButton("Mostrar todos");
+    private final JButton btNovo = new JButton("Novo"),
+            btSalvar = new JButton("Salvar"),
+            btAtual = new JButton("Atualizar"),
+            btSit = new JButton("Inativar/Ativar"),
+            btLimpar = new JButton("Limpar"),
+            btBuscar = new JButton("Pesquisar"),
+            btTodos = new JButton("Mostrar todos");
 
-    private final DefaultTableModel modeloTabela =
-            new DefaultTableModel(
-                    new Object[] {
-                            "Código",
-                            "Evento",
-                            "Conta de Débito",
-                            "Conta de Crédito",
-                            "Situação"
-                    },
-                    0
-            ) {
-                private static final long serialVersionUID = 1L;
+    private final DefaultTableModel mod = new DefaultTableModel(
+            new Object[] {"Código", "Evento", "Conta de Débito", "Conta de Crédito", "Situação"},
+            0
+    ) {
+        private static final long serialVersionUID = 1L;
 
-                public boolean isCellEditable(int linha, int coluna) {
-                    return false;
-                }
-            };
+        @Override
+        public boolean isCellEditable(int l, int c) {
+            return false;
+        }
+    };
 
-    private final JTable tabelaRegras =
-            new JTable(modeloTabela);
+    private final JTable tab = new JTable(mod);
 
     public TelaRegrasContabilizacao() {
         setLayout(new BorderLayout(8, 8));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        montarTela();
+        montar();
     }
 
-    public static void main(String[] args) {
-        try {
-            UIManager.setLookAndFeel(
-                    UIManager.getSystemLookAndFeelClassName()
-            );
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    private void montar() {
+        JPanel f = new JPanel(new GridBagLayout());
+        f.setBorder(BorderFactory.createTitledBorder("Cadastro da Regra de Contabilização"));
 
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                JFrame janela = new JFrame(
-                        "Regras de Contabilização"
-                );
+        GridBagConstraints g = new GridBagConstraints();
+        g.insets = new Insets(4, 4, 4, 4);
+        g.anchor = GridBagConstraints.WEST;
 
-                janela.setSize(900, 650);
-                janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                janela.setLocationRelativeTo(null);
-                janela.add(new TelaRegrasContabilizacao());
-                janela.setVisible(true);
-            }
-        });
+        comp(f, g, 0, "Código:", txtCod);
+        comp(f, g, 1, "Descrição do evento:", txtDesc);
+        comp(f, g, 2, "Conta de débito:", cbDeb);
+        comp(f, g, 3, "Conta de crédito:", cbCred);
+        txtCod.setEditable(false);
+
+        g.gridx = 1;
+        g.gridy = 4;
+        f.add(chkAtiva, g);
+
+        JPanel b = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        b.add(btNovo);
+        b.add(btSalvar);
+        b.add(btAtual);
+        b.add(btSit);
+        b.add(btLimpar);
+
+        JPanel n = new JPanel(new BorderLayout());
+        n.add(f, BorderLayout.CENTER);
+        n.add(b, BorderLayout.SOUTH);
+        add(n, BorderLayout.NORTH);
+
+        JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        p.add(new JLabel("Evento:"));
+        p.add(txtPesq);
+        p.add(new JLabel("Situação:"));
+        p.add(cbSit);
+        p.add(btBuscar);
+        p.add(btTodos);
+
+        JScrollPane sp = new JScrollPane(tab);
+        sp.setBorder(BorderFactory.createTitledBorder("Regras Cadastradas"));
+
+        JPanel c = new JPanel(new BorderLayout(5, 5));
+        c.add(p, BorderLayout.NORTH);
+        c.add(sp, BorderLayout.CENTER);
+        add(c, BorderLayout.CENTER);
+        tab.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
 
-    private void montarTela() {
-        JPanel painelCadastro = new JPanel(new GridBagLayout());
-        painelCadastro.setBorder(
-                BorderFactory.createTitledBorder(
-                        "Cadastro da Regra de Contabilização"
-                )
-        );
+    private void comp(JPanel p, GridBagConstraints g,
+            int l, String txt, Component comp) {
+        g.gridx = 0;
+        g.gridy = l;
+        g.weightx = 0;
+        g.fill = GridBagConstraints.NONE;
+        p.add(new JLabel(txt), g);
 
-        txtCodigo.setEditable(false);
-
-        GridBagConstraints organizador = new GridBagConstraints();
-        organizador.insets = new Insets(4, 4, 4, 4);
-        organizador.anchor = GridBagConstraints.WEST;
-
-        adicionarComponente(
-                painelCadastro, organizador, 0,
-                "Código:", txtCodigo
-        );
-        adicionarComponente(
-                painelCadastro, organizador, 1,
-                "Descrição do evento:", txtDescricaoEvento
-        );
-        adicionarComponente(
-                painelCadastro, organizador, 2,
-                "Conta de débito:", cmbContaDebito
-        );
-        adicionarComponente(
-                painelCadastro, organizador, 3,
-                "Conta de crédito:", cmbContaCredito
-        );
-
-        organizador.gridx = 1;
-        organizador.gridy = 4;
-        organizador.weightx = 1;
-        organizador.fill = GridBagConstraints.HORIZONTAL;
-        painelCadastro.add(checkAtiva, organizador);
-
-        JPanel painelBotoes = new JPanel(
-                new FlowLayout(FlowLayout.LEFT, 5, 5)
-        );
-        painelBotoes.add(btnNovo);
-        painelBotoes.add(btnSalvar);
-        painelBotoes.add(btnAtualizar);
-        painelBotoes.add(btnInativarAtivar);
-        painelBotoes.add(btnLimpar);
-
-        JPanel painelSuperior = new JPanel(new BorderLayout());
-        painelSuperior.add(painelCadastro, BorderLayout.CENTER);
-        painelSuperior.add(painelBotoes, BorderLayout.SOUTH);
-        add(painelSuperior, BorderLayout.NORTH);
-
-        JPanel painelPesquisa = new JPanel(
-                new FlowLayout(FlowLayout.LEFT, 5, 5)
-        );
-        painelPesquisa.add(new JLabel("Evento:"));
-        painelPesquisa.add(txtPesquisa);
-        painelPesquisa.add(new JLabel("Situação:"));
-        painelPesquisa.add(cmbFiltroSituacao);
-        painelPesquisa.add(btnPesquisar);
-        painelPesquisa.add(btnMostrarTodos);
-
-        tabelaRegras.setSelectionMode(
-                ListSelectionModel.SINGLE_SELECTION
-        );
-
-        JScrollPane scrollPane = new JScrollPane(tabelaRegras);
-        scrollPane.setBorder(
-                BorderFactory.createTitledBorder("Regras Cadastradas")
-        );
-
-        JPanel painelLista = new JPanel(new BorderLayout(5, 5));
-        painelLista.add(painelPesquisa, BorderLayout.NORTH);
-        painelLista.add(scrollPane, BorderLayout.CENTER);
-        add(painelLista, BorderLayout.CENTER);
+        g.gridx = 1;
+        g.weightx = 1;
+        g.fill = GridBagConstraints.HORIZONTAL;
+        p.add(comp, g);
     }
 
-    private void adicionarComponente(
-            JPanel painel,
-            GridBagConstraints organizador,
-            int linha,
-            String texto,
-            Component componente
-    ) {
-        organizador.gridx = 0;
-        organizador.gridy = linha;
-        organizador.weightx = 0;
-        organizador.fill = GridBagConstraints.NONE;
-        painel.add(new JLabel(texto), organizador);
-
-        organizador.gridx = 1;
-        organizador.weightx = 1;
-        organizador.fill = GridBagConstraints.HORIZONTAL;
-        painel.add(componente, organizador);
+    public void limpar() {
+        txtCod.setText("");
+        txtDesc.setText("");
+        cbDeb.setSelectedIndex(0);
+        cbCred.setSelectedIndex(0);
+        chkAtiva.setSelected(true);
+        tab.clearSelection();
     }
 
-    public void limparCampos() {
-        txtCodigo.setText("");
-        txtDescricaoEvento.setText("");
-        cmbContaDebito.setSelectedIndex(0);
-        cmbContaCredito.setSelectedIndex(0);
-        checkAtiva.setSelected(true);
-        tabelaRegras.clearSelection();
+    public JTextField getTxtCod() {
+        return txtCod;
     }
 
-    public JTextField getTxtCodigo() {
-        return txtCodigo;
+    public JTextField getTxtDesc() {
+        return txtDesc;
     }
 
-    public JTextField getTxtDescricaoEvento() {
-        return txtDescricaoEvento;
+    public JTextField getTxtPesq() {
+        return txtPesq;
     }
 
-    public JTextField getTxtPesquisa() {
-        return txtPesquisa;
+    public JComboBox<String> getCbDeb() {
+        return cbDeb;
     }
 
-    public JComboBox<String> getCmbContaDebito() {
-        return cmbContaDebito;
+    public JComboBox<String> getCbCred() {
+        return cbCred;
     }
 
-    public JComboBox<String> getCmbContaCredito() {
-        return cmbContaCredito;
+    public JComboBox<String> getCbSit() {
+        return cbSit;
     }
 
-    public JComboBox<String> getCmbFiltroSituacao() {
-        return cmbFiltroSituacao;
+    public JCheckBox getChkAtiva() {
+        return chkAtiva;
     }
 
-    public JCheckBox getCheckAtiva() {
-        return checkAtiva;
+    public JButton getBtNovo() {
+        return btNovo;
     }
 
-    public JButton getBtnNovo() {
-        return btnNovo;
+    public JButton getBtSalvar() {
+        return btSalvar;
     }
 
-    public JButton getBtnSalvar() {
-        return btnSalvar;
+    public JButton getBtAtual() {
+        return btAtual;
     }
 
-    public JButton getBtnAtualizar() {
-        return btnAtualizar;
+    public JButton getBtSit() {
+        return btSit;
     }
 
-    public JButton getBtnInativarAtivar() {
-        return btnInativarAtivar;
+    public JButton getBtLimpar() {
+        return btLimpar;
     }
 
-    public JButton getBtnLimpar() {
-        return btnLimpar;
+    public JButton getBtBuscar() {
+        return btBuscar;
     }
 
-    public JButton getBtnPesquisar() {
-        return btnPesquisar;
+    public JButton getBtTodos() {
+        return btTodos;
     }
 
-    public JButton getBtnMostrarTodos() {
-        return btnMostrarTodos;
-    }
-
-    public JTable getTabelaRegras() {
-        return tabelaRegras;
+    public JTable getTab() {
+        return tab;
     }
 }

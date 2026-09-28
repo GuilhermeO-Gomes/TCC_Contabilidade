@@ -41,19 +41,17 @@ public class TelaRegrasContabilizacao extends JPanel {
             btBuscar = new JButton("Pesquisar"),
             btTodos = new JButton("Mostrar todos");
 
-    private final DefaultTableModel mod = new DefaultTableModel(
+    private final DefaultTableModel modelo = new DefaultTableModel(
             new Object[] {"Código", "Evento", "Conta de Débito", "Conta de Crédito", "Situação"},
             0
     ) {
         private static final long serialVersionUID = 1L;
-
-        @Override
         public boolean isCellEditable(int l, int c) {
             return false;
         }
     };
 
-    private final JTable tab = new JTable(mod);
+    private final JTable tabela = new JTable(modelo);
 
     public TelaRegrasContabilizacao() {
         setLayout(new BorderLayout(8, 8));
@@ -69,10 +67,10 @@ public class TelaRegrasContabilizacao extends JPanel {
         g.insets = new Insets(4, 4, 4, 4);
         g.anchor = GridBagConstraints.WEST;
 
-        comp(f, g, 0, "Código:", txtCod);
-        comp(f, g, 1, "Descrição do evento:", txtDesc);
-        comp(f, g, 2, "Conta de débito:", cbDeb);
-        comp(f, g, 3, "Conta de crédito:", cbCred);
+        componente(f, g, 0, "Código:", txtCod);
+        componente(f, g, 1, "Descrição do evento:", txtDesc);
+        componente(f, g, 2, "Conta de débito:", cbDeb);
+        componente(f, g, 3, "Conta de crédito:", cbCred);
         txtCod.setEditable(false);
 
         g.gridx = 1;
@@ -99,28 +97,29 @@ public class TelaRegrasContabilizacao extends JPanel {
         p.add(btBuscar);
         p.add(btTodos);
 
-        JScrollPane sp = new JScrollPane(tab);
+        JScrollPane sp = new JScrollPane(tabela);
         sp.setBorder(BorderFactory.createTitledBorder("Regras Cadastradas"));
 
         JPanel c = new JPanel(new BorderLayout(5, 5));
         c.add(p, BorderLayout.NORTH);
         c.add(sp, BorderLayout.CENTER);
         add(c, BorderLayout.CENTER);
-        tab.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
 
-    private void comp(JPanel p, GridBagConstraints g,
-            int l, String txt, Component comp) {
-        g.gridx = 0;
-        g.gridy = l;
-        g.weightx = 0;
-        g.fill = GridBagConstraints.NONE;
-        p.add(new JLabel(txt), g);
+    private void componente(JPanel painel, GridBagConstraints organizador,
+            int linha, String texto, Component campo) {
+        organizador.gridx = 0;
+        organizador.gridy = linha;
+        organizador.gridwidth = 1;
+        organizador.weightx = 0;
+        organizador.fill = GridBagConstraints.NONE;
+        painel.add(new JLabel(texto), organizador);
 
-        g.gridx = 1;
-        g.weightx = 1;
-        g.fill = GridBagConstraints.HORIZONTAL;
-        p.add(comp, g);
+        organizador.gridx = 1;
+        organizador.weightx = 1;
+        organizador.fill = GridBagConstraints.HORIZONTAL;
+        painel.add(campo, organizador);
     }
 
     public void limpar() {
@@ -129,7 +128,7 @@ public class TelaRegrasContabilizacao extends JPanel {
         cbDeb.setSelectedIndex(0);
         cbCred.setSelectedIndex(0);
         chkAtiva.setSelected(true);
-        tab.clearSelection();
+        tabela.clearSelection();
     }
 
     public JTextField getTxtCod() {
@@ -189,6 +188,6 @@ public class TelaRegrasContabilizacao extends JPanel {
     }
 
     public JTable getTab() {
-        return tab;
+        return tabela;
     }
 }

@@ -90,7 +90,7 @@ public class TelaCentroCustos extends JPanel {
 	        );
 	        
 	        organizador_principal.gridy = 2;
-	    	organizador_principal.weighty = 0;
+	    	organizador_principal.weighty = 5;
 	    	organizador_principal.fill = GridBagConstraints.BOTH;
 	        painel_principal.add(scrollPane, organizador_principal);
 	        botoes.add(criar_conta);

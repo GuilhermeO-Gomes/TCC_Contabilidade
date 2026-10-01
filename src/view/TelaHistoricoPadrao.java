@@ -64,9 +64,9 @@ public class TelaHistoricoPadrao extends JPanel {
 			p.add(new JLabel("Pesquisar:"));
 			p.add(pesquisa);
 			JButton buscar = new JButton("Buscar");
-			 todos = new JButton ("Todos");
+			 
 			 p.add(buscar);
-			 p.add(todos);
+			
 			 JPanel c = new JPanel(new BorderLayout());
 			 c.add(p, BorderLayout.NORTH);
 			 c.add(new JScrollPane(tabela));
@@ -100,23 +100,7 @@ public class TelaHistoricoPadrao extends JPanel {
 			ativo.setSelected(true);
 		}
 		
-		public void mostrar(Historico h) {
-			id.setText(String.valueOf(h.getId()));
-			descricao.setText(h.getDescricao());
-			ativo.setSelected(h.isAtivo());
-		}
 		
-		public void preencher(List<Historico> l) {
-			int i;
-			for(i=0; i < l.size(); i++) {
-				Historico h = l.get(i);
-				modelo.addRow(new Object[] {
-						h.getDescricao(),
-						h.isAtivo() ? "Sim" : "Não",
-				});
-				
-			}
-		}
 		
 		 public int getId() {
 			    try {

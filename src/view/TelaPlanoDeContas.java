@@ -64,7 +64,7 @@ public class TelaPlanoDeContas extends JPanel {
     	JComboBox <String> situacao = new JComboBox<>(situacoes);
     	JButton pesquisar = new JButton("Pesquisar conta"), mostrar_todos = new JButton("Mostrar todos"),
     	criar_conta = new JButton("Adicionar conta"), atualizar_conta = new JButton("Atualizar conta"),
-    	inativar_conta = new JButton("Inativar conta");
+    	inativar_conta = new JButton("Inativar conta"), razao = new JButton("Consultar razão");
     	
     	adicionar_componente(1, painel_formulario, organizador_form, lbl_codigo, codigo);
     	adicionar_componente(2, painel_formulario, organizador_form, lbl_descricao, descricao);
@@ -106,7 +106,7 @@ public class TelaPlanoDeContas extends JPanel {
         botoes.add(criar_conta);
         botoes.add(atualizar_conta);
         botoes.add(inativar_conta);
-        
+        botoes.add(razao);        
         organizador_principal.gridy = 1;
         painel_principal.add(botoes, organizador_principal);
         add(painel_principal);

@@ -56,7 +56,8 @@ public class TelaCentroCustos extends JPanel {
 	    	JComboBox <String> situacao = new JComboBox<>(situacoes);
 	    	JButton pesquisar = new JButton("Pesquisar custo"), mostrar_todos = new JButton("Mostrar todos"),
 	    	criar_conta = new JButton("Adicionar centro de custo"), atualizar_conta = new JButton("Atualizar centro de custos"),
-	    	inativar_conta = new JButton("Inativar custo"), rateio = new JButton("Configurar Rateio");
+	    	inativar_conta = new JButton("Inativar custo"), rateio = new JButton("Configurar Rateio"), 
+	    	razao = new JButton("Consultar razão");
 	    	
 	    	adicionar_componente(1, painel_formulario, organizador_form, lbl_codigo, codigo);
 	    	adicionar_componente(2, painel_formulario, organizador_form, lbl_descricao, descricao);
@@ -97,7 +98,7 @@ public class TelaCentroCustos extends JPanel {
 	        botoes.add(atualizar_conta);
 	        botoes.add(inativar_conta);
 	        botoes.add(rateio);
-	        
+	        botoes.add(razao);
 	        
 	        organizador_principal.gridy = 1;
 	        painel_principal.add(botoes, organizador_principal);

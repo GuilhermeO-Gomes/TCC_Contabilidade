@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Window;
 import java.awt.FlowLayout;
 
 import javax.swing.BorderFactory;
@@ -15,13 +16,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import controller.CentroCustosController;
 
 public class TelaCentroCustos extends JPanel {
 	    private static final long serialVersionUID = 1L;
-	    private final JTextField codigo = new JTextField(5), descricao = new JTextField(15);
+	    private final JTextField txt_codigo = new JTextField(5), txt_descricao = new JTextField(15);
 	    private final DefaultTableModel modeloTabela = new DefaultTableModel(
 	            new Object[] {"Código", "Descrição", "Centro Superior", "Nível", "Situação"},
 	            0
@@ -31,7 +33,6 @@ public class TelaCentroCustos extends JPanel {
 	    private CentroCustosController controller;
 
 	    public TelaCentroCustos() {
-	    	//Fazer controller pra rodar a tela
 	    	setLayout(new BorderLayout(8,8));
 	    	setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 	        montar_tela();
@@ -40,46 +41,37 @@ public class TelaCentroCustos extends JPanel {
 	    }
 
 	    private void montar_tela() {
-	    	JPanel painel_principal = new JPanel(new GridBagLayout());
-	    	GridBagConstraints organizador_principal = new GridBagConstraints();
-	    	JPanel painel_formulario = new JPanel(new GridBagLayout());
-	    	painel_formulario.setBorder(BorderFactory.createTitledBorder("Filtros e Pesquisa"));
-	    	GridBagConstraints organizador_form = new GridBagConstraints();
-	    	organizador_form.insets = new Insets(4, 4, 4, 4);
-	    	organizador_form.anchor = GridBagConstraints.WEST;
-	    	organizador_form.weightx = 0;
+	    	JPanel jp_inferior = new JPanel(new BorderLayout(0,5));
+	    	JPanel jp_form = new JPanel(new GridBagLayout());
+	    	jp_form.setBorder(BorderFactory.createTitledBorder("Filtros e Pesquisa"));
+	    	GridBagConstraints gbc_form = new GridBagConstraints();
+	    	gbc_form.insets = new Insets(4, 4, 4, 4);
+	    	gbc_form.anchor = GridBagConstraints.WEST;
+	    	gbc_form.weightx = 0;
 	    	JPanel botoes_filtro = new JPanel(new FlowLayout(FlowLayout.LEFT, 1, 5));
 	    	JPanel botoes = new JPanel(new FlowLayout(FlowLayout.LEFT));
 	    	JLabel lbl_codigo = new JLabel("Código:"), lbl_descricao = new JLabel("Descrição:"), 
 	    	lbl_situacao = new JLabel("Situação:");
-	      	String[] situacoes = {"Ativo", "Inativo"};
-	    	JComboBox <String> situacao = new JComboBox<>(situacoes);
-	    	JButton pesquisar = new JButton("Pesquisar custo"), mostrar_todos = new JButton("Mostrar todos"),
-	    	criar_conta = new JButton("Adicionar centro de custo"), atualizar_conta = new JButton("Atualizar centro de custos"),
-	    	inativar_conta = new JButton("Inativar custo"), rateio = new JButton("Configurar Rateio"), 
-	    	razao = new JButton("Consultar razão");
+	      	String[] obj_situacoes = {"Ativo", "Inativo"};
+	    	JComboBox <String> cmbBox_situacao = new JComboBox<>(obj_situacoes);
+	    	JButton btn_pesquisar = new JButton("Pesquisar custo"), btn_mostrar_todos = new JButton("Mostrar todos"),
+	    	btn_criar_conta = new JButton("Adicionar centro de custo"), btn_atualizar_conta = new JButton("Atualizar centro de custos"),
+	    	btn_inativar_conta = new JButton("Inativar custo"), btn_rateio = new JButton("Configurar Rateio"), 
+	    	btn_razao = new JButton("Consultar razão");
 	    	
-	    	adicionar_componente(1, painel_formulario, organizador_form, lbl_codigo, codigo);
-	    	adicionar_componente(2, painel_formulario, organizador_form, lbl_descricao, descricao);
-	    	adicionar_componente(3, painel_formulario, organizador_form, lbl_situacao, situacao);
+	    	adicionar_componente(1, jp_form, gbc_form, lbl_codigo, txt_codigo);
+	    	adicionar_componente(2, jp_form, gbc_form, lbl_descricao, txt_descricao);
+	    	adicionar_componente(3, jp_form, gbc_form, lbl_situacao, cmbBox_situacao);
 	    	
-	    	botoes_filtro.add(pesquisar);
-	    	botoes_filtro.add(mostrar_todos);
+	    	botoes_filtro.add(btn_pesquisar);
+	    	botoes_filtro.add(btn_mostrar_todos);
 	    	
-	    	organizador_form.gridx = 1;
-	    	organizador_form.gridy = 6;
-	    	organizador_form.weightx = 0;
-	    	organizador_form.fill = GridBagConstraints.NONE;
-	    	organizador_form.anchor = GridBagConstraints.WEST;
-	    	painel_formulario.add(botoes_filtro, organizador_form);
-	    	
-	    	organizador_principal.gridx = 0;
-	    	organizador_principal.gridy = 0;
-	    	organizador_principal.anchor = GridBagConstraints.WEST;
-	    	organizador_principal.weightx = 1;
-	    	organizador_principal.fill = GridBagConstraints.HORIZONTAL;
-	    	painel_principal.add(painel_formulario, organizador_principal);
-	    	
+	    	gbc_form.gridx = 1;
+	    	gbc_form.gridy = 6;
+	    	gbc_form.weightx = 0;
+	    	gbc_form.fill = GridBagConstraints.NONE;
+	    	gbc_form.anchor = GridBagConstraints.WEST;
+	    	jp_form.add(botoes_filtro, gbc_form);
 	    	
 	    	//Fazer JPanel para todo o container de filtro/pesquisa
 	        tabelaCentroCustos = new JTable(modeloTabela);
@@ -89,20 +81,36 @@ public class TelaCentroCustos extends JPanel {
 	        scrollPane.setBorder(
 	                BorderFactory.createTitledBorder("Contas")
 	        );
+	        	   
+	        botoes.add(btn_criar_conta);
+	        botoes.add(btn_atualizar_conta);
+	        botoes.add(btn_inativar_conta);
 	        
-	        organizador_principal.gridy = 2;
-	    	organizador_principal.weighty = 5;
-	    	organizador_principal.fill = GridBagConstraints.BOTH;
-	        painel_principal.add(scrollPane, organizador_principal);
-	        botoes.add(criar_conta);
-	        botoes.add(atualizar_conta);
-	        botoes.add(inativar_conta);
-	        botoes.add(rateio);
-	        botoes.add(razao);
+	      //Pra criar o JDialog, talvez depois jogue essa actionListener para os controllers
+	        btn_criar_conta.addActionListener(e -> {
+	        	Window janela_pai = SwingUtilities.getWindowAncestor(this);
+	        	TelaAdicionarCustos dialog = new TelaAdicionarCustos(janela_pai);
+	            dialog.setVisible(true);
+	        });
 	        
-	        organizador_principal.gridy = 1;
-	        painel_principal.add(botoes, organizador_principal);
-	        add(painel_principal);
+	        btn_rateio.addActionListener(e -> {
+	        	Window janela_pai = SwingUtilities.getWindowAncestor(this);
+	        	TelaRateio dialog = new TelaRateio(janela_pai);
+	            dialog.setVisible(true);
+	        });
+	        botoes.add(btn_rateio);
+	        
+	        
+	        botoes.add(btn_razao);
+	        btn_razao.addActionListener(e -> {
+	        	Window janela_pai = SwingUtilities.getWindowAncestor(this);
+	        	TelaLivroRazao dialog = new TelaLivroRazao(janela_pai);
+	            dialog.setVisible(true);});
+
+	        jp_inferior.add(scrollPane, BorderLayout.CENTER);
+	        jp_inferior.add(botoes, BorderLayout.NORTH);
+	        add(jp_form, BorderLayout.NORTH);
+	        add(jp_inferior, BorderLayout.CENTER);
 	    }
 
 

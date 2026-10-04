@@ -5,33 +5,38 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Window;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 
-public class TelaAdicionarConta extends JPanel {
+public class TelaAdicionarConta extends JDialog {
 
 	    private static final long serialVersionUID = 1L;
-	    private final JTextField codigo = new JTextField(5), descricao = new JTextField(15);
-	    public TelaAdicionarConta() {
+	    private final JTextField txt_codigo = new JTextField(5), txt_descricao = new JTextField(15);
+	    public TelaAdicionarConta(Window janela_pai) {
+	    	super(janela_pai, "Adicionar Nova Conta", ModalityType.APPLICATION_MODAL);
 	    	setLayout(new BorderLayout(8,8));
-	    	setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 	        montar_tela();
+	        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+	        pack();                      
+	        setLocationRelativeTo(janela_pai);
 	    }
 
 	    private void montar_tela() {
-	    	JPanel painel_principal = new JPanel(new GridBagLayout());
-	    	painel_principal.setBorder(BorderFactory.createTitledBorder("Nova Conta"));
-	    	GridBagConstraints organizador_principal = new GridBagConstraints();
-	    	organizador_principal.insets = new Insets(10, 2, 10, 2);
-	    	organizador_principal.anchor = GridBagConstraints.WEST;
-	    	organizador_principal.weightx = 0;
+	    	JPanel jp_principal = new JPanel(new GridBagLayout());
+	    	jp_principal.setBorder(BorderFactory.createTitledBorder("Nova Conta"));
+	    	GridBagConstraints gbc_principal = new GridBagConstraints();
+	    	gbc_principal.insets = new Insets(10, 2, 10, 2);
+	    	gbc_principal.anchor = GridBagConstraints.WEST;
+	    	gbc_principal.weightx = 0;
 	    	JPanel botoes = new JPanel(new FlowLayout(FlowLayout.LEFT));
 	    	JLabel lbl_codigo = new JLabel("Código:"), lbl_descricao = new JLabel("Descrição:"), 
 	    	lbl_conta_superior = new JLabel("Conta Superior:"),
@@ -39,37 +44,39 @@ public class TelaAdicionarConta extends JPanel {
 	    	lbl_natureza = new JLabel("Natureza:"), 
 	    	lbl_situacao = new JLabel("Situação:"),
 	    	lbl_tipo = new JLabel("Tipo:");
-	    	String[] grupos= {"Ativos", "Passivos", "Custos", "Receita", "Despesa", "Patrimônio liquído"};
-	    	String[] naturezas = {"Devedora", "Credora"};
-	    	String[] situacoes = {"Ativo", "Inativo"};
-	    	String[] tipos = {"Analítica", "Sintética"};
-	    	JComboBox <String> grupo = new JComboBox<>(grupos);
-	    	JComboBox <String> conta_superior = new JComboBox<>(grupos);
-	    	JComboBox <String> natureza = new JComboBox<>(naturezas);
-	    	JComboBox <String> situacao = new JComboBox<>(situacoes);
-	    	JComboBox <String> tipo = new JComboBox<>(tipos);
-	    	JButton salvar = new JButton("Salvar"), cancelar = new JButton("Cancelar");
+	    	String[] obj_grupos= {"Ativos", "Passivos", "Custos", "Receita", "Despesa", "Patrimônio liquído"};
+	    	String[] obj_naturezas = {"Devedora", "Credora"};
+	    	String[] obj_situacoes = {"Ativo", "Inativo"};
+	    	String[] obj_tipos = {"Analítica", "Sintética"};
+	    	JComboBox <String> cmbBox_grupo = new JComboBox<>(obj_grupos);
+	    	JComboBox <String> cmbBox_conta_superior = new JComboBox<>(obj_grupos);
+	    	JComboBox <String> cmbBox_natureza = new JComboBox<>(obj_naturezas);
+	    	JComboBox <String> cmbBox_situacao = new JComboBox<>(obj_situacoes);
+	    	JComboBox <String> cmbBox_tipo = new JComboBox<>(obj_tipos);
+	    	JButton btn_salvar = new JButton("Salvar"), btn_cancelar = new JButton("Cancelar");
 	    	
-	    	adicionar_componente(0, painel_principal, organizador_principal, lbl_codigo, codigo);
-	    	adicionar_componente(1, painel_principal, organizador_principal, lbl_descricao, descricao);
-	    	adicionar_componente(2, painel_principal, organizador_principal, lbl_conta_superior, conta_superior);
-	    	adicionar_componente(3, painel_principal, organizador_principal, lbl_grupo, grupo);
-	    	adicionar_componente(4, painel_principal, organizador_principal, lbl_natureza, natureza);
-	    	adicionar_componente(5, painel_principal, organizador_principal, lbl_tipo, tipo);
-	    	adicionar_componente(6, painel_principal, organizador_principal, lbl_situacao, situacao);
+	    	btn_cancelar.addActionListener(e -> dispose());
 	    	
-	    	botoes.add(cancelar);
-	    	botoes.add(salvar);
+	    	adicionar_componente(0, jp_principal, gbc_principal, lbl_codigo, txt_codigo);
+	    	adicionar_componente(1, jp_principal, gbc_principal, lbl_descricao, txt_descricao);
+	    	adicionar_componente(2, jp_principal, gbc_principal, lbl_conta_superior, cmbBox_conta_superior);
+	    	adicionar_componente(3, jp_principal, gbc_principal, lbl_grupo, cmbBox_grupo);
+	    	adicionar_componente(4, jp_principal, gbc_principal, lbl_natureza, cmbBox_natureza);
+	    	adicionar_componente(5, jp_principal, gbc_principal, lbl_tipo, cmbBox_tipo);
+	    	adicionar_componente(6, jp_principal, gbc_principal, lbl_situacao, cmbBox_situacao);
 	    	
-	    	organizador_principal.gridy = 7;
-	    	organizador_principal.gridx = 0;
-	    	organizador_principal.gridwidth = 2;
-	    	organizador_principal.weightx = 1;
-	    	organizador_principal.weighty = 0;
-	    	organizador_principal.fill = GridBagConstraints.HORIZONTAL;
-	    	painel_principal.add(botoes, organizador_principal);
+	    	botoes.add(btn_cancelar);
+	    	botoes.add(btn_salvar);
 	    	
-	        add(painel_principal, BorderLayout.NORTH);
+	    	gbc_principal.gridy = 7;
+	    	gbc_principal.gridx = 0;
+	    	gbc_principal.gridwidth = 2;
+	    	gbc_principal.weightx = 1;
+	    	gbc_principal.weighty = 0;
+	    	gbc_principal.fill = GridBagConstraints.HORIZONTAL;
+	    	jp_principal.add(botoes, gbc_principal);
+	    	
+	        add(jp_principal, BorderLayout.NORTH);
 	    }
 public void adicionar_componente( 
 		int y, 

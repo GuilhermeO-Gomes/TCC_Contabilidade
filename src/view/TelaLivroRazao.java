@@ -1,15 +1,18 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Window;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -19,7 +22,7 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 import javax.swing.table.DefaultTableModel;
 
-public class TelaLivroRazao extends JPanel {
+public class TelaLivroRazao extends JDialog {
 	/**
 	 * 
 	 */
@@ -42,15 +45,18 @@ public class TelaLivroRazao extends JPanel {
 	
 	
 	
-    public TelaLivroRazao() {
+    public TelaLivroRazao(Window janela_pai) {
+    	super(janela_pai, "Consulta de Razão", ModalityType.APPLICATION_MODAL);
     	setLayout(new BorderLayout(8,8));
-    	setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         montar_tela();
+        setPreferredSize(new Dimension(920, 680));
+        setMinimumSize(new Dimension(780, 520));
+        pack(); 
+        setLocationRelativeTo(janela_pai);
     }
 
     private void montar_tela() {
     	//Criar funções que criem automaticamente JPanels e GBCs, e JLabels
-    	
     	JPanel painel_principal = new JPanel(new GridBagLayout());
     	painel_principal.setBorder(BorderFactory.createTitledBorder("Razão"));
     	GridBagConstraints organizador_principal = new GridBagConstraints();
@@ -80,6 +86,7 @@ public class TelaLivroRazao extends JPanel {
     	painel_lancamento.setBorder(BorderFactory.createTitledBorder("Lançamentos da conta"));
     	JPanel botoes_pesquisa = new JPanel(new FlowLayout(FlowLayout.LEFT));
     	JPanel botao_lancamento = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    	//Function para JLabels
     	JLabel lbl_conta = new JLabel("Conta:"), lbl_conta1 = new JLabel("Conta:"), lbl_periodo = new JLabel("Período:"),
     	lbl_ate = new JLabel("até"), lbl_historico = new JLabel("Histórico"),
     	lbl_centro_custo = new JLabel("Centro de Custo:"), lbl_descricao = new JLabel("Descrição:"),
@@ -157,7 +164,7 @@ public class TelaLivroRazao extends JPanel {
         painel_lancamento.add(botao_lancamento, BorderLayout.SOUTH);
          
     	organizador_principal.gridy = 2;
-    	organizador_principal.weighty = 0;
+    	organizador_principal.weighty = 1;
     	organizador_principal.fill = GridBagConstraints.BOTH;
     	painel_principal.add(painel_lancamento, organizador_principal);
     	

@@ -49,8 +49,7 @@ public class TelaBalancete extends JPanel {
     private void montar_tela() {
     	//Criar funções que criem automaticamente JPanels e GBCs, e JLabels
     	
-    	JPanel painel_principal = new JPanel(new GridBagLayout());
-    	painel_principal.setBorder(BorderFactory.createTitledBorder("Balancete"));
+    
     	GridBagConstraints organizador_principal = new GridBagConstraints();
     	organizador_principal.insets = new Insets(10, 2, 10, 2);
     	organizador_principal.anchor = GridBagConstraints.WEST;
@@ -127,7 +126,7 @@ public class TelaBalancete extends JPanel {
     	organizador_principal.anchor = GridBagConstraints.WEST;
     	organizador_principal.weightx = 1;
     	organizador_principal.fill = GridBagConstraints.HORIZONTAL;
-    	painel_principal.add(painel_pesquisa, organizador_principal);
+  
     	
     	TabelaBalancete = new JTable(modeloTabela);
         JScrollPane scrollPane =new JScrollPane(TabelaBalancete);
@@ -145,21 +144,28 @@ public class TelaBalancete extends JPanel {
         painel_dados.add(lbl_situacao);
         painel_dados.add(lbl_placeholder2);
         
-
+        organizador_lancamento.gridx = 0;
+        organizador_lancamento.gridy = 1;
+        organizador_lancamento.weightx = 0;
+        organizador_lancamento.weighty = 0;
+        organizador_lancamento.gridwidth = 0;
+        organizador_lancamento.fill = GridBagConstraints.BOTH;
+        painel_lancamento.add(painel_dados, organizador_lancamento);
          
     	organizador_principal.gridy = 2;
     	organizador_principal.weighty = 0;
     	organizador_principal.fill = GridBagConstraints.BOTH;
     	organizador_principal.weighty = 1;
-    	painel_principal.add(painel_lancamento, organizador_principal);
+
     	
     	organizador_principal.gridy = 3;
     	organizador_principal.weighty = 0;
     	organizador_principal.fill = GridBagConstraints.HORIZONTAL;
     	organizador_principal.weightx = 1;
-    	painel_principal.add(painel_dados, organizador_principal);
+
     	 	
-        add(painel_principal, BorderLayout.CENTER);
+        add(painel_pesquisa, BorderLayout.NORTH);
+        add(painel_lancamento, BorderLayout.CENTER);
     }
 public void adicionar_componente( 
 	int y, 

@@ -5,6 +5,8 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Window;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -14,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import controller.PlanoContasController;
@@ -21,7 +24,7 @@ import controller.PlanoContasController;
 public class TelaPlanoDeContas extends JPanel {
 
     private static final long serialVersionUID = 1L;
-    private final JTextField codigo = new JTextField(5), descricao = new JTextField(15);
+    private final JTextField txt_codigo = new JTextField(5), txt_descricao = new JTextField(15);
     private final DefaultTableModel modeloTabela = new DefaultTableModel(
             new Object[] {"Código", "Descrição", "Conta Superior", "Nível", "Grupo", "Natureza", "Tipo da Conta", "Situação"
             },
@@ -31,9 +34,7 @@ public class TelaPlanoDeContas extends JPanel {
     private JTable tabelaPlanoDeContas;
     private PlanoContasController controller;
 
-    public TelaPlanoDeContas() {
-    	//Ver o que essas telas fazem no sentido de layout e painel
-    	
+    public TelaPlanoDeContas() {    	
     	setLayout(new BorderLayout(8,8));
     	setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         montar_tela();
@@ -42,53 +43,45 @@ public class TelaPlanoDeContas extends JPanel {
     }
 
     private void montar_tela() {
-    	JPanel painel_principal = new JPanel(new GridBagLayout());
-    	GridBagConstraints organizador_principal = new GridBagConstraints();
-    	JPanel painel_formulario = new JPanel(new GridBagLayout());
-    	painel_formulario.setBorder(BorderFactory.createTitledBorder("Filtros e Pesquisa"));
-    	GridBagConstraints organizador_form = new GridBagConstraints();
-    	organizador_form.insets = new Insets(4, 4, 4, 4);
-    	organizador_form.anchor = GridBagConstraints.WEST;
-    	organizador_form.weightx = 0;
+    	//Painel que agrupa os conteúdos inferiores para ser utilizado o Borderlayout
+    	JPanel jp_inferior = new JPanel(new BorderLayout(0,5));
+    	JPanel jp_form = new JPanel(new GridBagLayout());
+    	jp_form.setBorder(BorderFactory.createTitledBorder("Filtros e Pesquisa"));
+    	GridBagConstraints gbc_form = new GridBagConstraints();
+    	gbc_form.insets = new Insets(4, 4, 4, 4);
+    	gbc_form.anchor = GridBagConstraints.WEST;
+    	gbc_form.weightx = 0;
     	JPanel botoes_filtro = new JPanel(new FlowLayout(FlowLayout.LEFT, 1, 5));
     	JPanel botoes = new JPanel(new FlowLayout(FlowLayout.LEFT));
     	JLabel lbl_codigo = new JLabel("Código:"), lbl_descricao = new JLabel("Descrição:"), 
     	lbl_grupo = new JLabel("Grupo:"), 
     	lbl_natureza = new JLabel("Natureza:"), 
     	lbl_situacao = new JLabel("Situação:");
-    	String[] grupos= {"Ativos", "Passivos", "Custos", "Receita", "Despesa", "Patrimônio liquído"};
-    	String[] naturezas = {"Devedora", "Credora"};
-      	String[] situacoes = {"Ativo", "Inativo"};
-    	JComboBox <String> grupo = new JComboBox<>(grupos);
-    	JComboBox <String> natureza = new JComboBox<>(naturezas);
-    	JComboBox <String> situacao = new JComboBox<>(situacoes);
-    	JButton pesquisar = new JButton("Pesquisar conta"), mostrar_todos = new JButton("Mostrar todos"),
-    	criar_conta = new JButton("Adicionar conta"), atualizar_conta = new JButton("Atualizar conta"),
-    	inativar_conta = new JButton("Inativar conta"), razao = new JButton("Consultar razão");
+    	String[] obj_grupos= {"Ativos", "Passivos", "Custos", "Receita", "Despesa", "Patrimônio liquído"};
+    	String[] obj_naturezas = {"Devedora", "Credora"};
+      	String[] obj_situacoes = {"Ativo", "Inativo"};
+    	JComboBox <String> cmbBox_grupo = new JComboBox<>(obj_grupos);
+    	JComboBox <String> cmbBox_natureza = new JComboBox<>(obj_naturezas);
+    	JComboBox <String> cmbBox_situacao = new JComboBox<>(obj_situacoes);
+    	JButton btn_pesquisar = new JButton("Pesquisar conta"), btn_mostrar_todos = new JButton("Mostrar todos"),
+    	btn_criar_conta = new JButton("Adicionar conta"), btn_atualizar_conta = new JButton("Atualizar conta"),
+    	btn_inativar_conta = new JButton("Inativar conta"), btn_razao = new JButton("Consultar razão");
     	
-    	adicionar_componente(1, painel_formulario, organizador_form, lbl_codigo, codigo);
-    	adicionar_componente(2, painel_formulario, organizador_form, lbl_descricao, descricao);
-    	adicionar_componente(3, painel_formulario, organizador_form, lbl_grupo, grupo);
-    	adicionar_componente(4, painel_formulario, organizador_form, lbl_natureza, natureza);
-    	adicionar_componente(5, painel_formulario, organizador_form, lbl_situacao, situacao);
+    	adicionar_componente(1, jp_form, gbc_form, lbl_codigo, txt_codigo);
+    	adicionar_componente(2, jp_form, gbc_form, lbl_descricao, txt_descricao);
+    	adicionar_componente(3, jp_form, gbc_form, lbl_grupo, cmbBox_grupo);
+    	adicionar_componente(4, jp_form, gbc_form, lbl_natureza, cmbBox_natureza);
+    	adicionar_componente(5, jp_form, gbc_form, lbl_situacao, cmbBox_situacao);
     	
-    	botoes_filtro.add(pesquisar);
-    	botoes_filtro.add(mostrar_todos);
+    	botoes_filtro.add(btn_pesquisar);
+    	botoes_filtro.add(btn_mostrar_todos);
     	
-    	organizador_form.gridx = 1;
-    	organizador_form.gridy = 6;
-    	organizador_form.weightx = 0;
-    	organizador_form.fill = GridBagConstraints.NONE;
-    	organizador_form.anchor = GridBagConstraints.WEST;
-    	painel_formulario.add(botoes_filtro, organizador_form);
-    	
-    	organizador_principal.gridx = 0;
-    	organizador_principal.gridy = 0;
-    	organizador_principal.anchor = GridBagConstraints.WEST;
-    	organizador_principal.weightx = 1;
-    	organizador_principal.fill = GridBagConstraints.HORIZONTAL;
-    	painel_principal.add(painel_formulario, organizador_principal);
-    	
+    	gbc_form.gridx = 1;
+    	gbc_form.gridy = 6;
+    	gbc_form.weightx = 0;
+    	gbc_form.fill = GridBagConstraints.NONE;
+    	gbc_form.anchor = GridBagConstraints.WEST;
+    	jp_form.add(botoes_filtro, gbc_form);
     	
     	//Fazer JPanel para todo o container de filtro/pesquisa
         tabelaPlanoDeContas = new JTable(modeloTabela);
@@ -98,18 +91,29 @@ public class TelaPlanoDeContas extends JPanel {
         scrollPane.setBorder(
                 BorderFactory.createTitledBorder("Lista de Contas")
         );
+               
+        jp_inferior.add(botoes, BorderLayout.NORTH);
+        jp_inferior.add(scrollPane, BorderLayout.CENTER);
         
-        organizador_principal.gridy = 2;
-    	organizador_principal.weighty = 0;
-    	organizador_principal.fill = GridBagConstraints.BOTH;
-        painel_principal.add(scrollPane, organizador_principal);
-        botoes.add(criar_conta);
-        botoes.add(atualizar_conta);
-        botoes.add(inativar_conta);
-        botoes.add(razao);        
-        organizador_principal.gridy = 1;
-        painel_principal.add(botoes, organizador_principal);
-        add(painel_principal);
+        //Pra criar o JDialog, talvez depois jogue essa actionListener para os controllers
+        btn_criar_conta.addActionListener(e -> {
+        	Window janela_pai = SwingUtilities.getWindowAncestor(this);
+        	TelaAdicionarConta dialog = new TelaAdicionarConta(janela_pai);
+            dialog.setVisible(true);
+        });
+        botoes.add(btn_criar_conta);
+        botoes.add(btn_atualizar_conta);
+        botoes.add(btn_inativar_conta);
+        
+        //Pra criar o JDialog, talvez depois jogue essa actionListener para os controllers
+        btn_razao.addActionListener(e -> {
+        	Window janela_pai = SwingUtilities.getWindowAncestor(this);
+        	TelaLivroRazao dialog = new TelaLivroRazao(janela_pai);
+            dialog.setVisible(true);}
+            );
+        botoes.add(btn_razao);        
+        add(jp_form, BorderLayout.NORTH);
+        add(jp_inferior, BorderLayout.CENTER);
     }
 
 

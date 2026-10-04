@@ -15,6 +15,6 @@ public class TelaTeste extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        add(new TelaLivroRazao());
+        add(new TelaBalancete());
     }
 }

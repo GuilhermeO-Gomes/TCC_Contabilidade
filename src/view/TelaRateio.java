@@ -8,21 +8,21 @@ import java.awt.Insets;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.SpinnerDateModel;
+
 import javax.swing.table.DefaultTableModel;
 
 public class TelaRateio extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private final JTextField nome_rateio = new JTextField(15);
+	private final JTextField conta_contabil = new JTextField(15);
+	private final JTextField centro_custo = new JTextField(15);
 	private final DefaultTableModel modeloTabela = new DefaultTableModel(
     new Object[] {"Centro de Custo", "Percentual(%)", "Valor" }, 0);
 	private JTable TabelaRateio;
@@ -41,108 +41,103 @@ public class TelaRateio extends JPanel {
     	//Criar funções que criem automaticamente JPanels e GBCs, e JLabels
     	
     	JPanel painel_principal = new JPanel(new GridBagLayout());
-    	painel_principal.setBorder(BorderFactory.createTitledBorder("Balancete"));
+    	painel_principal.setBorder(BorderFactory.createTitledBorder("Rateio"));
     	GridBagConstraints organizador_principal = new GridBagConstraints();
-    	organizador_principal.insets = new Insets(10, 2, 10, 2);
     	organizador_principal.anchor = GridBagConstraints.WEST;
     	organizador_principal.weightx = 0;
     	JPanel painel_config = new JPanel(new GridBagLayout());
-    	painel_config.setBorder(BorderFactory.createTitledBorder("Filtros e pesquisa"));
+    	painel_config.setBorder(BorderFactory.createTitledBorder("Configuração de Rateio"));
     	GridBagConstraints organizador_config = new GridBagConstraints();
     	organizador_config.insets = new Insets(5, 2, 5, 2);
     	organizador_config.anchor = GridBagConstraints.WEST;
     	organizador_config.weightx = 0;
+    	JPanel painel_distribuicao = new JPanel(new GridBagLayout());
+    	painel_distribuicao.setBorder(BorderFactory.createTitledBorder("Distribuição"));
+    	GridBagConstraints organizador_distribuicao = new GridBagConstraints();
+    	organizador_distribuicao.insets = new Insets(5, 2, 5, 2);
+    	organizador_distribuicao.anchor = GridBagConstraints.WEST;
+    	organizador_distribuicao.weightx = 0;
     	JPanel botoes_distribuicao = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    	JPanel botoes = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    	
-    	JLabel lbl_nome_rateio = new JLabel("Nome do Rateio:"), lbl_periodo = new JLabel("Período:"),
-    	lbl_ate = new JLabel("até"), lbl_grupo = new JLabel("Grupo:"), lbl_nivel = new JLabel("Nível:"),
-    	lbl_total = new JLabel("TOTAL: "), lbl_placeholder = new JLabel("R$Placholder/R$Placeholder"),
-    	lbl_situacao = new JLabel("SITUAÇÃO:"), lbl_placeholder2 = new JLabel("Placholders conferidos");
+    	JPanel botoes = new JPanel(new FlowLayout(FlowLayout.CENTER));
     	
     	
+    	JLabel lbl_nome_rateio = new JLabel("Nome do Rateio:"), lbl_conta_contabil = new JLabel("Conta Contábil:"),
+    	lbl_centro_custo = new JLabel("Centro de Custo Origem"), lbl_criterio = new JLabel("Critério:"), lbl_situacao = new JLabel("Situação:"),
+    	lbl_total = new JLabel("TOTAL: "), lbl_placeholder = new JLabel("100%");
     	
-    
-    	String[] grupos= {"Grupo 1", "Grupo 2"};
-    	String[] niveis = {"Nível 1", "Nível 2"};
+    	String[] criterios= {"Critério 1", "Critério 2"};
+    	String[] situacoes = {"Situação 1", "Situação 2"};
 
-    	JComboBox <String> grupo = new JComboBox<>(grupos);
-    	JComboBox <String> nivel = new JComboBox<>(niveis);
-    	JCheckBox conta_movimento = new JCheckBox("Exibir contas sem movimento");
-    	JButton balancete = new JButton("Gerar Balancete"), limpar = new JButton("Limpar"), 
-    	exportar = new JButton("Exportar"), imprimir = new JButton("Imprimir");
-    	//Adicionar Jchkbox
-    	adicionar_componente(0, painel_pesquisa, organizador_pesquisa, lbl_conta, conta);
-    	adicionar_componente(1, painel_pesquisa, organizador_pesquisa, lbl_periodo, periodo_1);
-    	organizador_pesquisa.gridx = 2;
-    	organizador_pesquisa.gridy = 1;
-    	organizador_pesquisa.weightx = 0;
-    	organizador_pesquisa.fill = GridBagConstraints.NONE;
-    	painel_pesquisa.add(lbl_ate, organizador_pesquisa);
-
-    	organizador_pesquisa.gridx = 3;
-    	organizador_pesquisa.gridy = 1;
-    	organizador_pesquisa.weightx = 1;
-    	organizador_pesquisa.fill = GridBagConstraints.HORIZONTAL;
-    	painel_pesquisa.add(periodo_2, organizador_pesquisa);
-    	adicionar_componente(2, painel_pesquisa, organizador_pesquisa, lbl_grupo, grupo);
-    	adicionar_componente(3, painel_pesquisa, organizador_pesquisa, lbl_nivel, nivel);
-    	organizador_pesquisa.gridx = 1;
-    	organizador_pesquisa.gridy = 4;
-    	organizador_pesquisa.weightx = 0;
-    	organizador_pesquisa.fill = GridBagConstraints.NONE;
-    	organizador_pesquisa.gridwidth = 1;
-    	painel_pesquisa.add(conta_movimento, organizador_pesquisa);
+    	JComboBox <String> criterio = new JComboBox<>(criterios);
+    	JComboBox <String> situacao = new JComboBox<>(situacoes);
+    	JButton adicionar_centro = new JButton("Adicionar Centro"), atualizar = new JButton("Atualizar"), 
+    	remover = new JButton("Remover"), salvar = new JButton("Salvar"), limpar = new JButton("Limpar"), 
+    	cancelar = new JButton("Cancelar"), buscar_conta1 = new JButton ("Buscar Conta"), 
+    	buscar_conta2 = new JButton ("Buscar Conta");
+    	adicionar_componente(0, painel_config, organizador_config, lbl_nome_rateio, nome_rateio);
+    	adicionar_componente(1, painel_config, organizador_config, lbl_conta_contabil, conta_contabil);
     	
-    	botoes_pesquisa.add(balancete);
-    	botoes_pesquisa.add(limpar);
-    	botoes_pesquisa.add(exportar);
-    	botoes_pesquisa.add(imprimir);
+    	organizador_config.gridx = 2;
+    	organizador_config.gridy = 1;
+    	organizador_config.weightx = 0;
+    	organizador_config.fill = GridBagConstraints.NONE;
+    	painel_config.add(buscar_conta1, organizador_config);
     	
-    	organizador_pesquisa.gridy = 5;
-    	organizador_pesquisa.gridx = 1;
-    	organizador_pesquisa.gridwidth = 2;
-    	organizador_pesquisa.weightx = 1;
-    	organizador_pesquisa.weighty = 0;
-    	organizador_pesquisa.fill = GridBagConstraints.HORIZONTAL;
-    	painel_pesquisa.add(botoes_pesquisa, organizador_pesquisa);
+    	adicionar_componente(2, painel_config, organizador_config, lbl_centro_custo, centro_custo);
     	
+    	organizador_config.gridx = 2;
+    	organizador_config.gridy = 2;
+    	organizador_config.weightx = 0;
+    	organizador_config.fill = GridBagConstraints.NONE;
+    	painel_config.add(buscar_conta2, organizador_config);
+    	
+    	adicionar_componente(3, painel_config, organizador_config, lbl_criterio, criterio);
+    	adicionar_componente(4, painel_config, organizador_config, lbl_situacao, situacao);
     	organizador_principal.gridx = 0;
     	organizador_principal.gridy = 0;
     	organizador_principal.anchor = GridBagConstraints.WEST;
     	organizador_principal.weightx = 1;
     	organizador_principal.fill = GridBagConstraints.HORIZONTAL;
-    	painel_principal.add(painel_pesquisa, organizador_principal);
+    	painel_principal.add(painel_config, organizador_principal);
     	
-    	TabelaBalancete = new JTable(modeloTabela);
-        JScrollPane scrollPane =new JScrollPane(TabelaBalancete);
-        organizador_lancamento.gridx = 0;
-        organizador_lancamento.gridy = 0;
-        organizador_lancamento.weightx = 1;
-        organizador_lancamento.weighty = 1;
-        organizador_lancamento.gridwidth = 1;
-        organizador_lancamento.fill = GridBagConstraints.BOTH;
-        painel_lancamento.add(scrollPane, organizador_lancamento);
-        
-        
-        painel_dados.add(lbl_total);
-        painel_dados.add(lbl_placeholder);
-        painel_dados.add(lbl_situacao);
-        painel_dados.add(lbl_placeholder2);
-        
+    	botoes_distribuicao.add(adicionar_centro);
+    	botoes_distribuicao.add(atualizar);
+    	botoes_distribuicao.add(remover);
+    	
+    	organizador_principal.gridx = 0;
+    	organizador_principal.gridy = 1;
+    	organizador_principal.anchor = GridBagConstraints.WEST;
+    	organizador_principal.weightx = 1;
+    	organizador_principal.weighty = 0;
+    	organizador_principal.fill = GridBagConstraints.HORIZONTAL;
+    	painel_principal.add(botoes_distribuicao, organizador_principal);
+    	
 
+    	
+    	TabelaRateio = new JTable(modeloTabela);
+        JScrollPane scrollPane =new JScrollPane(TabelaRateio);
+        organizador_distribuicao.gridx = 0;
+        organizador_distribuicao.gridy = 0;
+        organizador_distribuicao.weightx = 1;
+        organizador_distribuicao.weighty = 1;
+        organizador_distribuicao.gridwidth = 1;
+        organizador_distribuicao.fill = GridBagConstraints.BOTH;
+        painel_distribuicao.add(scrollPane, organizador_distribuicao);
          
     	organizador_principal.gridy = 2;
-    	organizador_principal.weighty = 0;
     	organizador_principal.fill = GridBagConstraints.BOTH;
     	organizador_principal.weighty = 1;
-    	painel_principal.add(painel_lancamento, organizador_principal);
+    	painel_principal.add(painel_distribuicao, organizador_principal);
     	
+    	botoes.add(salvar);
+    	botoes.add(limpar);
+    	botoes.add(cancelar);
     	organizador_principal.gridy = 3;
     	organizador_principal.weighty = 0;
     	organizador_principal.fill = GridBagConstraints.HORIZONTAL;
+    	organizador_principal.anchor = GridBagConstraints.WEST;
     	organizador_principal.weightx = 1;
-    	painel_principal.add(painel_dados, organizador_principal);
+    	painel_principal.add(botoes, organizador_principal);
     	 	
         add(painel_principal, BorderLayout.CENTER);
     }

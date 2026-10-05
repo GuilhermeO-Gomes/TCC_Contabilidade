@@ -84,6 +84,10 @@ public class TelaCentroCustos extends JPanel {
 	        	   
 	        botoes.add(btn_criar_conta);
 	        botoes.add(btn_atualizar_conta);
+	        btn_atualizar_conta.addActionListener(e -> {
+	        	Window janela_pai = SwingUtilities.getWindowAncestor(this);
+	        	TelaAtualizarCustos dialog = new TelaAtualizarCustos(janela_pai);
+	            dialog.setVisible(true);});
 	        botoes.add(btn_inativar_conta);
 	        
 	      //Pra criar o JDialog, talvez depois jogue essa actionListener para os controllers

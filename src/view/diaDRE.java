@@ -3,75 +3,103 @@ package view;
 import javax.swing.*;
 import java.awt.*;
 
-
 public class diaDRE extends JDialog {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private final JTextField id = new JTextField(1),
-			ordem = new JTextField(28),
-			codigoAglutinacao = new JTextField(28),
-			grupo = new JTextField(28),
-			codigoAglutinacaoSuperior = new JTextField(28);
-	private final JCheckBox ativo = new JCheckBox("Ativo", true);
-	
-	
-	public diaDRE(Frame parent, boolean modal) {
-		super(parent, "Inserir", modal);
-		
-		setSize(400,380);
-		setLocationRelativeTo(parent);
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		
-		
-		
-	
-		
-		 JPanel p = new JPanel(new GridBagLayout());
-		 p.setBorder(BorderFactory.createTitledBorder("Dados"));
-	     GridBagConstraints g = new GridBagConstraints();
-	     g.insets = new Insets(4,4,4,4);
-	     
-	     componente(p,g,0,"ID", id);
-	     componente(p,g,1,"Ordem", ordem);
-	     componente(p,g,2,"Código de Aglutinacao", codigoAglutinacao);
-	     componente(p,g,3,"grupo", grupo);
-	     componente(p,g,4,"Código de Aglutinação Superior", codigoAglutinacaoSuperior);
-		
-	     g.gridx = 1;
-	     g.gridy =6;
-	     p.add(ativo, g);
-	     id.setEditable(false);
-	     
-	     JPanel b = new JPanel(new FlowLayout(FlowLayout.LEFT));
-	     JButton salvar = new JButton("Salvar");
-	     
-	     b.add(salvar);
-	     
-	     JPanel n = new JPanel(new BorderLayout());
-	     n.add(p);
-	     n.add(b, BorderLayout.SOUTH);
-	     add(n, BorderLayout.NORTH);
-	}
-	
-	
-	private void componente (
-			 JPanel p,
-			    GridBagConstraints g,
-			    int y,
-			    String r,
-			    Component t
-			) {
-		 g.gridx = 0;
-		    g.gridy = y;
-		    g.weightx = 0;
-		    g.fill = GridBagConstraints.NONE;
-		    p.add(new JLabel(r), g);
-		    g.gridx = 1;
-		    g.weightx = 1;
-		    g.fill = GridBagConstraints.HORIZONTAL;
-		    p.add(t, g);
-	}
+
+    private static final long serialVersionUID = 1L;
+
+    private final JTextField id = new JTextField(5);
+    private final JTextField descricao = new JTextField(28);
+    private final JCheckBox favorito = new JCheckBox("Favorito", true);
+
+    private final JButton salvar = new JButton("Salvar");
+
+    public diaDRE(Frame parent, boolean modal) {
+
+        super(parent, "DRE", modal);
+
+        setSize(400, 250);
+        setLocationRelativeTo(parent);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
+        JPanel dados = new JPanel(new GridBagLayout());
+        dados.setBorder(
+            BorderFactory.createTitledBorder("Dados da DRE")
+        );
+
+        GridBagConstraints g = new GridBagConstraints();
+        g.insets = new Insets(4, 4, 4, 4);
+
+        componente(dados, g, 0, "ID", id);
+        componente(dados, g, 1, "Descrição", descricao);
+
+        g.gridx = 1;
+        g.gridy = 2;
+        g.anchor = GridBagConstraints.WEST;
+        dados.add(favorito, g);
+
+        id.setEditable(false);
+
+        JPanel botoes = new JPanel(
+            new FlowLayout(FlowLayout.RIGHT)
+        );
+
+        botoes.add(salvar);
+
+        setLayout(new BorderLayout(8, 8));
+        add(dados, BorderLayout.CENTER);
+        add(botoes, BorderLayout.SOUTH);
+    }
+
+    private void componente(
+            JPanel painel,
+            GridBagConstraints g,
+            int linha,
+            String texto,
+            Component componente) {
+
+        g.gridx = 0;
+        g.gridy = linha;
+        g.weightx = 0;
+        g.fill = GridBagConstraints.NONE;
+
+        painel.add(new JLabel(texto), g);
+
+        g.gridx = 1;
+        g.weightx = 1;
+        g.fill = GridBagConstraints.HORIZONTAL;
+
+        painel.add(componente, g);
+    }
+
+    public int getId() {
+        try {
+            return Integer.parseInt(id.getText());
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    public String getDescricao() {
+        return descricao.getText();
+    }
+
+    public boolean isFavorito() {
+        return favorito.isSelected();
+    }
+
+    public JButton getSalvar() {
+        return salvar;
+    }
+
+    public void setId(int id) {
+        this.id.setText(String.valueOf(id));
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao.setText(descricao);
+    }
+
+    public void setFavorito(boolean favorito) {
+        this.favorito.setSelected(favorito);
+    }
 }

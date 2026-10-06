@@ -2,7 +2,10 @@ package view;
 
 
 import javax.swing.*;
+import javax.swing.text.MaskFormatter;
+
 import java.awt.*;
+import java.text.ParseException;
 
 
 public class diaExerciciosSociais extends JDialog {
@@ -11,11 +14,17 @@ public class diaExerciciosSociais extends JDialog {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private final JTextField id = new JTextField(1),
-			anoReferencia = new  JTextField(4),
-			dataInicio = new JFormattedTextField(),
-			dataFinal = new JFormattedTextField();
+	private final JTextField id = new JTextField(5),
+			anoReferencia = new  JTextField(4);
+					 private final JFormattedTextField dataInicio =
+			            criarCampoData();
+
+			    private final JFormattedTextField dataFinal =
+			            criarCampoData();
 	private final JCheckBox ativo = new JCheckBox("Ativo", true);
+	
+	private final JButton salvar =
+            new JButton("Salvar");
 	
 	
 	public diaExerciciosSociais(Frame parent, boolean modal) {
@@ -45,7 +54,6 @@ public class diaExerciciosSociais extends JDialog {
 	     id.setEditable(false);
 	     
 	     JPanel b = new JPanel(new FlowLayout(FlowLayout.LEFT));
-	     JButton salvar = new JButton("Salvar");
 	     
 	     b.add(salvar);
 	     
@@ -54,6 +62,30 @@ public class diaExerciciosSociais extends JDialog {
 	     n.add(b, BorderLayout.SOUTH);
 	     add(n, BorderLayout.NORTH);
 	}
+	
+	 private JFormattedTextField criarCampoData() {
+
+	        try {
+
+	            MaskFormatter mascara =
+	                    new MaskFormatter(
+	                            "##/##/####"
+	                    );
+
+	            mascara.setPlaceholderCharacter('_');
+
+	            return new JFormattedTextField(
+	                    mascara
+	            );
+
+	        } catch (ParseException e) {
+
+	            e.printStackTrace();
+
+	            return new JFormattedTextField();
+	        }
+	    }
+
 	
 	
 	private void componente (
@@ -73,4 +105,48 @@ public class diaExerciciosSociais extends JDialog {
 		    g.fill = GridBagConstraints.HORIZONTAL;
 		    p.add(t, g);
 	}
+	
+	public String getId() {
+        return id.getText();
+    }
+
+    public String getAnoReferencia() {
+        return anoReferencia.getText();
+    }
+
+    public String getDataInicio() {
+        return dataInicio.getText();
+    }
+
+    public String getDataFinal() {
+        return dataFinal.getText();
+    }
+
+    public boolean isAtivo() {
+        return ativo.isSelected();
+    }
+
+    public JButton getSalvar() {
+        return salvar;
+    }
+
+    public void setId(String valor) {
+        id.setText(valor);
+    }
+
+    public void setAnoReferencia(String valor) {
+        anoReferencia.setText(valor);
+    }
+
+    public void setDataInicio(String valor) {
+        dataInicio.setText(valor);
+    }
+
+    public void setDataFinal(String valor) {
+        dataFinal.setText(valor);
+    }
+
+    public void setAtivo(boolean valor) {
+        ativo.setSelected(valor);
+    }
 }

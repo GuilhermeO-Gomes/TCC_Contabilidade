@@ -54,15 +54,66 @@ public class TelaExerciciosSociais extends JPanel {
 		
 		
 		editar.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Window pai = SwingUtilities.getWindowAncestor(TelaExerciciosSociais.this);
-				
-				diaExerciciosSociais dialogo = new diaExerciciosSociais((Frame) pai, true);
-				
-				dialogo.setVisible(true);
-			}
-		});
+			 @Override
+	            public void actionPerformed(ActionEvent e) {
+
+	                int linhaSelecionada =
+	                        tabela.getSelectedRow();
+
+	                if (linhaSelecionada == -1) {
+
+	                    JOptionPane.showMessageDialog(
+	                            TelaExerciciosSociais.this,
+	                            "Selecione um exercício social para editar.",
+	                            "Aviso",
+	                            JOptionPane.WARNING_MESSAGE
+	                    );
+
+	                    return;
+	                }
+
+	        
+	                int linhaModelo =
+	                        tabela.convertRowIndexToModel(
+	                                linhaSelecionada
+	                        );
+
+	               
+	                String id =
+	                        modelo.getValueAt(linhaModelo, 0).toString();
+
+	                String anoReferencia =
+	                        modelo.getValueAt(linhaModelo, 1).toString();
+
+	                String dataInicio =
+	                        modelo.getValueAt(linhaModelo, 2).toString();
+
+	                String dataFinal =
+	                        modelo.getValueAt(linhaModelo, 3).toString();
+
+	                boolean ativo =
+	                        Boolean.parseBoolean(
+	                                modelo.getValueAt(linhaModelo, 4).toString()
+	                        );
+
+	                Window pai =
+	                        SwingUtilities.getWindowAncestor(
+	                                TelaExerciciosSociais.this
+	                        );
+
+	                diaExerciciosSociais dialogo =
+	                        new diaExerciciosSociais((Frame) pai, true);
+
+	                // Preenchendo o diálogo
+	                dialogo.setId(id);
+	                dialogo.setAnoReferencia(anoReferencia);
+	                dialogo.setDataInicio(dataInicio);
+	                dialogo.setDataFinal(dataFinal);
+	                dialogo.setAtivo(ativo);
+
+	                dialogo.setVisible(true);
+	            }
+	        });
 		
 		b.add(novo);
 		b.add(editar);
@@ -86,10 +137,33 @@ public class TelaExerciciosSociais extends JPanel {
 	
 
 
-	  public JTable getTabela() {
-	    return tabela;
-	  }
 
+    public JTable getTabela() {
+        return tabela;
+    }
+
+    public void limparTabela() {
+        modelo.setRowCount(0);
+    }
+
+    public void adicionarLinha(
+            int id,
+            int anoReferencia,
+            String dataInicio,
+            String dataFinal,
+            boolean ativo
+    ) {
+
+        modelo.addRow(
+                new Object[] {
+                        id,
+                        anoReferencia,
+                        dataInicio,
+                        dataFinal,
+                        ativo
+                }
+        );
+    }
 	
 	
 }

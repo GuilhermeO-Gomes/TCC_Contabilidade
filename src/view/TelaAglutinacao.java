@@ -22,6 +22,10 @@ public class TelaAglutinacao extends JPanel {
 			
 		private final JTable tabela = new JTable(modelo);
 		
+		private final JButton novo = new JButton("Novo");
+	    private final JButton editar = new JButton("Editar");
+	    private final JButton buscar = new JButton("Buscar");
+
 		
 		public TelaAglutinacao() {
 			
@@ -43,8 +47,6 @@ public class TelaAglutinacao extends JPanel {
 			g.gridy = 1;
 	
 			JPanel b = new JPanel(new FlowLayout(FlowLayout.LEFT));;
-			JButton novo = new JButton("Novo"),
-					editar = new JButton("Editar");
 
 			
 			
@@ -71,8 +73,18 @@ public class TelaAglutinacao extends JPanel {
 				}
 			});
 			
+			JPanel pesquisaPanel = new JPanel(
+		            new FlowLayout(FlowLayout.LEFT)
+		        );
+
+		        
+			
 			b.add(novo);
 			b.add(editar);
+			
+			pesquisaPanel.add(new JLabel("Pesquisar:"));
+	        pesquisaPanel.add(pesquisa);
+	        pesquisaPanel.add(buscar);
 			
 			JPanel n = new JPanel(new BorderLayout());
 			n.add(b, BorderLayout.SOUTH);
@@ -99,14 +111,46 @@ public class TelaAglutinacao extends JPanel {
 	
 		
 		 
-		 public JTextField getTxtPesquisa() {
-			    return pesquisa;
-			  }
+		 public JTextField getPesquisa() {
+		        return pesquisa;
+		    }
 
+		    public JTable getTabela() {
+		        return tabela;
+		    }
 
-			
-			  public JTable getTabela() {
-			    return tabela;
-			  }
+		    public JButton getNovo() {
+		        return novo;
+		    }
+
+		    public JButton getEditar() {
+		        return editar;
+		    }
+
+		    public JButton getBuscar() {
+		        return buscar;
+		    }
+
+		    public void limparTabela() {
+		        modelo.setRowCount(0);
+		    }
+
+		    public void adicionarLinha(
+		            int id,
+		            String valor,
+		            String descricao,
+		            String observacao,
+		            boolean ativo) {
+
+		        modelo.addRow(
+		            new Object[] {
+		                id,
+		                valor,
+		                descricao,
+		                observacao,
+		                ativo
+		            }
+		        );
+		    }
 		
 }

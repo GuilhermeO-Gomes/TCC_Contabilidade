@@ -22,6 +22,13 @@ public class TelaHistoricoPadrao extends JPanel {
 				}
 			};
 			
+			private final JButton novo =
+		            new JButton("Novo"),
+			salvar =new JButton("Salvar"),
+			inativar =new JButton("Inativar"),
+			limpar = new JButton("Limpar"),
+			buscar = new JButton("Buscar");
+			
 		private final JTable tabela = new JTable(modelo);
 		
 		
@@ -48,10 +55,6 @@ public class TelaHistoricoPadrao extends JPanel {
 			g.gridy = 4;
 			f.add(aviso, g);
 			JPanel b = new JPanel(new FlowLayout(FlowLayout.LEFT));
-			JButton novo = new JButton("Novo"),
-					salvar = new JButton("Salvar"),
-					inativar = new JButton("Inativar"),
-					limpar = new JButton("Limpar");
 			b.add(novo);
 			b.add(salvar);
 			b.add(inativar);
@@ -94,36 +97,107 @@ public class TelaHistoricoPadrao extends JPanel {
 			    p.add(t, g);
 		}
 		
-		public void limpar() {
-			id.setText("");
-			descricao.setText("");
-			ativo.setSelected(true);
-		}
+		 public void limpar() {
+
+		        id.setText("");
+		        descricao.setText("");
+		        ativo.setSelected(true);
+		    }
 		
-		
-		
-		 public int getId() {
-			    try {
-			      return Integer.parseInt(id.getText());
-			    } catch (Exception e) {
-			      return 0;
-			    }
-			  }
-		 public JTextField getTxtDescricao() {
-			    return descricao;
-			  }
-		 
-		 public JTextField getTxtPesquisa() {
-			    return pesquisa;
-			  }
+		public void limparTabela() {
+	        modelo.setRowCount(0);
+	    }
 
 
-			  public JCheckBox getChkAtivo() {
-			    return ativo;
-			  }
+	    public void adicionarLinha(
+	            int id,
+	            String descricao,
+	            boolean ativo) {
 
-			  public JTable getTabela() {
-			    return tabela;
-			  }
+	        modelo.addRow(
+	                new Object[] {
+	                        id,
+	                        descricao,
+	                        ativo
+	                }
+	        );
+	    }
+
 		
-}
+		
+		
+	    public int getId() {
+
+	        try {
+	            return Integer.parseInt(
+	                    id.getText()
+	            );
+
+	        } catch (NumberFormatException e) {
+	            return 0;
+	        }
+	    }
+
+
+	    public String getDescricao() {
+	        return descricao.getText();
+	    }
+
+
+	    public String getPesquisa() {
+	        return pesquisa.getText();
+	    }
+
+
+	    public boolean isAtivo() {
+	        return ativo.isSelected();
+	    }
+
+
+	    public JTable getTabela() {
+	        return tabela;
+	    }
+
+
+	    public JButton getNovo() {
+	        return novo;
+	    }
+
+
+	    public JButton getSalvar() {
+	        return salvar;
+	    }
+
+
+	    public JButton getInativar() {
+	        return inativar;
+	    }
+
+
+	    public JButton getLimpar() {
+	        return limpar;
+	    }
+
+
+	    public JButton getBuscar() {
+	        return buscar;
+	    }
+
+
+
+	    public void setId(int valor) {
+	        id.setText(
+	                String.valueOf(valor)
+	        );
+	    }
+
+
+	    public void setDescricao(String valor) {
+	        descricao.setText(valor);
+	    }
+
+
+	    public void setAtivo(boolean valor) {
+	        ativo.setSelected(valor);
+	    }
+	}

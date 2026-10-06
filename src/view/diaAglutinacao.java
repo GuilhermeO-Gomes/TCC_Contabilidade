@@ -16,6 +16,7 @@ public class diaAglutinacao extends JDialog {
 			observacao = new JTextField(28);
 	private final JCheckBox ativo = new JCheckBox("Ativo", true);
 	
+	 private final JButton salvar = new JButton("Salvar");
 	
 	public diaAglutinacao(Frame parent, boolean modal) {
 		super(parent, "código de aglutinação", modal);
@@ -44,7 +45,7 @@ public class diaAglutinacao extends JDialog {
 	     id.setEditable(false);
 	     
 	     JPanel b = new JPanel(new FlowLayout(FlowLayout.LEFT));
-	     JButton salvar = new JButton("Salvar");
+
 	     
 	     b.add(salvar);
 	     
@@ -72,4 +73,52 @@ public class diaAglutinacao extends JDialog {
 		    g.fill = GridBagConstraints.HORIZONTAL;
 		    p.add(t, g);
 	}
+	
+	 public int getId() {
+	        try {
+	            return Integer.parseInt(id.getText());
+	        } catch (NumberFormatException e) {
+	            return 0;
+	        }
+	    }
+
+	    public String getValor() {
+	        return valor.getText();
+	    }
+
+	    public String getDescricao() {
+	        return descricao.getText();
+	    }
+
+	    public String getObservacao() {
+	        return observacao.getText();
+	    }
+
+	    public boolean isAtivo() {
+	        return ativo.isSelected();
+	    }
+
+	    public JButton getSalvar() {
+	        return salvar;
+	    }
+
+	    public void setId(int id) {
+	        this.id.setText(String.valueOf(id));
+	    }
+
+	    public void setValor(String valor) {
+	        this.valor.setText(valor);
+	    }
+
+	    public void setDescricao(String descricao) {
+	        this.descricao.setText(descricao);
+	    }
+
+	    public void setObservacao(String observacao) {
+	        this.observacao.setText(observacao);
+	    }
+
+	    public void setAtivo(boolean ativo) {
+	        this.ativo.setSelected(ativo);
+	    }
 }

@@ -2,6 +2,7 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -13,13 +14,17 @@ import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 public class TelaLancamentos extends JPanel {
@@ -43,7 +48,8 @@ public class TelaLancamentos extends JPanel {
             cbConta = new JComboBox<>(new String[] {"Selecione uma conta"}),
             cbTipo = new JComboBox<>(new String[] {"Débito", "Crédito"}),
             cbCC = new JComboBox<>(new String[] {"Não informado"}),
-            cbContaPesq = new JComboBox<>(new String[] {"Todas as contas"});
+            cbContaPesq = new JComboBox<>(new String[] {"Todas as contas"}),
+            cbCCPesq = new JComboBox<>(new String[] {"Todos os centros de custos"});
 
     private final JButton btNovo = new JButton("Novo"),
             btSalvar = new JButton("Salvar"),
@@ -54,7 +60,8 @@ public class TelaLancamentos extends JPanel {
             btRemover = new JButton("Remover partida"),
             btBuscar = new JButton("Pesquisar"),
             btTodos = new JButton("Mostrar todos"),
-            btAbrir = new JButton("Abrir lançamento");
+            btAbrir = new JButton("Abrir lançamento"),
+            btEstornar = new JButton("Estornar lançamento");
 
     private final DefaultTableModel modeloPartidas = new DefaultTableModel(
             new Object[] {"Conta", "Centro de custos", "Débito (R$)", "Crédito (R$)"}, 0
@@ -78,6 +85,10 @@ public class TelaLancamentos extends JPanel {
             tabelaLancamentos = new JTable(modeloLancamentos);
 
     private final JTabbedPane abas = new JTabbedPane();
+    private final JButton btNovaPartida = new JButton("Nova partida"),
+            btEditarPartida = new JButton("Editar partida");
+    private JPanel dadosPartida;
+    private JDialog dialogoPartida;
 
     public TelaLancamentos() {
         setLayout(new BorderLayout(8, 8));
@@ -117,6 +128,8 @@ public class TelaLancamentos extends JPanel {
         txtHist.setToolTipText("Descrição complementar do lançamento.");
 
         JPanel partida = new JPanel(new GridBagLayout());
+        dadosPartida = new JPanel(new BorderLayout(8, 8));
+        dadosPartida.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         partida.setBorder(BorderFactory.createTitledBorder("Dados da partida"));
         componente(partida, g, 0, "Conta:", cbConta);
         componente(partida, g, 1, "Tipo:", cbTipo);
@@ -126,23 +139,28 @@ public class TelaLancamentos extends JPanel {
         txtValor.setToolTipText("Exemplo: 1500,00");
         cbCC.setToolTipText("Informe quando a conta exigir centro de custos.");
 
-        JPanel incluir = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
+        JPanel incluir = new JPanel(new FlowLayout(FlowLayout.RIGHT, 4, 4));
         incluir.add(btAdicionar);
         incluir.add(btAlterar);
-        g.gridx = 0;
-        g.gridy = 4;
-        g.gridwidth = 2;
-        g.fill = GridBagConstraints.HORIZONTAL;
-        partida.add(incluir, g);
+        JButton btFechar = new JButton("Fechar");
+        incluir.add(btFechar);
+        dadosPartida.add(partida, BorderLayout.NORTH);
+        dadosPartida.add(incluir, BorderLayout.SOUTH);
+        btFechar.addActionListener(e -> dialogoPartida.dispose());
 
-        JPanel remover = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
-        remover.add(btRemover);
-        g.gridy = 5;
-        partida.add(remover, g);
+        JPanel acoesPartida = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
+        acoesPartida.add(btNovaPartida);
+        acoesPartida.add(btEditarPartida);
+        acoesPartida.add(btRemover);
+        JPanel topo = new JPanel(new BorderLayout(4, 4));
+        topo.add(dados, BorderLayout.CENTER);
+        topo.add(acoesPartida, BorderLayout.SOUTH);
 
-        JPanel topo = new JPanel(new GridLayout(1, 2, 8, 0));
-        topo.add(dados);
-        topo.add(partida);
+        btNovaPartida.addActionListener(e -> {
+            limparPartida();
+            abrirPartida("Nova partida");
+        });
+        btEditarPartida.addActionListener(e -> editarPartida());
         painel.add(topo, BorderLayout.NORTH);
 
         tabelaPartidas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -151,27 +169,22 @@ public class TelaLancamentos extends JPanel {
         tabelaPartidas.getTableHeader().setReorderingAllowed(false);
         tabelaPartidas.getColumnModel().getColumn(0).setPreferredWidth(300);
         tabelaPartidas.getColumnModel().getColumn(1).setPreferredWidth(180);
+        DefaultTableCellRenderer moeda = new DefaultTableCellRenderer();
+        moeda.setHorizontalAlignment(JLabel.RIGHT);
+        tabelaPartidas.getColumnModel().getColumn(2).setCellRenderer(moeda);
+        tabelaPartidas.getColumnModel().getColumn(3).setCellRenderer(moeda);
 
         JScrollPane sp = new JScrollPane(tabelaPartidas);
         sp.setBorder(BorderFactory.createTitledBorder("Partidas do lançamento"));
         painel.add(sp, BorderLayout.CENTER);
 
-        JPanel totais = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 4));
+        JPanel totais = new JPanel(new GridLayout(1, 3, 8, 0));
         totais.setBorder(BorderFactory.createTitledBorder("Totais do lançamento"));
-        totais.add(new JLabel("Débito (R$):"));
-        totais.add(txtDeb);
-        totais.add(new JLabel("Crédito (R$):"));
-        totais.add(txtCred);
-        totais.add(new JLabel("Diferença (R$):"));
-        totais.add(txtDif);
-        txtDeb.setEditable(false);
-        txtCred.setEditable(false);
-        txtDif.setEditable(false);
-        txtDeb.setHorizontalAlignment(JTextField.RIGHT);
-        txtCred.setHorizontalAlignment(JTextField.RIGHT);
-        txtDif.setHorizontalAlignment(JTextField.RIGHT);
+        totais.add(montarTotal("Débito (R$)", txtDeb));
+        totais.add(montarTotal("Crédito (R$)", txtCred));
+        totais.add(montarTotal("Diferença (R$)", txtDif));
 
-        JPanel botoes = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel botoes = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
         botoes.add(btNovo);
         botoes.add(btSalvar);
         botoes.add(btAtual);
@@ -185,12 +198,71 @@ public class TelaLancamentos extends JPanel {
         return painel;
     }
 
+    private JPanel montarTotal(String titulo, JTextField campo) {
+        JPanel painel = new JPanel(new BorderLayout(4, 4));
+        painel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+        painel.add(new JLabel(titulo), BorderLayout.NORTH);
+        painel.add(campo, BorderLayout.CENTER);
+        campo.setEditable(false);
+        campo.setHorizontalAlignment(JTextField.RIGHT);
+        return painel;
+    }
+
+    private void abrirPartida(String titulo) {
+        if (dialogoPartida == null) {
+            dialogoPartida = new JDialog(SwingUtilities.getWindowAncestor(this),
+                    titulo, JDialog.ModalityType.APPLICATION_MODAL);
+            dialogoPartida.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialogoPartida.add(dadosPartida);
+            dialogoPartida.setMinimumSize(new Dimension(540, 270));
+            dialogoPartida.pack();
+        }
+        dialogoPartida.setTitle(titulo);
+        dialogoPartida.setLocationRelativeTo(this);
+        dialogoPartida.setVisible(true);
+    }
+
+    private void editarPartida() {
+        int linha = tabelaPartidas.getSelectedRow();
+        if (linha == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione uma partida para editar.");
+            return;
+        }
+        selecionarItem(cbConta, tabelaPartidas.getValueAt(linha, 0));
+        selecionarItem(cbCC, tabelaPartidas.getValueAt(linha, 1));
+        Object debito = tabelaPartidas.getValueAt(linha, 2);
+        String valor = debito == null ? "" : debito.toString().trim();
+        boolean credito = valor.isEmpty() || valor.matches("0([,.]0+)?");
+        cbTipo.setSelectedIndex(credito ? 1 : 0);
+        Object selecionado = tabelaPartidas.getValueAt(linha, credito ? 3 : 2);
+        txtValor.setText(selecionado == null ? "" : selecionado.toString());
+        btAdicionar.setEnabled(false);
+        btAlterar.setEnabled(true);
+        abrirPartida("Editar partida");
+    }
+
+    private void selecionarItem(JComboBox<String> combo, Object valor) {
+        String item = valor == null ? "" : valor.toString();
+        for (int i = 0; i < combo.getItemCount(); i++) {
+            if (item.equals(combo.getItemAt(i))) {
+                combo.setSelectedIndex(i);
+                return;
+            }
+        }
+        if (!item.isEmpty()) {
+            combo.addItem(item);
+            combo.setSelectedItem(item);
+        } else {
+            combo.setSelectedIndex(-1);
+        }
+    }
+
     private JPanel montarConsulta() {
         JPanel painel = new JPanel(new BorderLayout(8, 8));
         painel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
 
         JPanel filtros = new JPanel(new GridBagLayout());
-        filtros.setBorder(BorderFactory.createTitledBorder("Consultar lançamentos"));
+        filtros.setBorder(BorderFactory.createTitledBorder("Filtros e pesquisa"));
         GridBagConstraints g = new GridBagConstraints();
         g.insets = new Insets(4, 4, 4, 4);
         g.anchor = GridBagConstraints.WEST;
@@ -202,11 +274,12 @@ public class TelaLancamentos extends JPanel {
         componente(filtros, g, 0, "Período (dd/mm/aaaa):", periodo);
         componente(filtros, g, 1, "Histórico / descrição:", txtPesq);
         componente(filtros, g, 2, "Conta:", cbContaPesq);
+        componente(filtros, g, 3, "Centro de custos:", cbCCPesq);
 
-        JPanel busca = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel busca = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
         busca.add(btBuscar);
         busca.add(btTodos);
-        JPanel topo = new JPanel(new BorderLayout());
+        JPanel topo = new JPanel(new BorderLayout(4, 4));
         topo.add(filtros, BorderLayout.CENTER);
         topo.add(busca, BorderLayout.SOUTH);
         painel.add(topo, BorderLayout.NORTH);
@@ -216,13 +289,23 @@ public class TelaLancamentos extends JPanel {
         tabelaLancamentos.setFillsViewportHeight(true);
         tabelaLancamentos.getTableHeader().setReorderingAllowed(false);
         tabelaLancamentos.getColumnModel().getColumn(4).setPreferredWidth(250);
+        DefaultTableCellRenderer moeda = new DefaultTableCellRenderer();
+        moeda.setHorizontalAlignment(JLabel.RIGHT);
+        tabelaLancamentos.getColumnModel().getColumn(5).setCellRenderer(moeda);
+        tabelaLancamentos.getColumnModel().getColumn(6).setCellRenderer(moeda);
 
         JScrollPane sp = new JScrollPane(tabelaLancamentos);
         sp.setBorder(BorderFactory.createTitledBorder("Lançamentos cadastrados"));
         painel.add(sp, BorderLayout.CENTER);
 
-        JPanel botoes = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel botoes = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
         botoes.add(btAbrir);
+        botoes.add(btEstornar);
+        btEstornar.setEnabled(false);
+        btEstornar.setToolTipText("O estorno gera um lançamento reverso e preserva o original.");
+        tabelaLancamentos.getSelectionModel().addListSelectionListener(e -> {
+            btEstornar.setEnabled(tabelaLancamentos.getSelectedRow() != -1);
+        });
         painel.add(botoes, BorderLayout.SOUTH);
         return painel;
     }
@@ -248,6 +331,8 @@ public class TelaLancamentos extends JPanel {
         cbCC.setSelectedIndex(0);
         txtValor.setText("");
         tabelaPartidas.clearSelection();
+        btAdicionar.setEnabled(true);
+        btAlterar.setEnabled(false);
     }
 
     public void limpar() {
@@ -332,6 +417,14 @@ public class TelaLancamentos extends JPanel {
         return cbContaPesq;
     }
 
+    public JComboBox<String> getCbCCPesq() {
+        return cbCCPesq;
+    }
+
+    public JButton getBtEstornar() {
+        return btEstornar;
+    }
+
     public JButton getBtNovo() {
         return btNovo;
     }
@@ -382,5 +475,17 @@ public class TelaLancamentos extends JPanel {
 
     public JTabbedPane getAbas() {
         return abas;
+    }
+
+    public JButton getBtNovaPartida() {
+        return btNovaPartida;
+    }
+
+    public JButton getBtEditarPartida() {
+        return btEditarPartida;
+    }
+
+    public JDialog getDialogoPartida() {
+        return dialogoPartida;
     }
 }

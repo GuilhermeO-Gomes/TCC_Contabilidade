@@ -2,6 +2,7 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -11,12 +12,15 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 public class TelaRegrasContabilizacao extends JPanel {
@@ -39,7 +43,8 @@ public class TelaRegrasContabilizacao extends JPanel {
             btSit = new JButton("Inativar/Ativar"),
             btLimpar = new JButton("Limpar"),
             btBuscar = new JButton("Pesquisar"),
-            btTodos = new JButton("Mostrar todos");
+            btTodos = new JButton("Mostrar todos"),
+            btExcluir = new JButton("Excluir");
 
     private final DefaultTableModel modelo = new DefaultTableModel(
             new Object[] {"Código", "Evento", "Conta de Débito", "Conta de Crédito", "Situação"},
@@ -52,6 +57,9 @@ public class TelaRegrasContabilizacao extends JPanel {
     };
 
     private final JTable tabela = new JTable(modelo);
+    private final JButton btEditar = new JButton("Editar regra");
+    private final JPanel cadastro = new JPanel(new BorderLayout(8, 8));
+    private JDialog dialogo;
 
     public TelaRegrasContabilizacao() {
         setLayout(new BorderLayout(8, 8));
@@ -77,34 +85,105 @@ public class TelaRegrasContabilizacao extends JPanel {
         g.gridy = 4;
         f.add(chkAtiva, g);
 
-        JPanel b = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        b.add(btNovo);
+        JPanel b = new JPanel(new FlowLayout(FlowLayout.RIGHT, 4, 4));
         b.add(btSalvar);
         b.add(btAtual);
-        b.add(btSit);
         b.add(btLimpar);
 
-        JPanel n = new JPanel(new BorderLayout());
-        n.add(f, BorderLayout.CENTER);
-        n.add(b, BorderLayout.SOUTH);
-        add(n, BorderLayout.NORTH);
+        JButton btFechar = new JButton("Fechar");
+        b.add(btFechar);
+        cadastro.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        cadastro.add(f, BorderLayout.NORTH);
+        cadastro.add(b, BorderLayout.SOUTH);
 
-        JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        p.add(new JLabel("Evento:"));
-        p.add(txtPesq);
-        p.add(new JLabel("Situação:"));
-        p.add(cbSit);
-        p.add(btBuscar);
-        p.add(btTodos);
+        JPanel p = new JPanel(new GridBagLayout());
+        p.setBorder(BorderFactory.createTitledBorder("Filtros e pesquisa"));
+        componente(p, g, 0, "Evento:", txtPesq);
+        componente(p, g, 1, "Situação:", cbSit);
+        JPanel busca = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
+        busca.add(btBuscar);
+        busca.add(btTodos);
+        JPanel topo = new JPanel(new BorderLayout(4, 4));
+        topo.add(p, BorderLayout.CENTER);
+        topo.add(busca, BorderLayout.SOUTH);
+        add(topo, BorderLayout.NORTH);
 
         JScrollPane sp = new JScrollPane(tabela);
         sp.setBorder(BorderFactory.createTitledBorder("Regras Cadastradas"));
 
         JPanel c = new JPanel(new BorderLayout(5, 5));
-        c.add(p, BorderLayout.NORTH);
         c.add(sp, BorderLayout.CENTER);
         add(c, BorderLayout.CENTER);
         tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tabela.setRowHeight(24);
+        tabela.setFillsViewportHeight(true);
+        tabela.getTableHeader().setReorderingAllowed(false);
+        tabela.getColumnModel().getColumn(1).setPreferredWidth(240);
+
+        JPanel acoes = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
+        acoes.add(btNovo);
+        acoes.add(btEditar);
+        acoes.add(btSit);
+        acoes.add(btExcluir);
+        btExcluir.setEnabled(false);
+        tabela.getSelectionModel().addListSelectionListener(e -> {
+            btExcluir.setEnabled(tabela.getSelectedRow() != -1);
+        });
+        add(acoes, BorderLayout.SOUTH);
+
+        btNovo.addActionListener(e -> {
+            limpar();
+            abrirCadastro("Nova regra");
+        });
+        btEditar.addActionListener(e -> editarRegra());
+        btLimpar.addActionListener(e -> limpar());
+        btFechar.addActionListener(e -> dialogo.dispose());
+    }
+
+    private void abrirCadastro(String titulo) {
+        if (dialogo == null) {
+            dialogo = new JDialog(SwingUtilities.getWindowAncestor(this),
+                    titulo, JDialog.ModalityType.APPLICATION_MODAL);
+            dialogo.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialogo.add(cadastro);
+            dialogo.setMinimumSize(new Dimension(560, 320));
+            dialogo.pack();
+        }
+        dialogo.setTitle(titulo);
+        dialogo.setLocationRelativeTo(this);
+        dialogo.setVisible(true);
+    }
+
+    private void editarRegra() {
+        int linha = tabela.getSelectedRow();
+        if (linha == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione uma regra para editar.");
+            return;
+        }
+        txtCod.setText(String.valueOf(tabela.getValueAt(linha, 0)));
+        txtDesc.setText(String.valueOf(tabela.getValueAt(linha, 1)));
+        selecionarConta(cbDeb, tabela.getValueAt(linha, 2));
+        selecionarConta(cbCred, tabela.getValueAt(linha, 3));
+        chkAtiva.setSelected("Ativa".equalsIgnoreCase(String.valueOf(tabela.getValueAt(linha, 4))));
+        btSalvar.setEnabled(false);
+        btAtual.setEnabled(true);
+        abrirCadastro("Editar regra");
+    }
+
+    private void selecionarConta(JComboBox<String> combo, Object valor) {
+        String conta = valor == null ? "" : valor.toString();
+        for (int i = 0; i < combo.getItemCount(); i++) {
+            if (conta.equals(combo.getItemAt(i))) {
+                combo.setSelectedIndex(i);
+                return;
+            }
+        }
+        if (!conta.isEmpty()) {
+            combo.addItem(conta);
+            combo.setSelectedItem(conta);
+        } else {
+            combo.setSelectedIndex(-1);
+        }
     }
 
     private void componente(JPanel painel, GridBagConstraints organizador,
@@ -129,6 +208,11 @@ public class TelaRegrasContabilizacao extends JPanel {
         cbCred.setSelectedIndex(0);
         chkAtiva.setSelected(true);
         tabela.clearSelection();
+        btSalvar.setEnabled(true);
+        btAtual.setEnabled(false);
+        if (dialogo != null) {
+            dialogo.setTitle("Nova regra");
+        }
     }
 
     public JTextField getTxtCod() {
@@ -189,5 +273,17 @@ public class TelaRegrasContabilizacao extends JPanel {
 
     public JTable getTab() {
         return tabela;
+    }
+
+    public JButton getBtExcluir() {
+        return btExcluir;
+    }
+
+    public JButton getBtEditar() {
+        return btEditar;
+    }
+
+    public JDialog getDialogo() {
+        return dialogo;
     }
 }

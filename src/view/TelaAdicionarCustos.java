@@ -39,9 +39,9 @@ public class TelaAdicionarCustos extends JDialog {
 	    	JLabel lbl_codigo = new JLabel("Código:"), lbl_descricao = new JLabel("Descrição:"), 
 	    	lbl_centro_superior = new JLabel("Centro Superior:"),lbl_situacao = new JLabel("Situação:");
 	    
-	    	String[] obj_centros= {"Administrativo", "Operacional", "Comercial", "Financeiro", "Logística", "Tecnologia", "Recursos Humanos", 
+	    	String[] obj_centros= {"Todos", "Administrativo", "Operacional", "Comercial", "Financeiro", "Logística", "Tecnologia", "Recursos Humanos", 
 	    			"Manutenção","Projetos", "Atendimento"};
-	    	String[] obj_situacoes = {"Ativo", "Inativo"};
+	    	String[] obj_situacoes = {"Todos", "Ativo", "Inativo"};
 	
 	    	JComboBox <String> cmbBox_centro_superior = new JComboBox<>(obj_centros);
 	    	JComboBox <String> cmbBox_situacao = new JComboBox<>(obj_situacoes);

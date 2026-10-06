@@ -52,11 +52,11 @@ public class TelaCentroCustos extends JPanel {
 	    	JPanel botoes = new JPanel(new FlowLayout(FlowLayout.LEFT));
 	    	JLabel lbl_codigo = new JLabel("Código:"), lbl_descricao = new JLabel("Descrição:"), 
 	    	lbl_situacao = new JLabel("Situação:");
-	      	String[] obj_situacoes = {"Ativo", "Inativo"};
+	      	String[] obj_situacoes = {"Todas", "Ativo", "Inativo"};
 	    	JComboBox <String> cmbBox_situacao = new JComboBox<>(obj_situacoes);
-	    	JButton btn_pesquisar = new JButton("Pesquisar custo"), btn_mostrar_todos = new JButton("Mostrar todos"),
-	    	btn_criar_conta = new JButton("Adicionar centro de custo"), btn_atualizar_conta = new JButton("Atualizar centro de custos"),
-	    	btn_inativar_conta = new JButton("Inativar custo"), btn_rateio = new JButton("Configurar Rateio"), 
+	    	JButton btn_pesquisar = new JButton("Pesquisar centro de custo"), btn_mostrar_todos = new JButton("Mostrar todos"),
+	    	btn_criar_conta = new JButton("Adicionar centro de custo"), btn_atualizar_conta = new JButton("Atualizar centro de custo"),
+	    	btn_inativar_conta = new JButton("Inativar centro"), btn_rateio = new JButton("Configurar Rateio"), 
 	    	btn_razao = new JButton("Consultar razão");
 	    	
 	    	adicionar_componente(1, jp_form, gbc_form, lbl_codigo, txt_codigo);
@@ -79,7 +79,7 @@ public class TelaCentroCustos extends JPanel {
 	                new JScrollPane(tabelaCentroCustos);
 
 	        scrollPane.setBorder(
-	                BorderFactory.createTitledBorder("Contas")
+	                BorderFactory.createTitledBorder("Lista de centro de custo")
 	        );
 	        	   
 	        botoes.add(btn_criar_conta);

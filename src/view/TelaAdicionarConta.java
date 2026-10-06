@@ -44,10 +44,10 @@ public class TelaAdicionarConta extends JDialog {
 	    	lbl_natureza = new JLabel("Natureza:"), 
 	    	lbl_situacao = new JLabel("Situação:"),
 	    	lbl_tipo = new JLabel("Tipo:");
-	    	String[] obj_grupos= {"Ativos", "Passivos", "Custos", "Receita", "Despesa", "Patrimônio liquído"};
-	    	String[] obj_naturezas = {"Devedora", "Credora"};
-	    	String[] obj_situacoes = {"Ativo", "Inativo"};
-	    	String[] obj_tipos = {"Analítica", "Sintética"};
+	    	String[] obj_grupos= {"Todas","Ativos", "Passivos", "Custos", "Receita", "Despesa", "Patrimônio liquído"};
+	    	String[] obj_naturezas = {"Todas","Devedora", "Credora"};
+	    	String[] obj_situacoes = {"Todas","Ativo", "Inativo"};
+	    	String[] obj_tipos = {"Todas","Analítica", "Sintética"};
 	    	JComboBox <String> cmbBox_grupo = new JComboBox<>(obj_grupos);
 	    	JComboBox <String> cmbBox_conta_superior = new JComboBox<>(obj_grupos);
 	    	JComboBox <String> cmbBox_natureza = new JComboBox<>(obj_naturezas);

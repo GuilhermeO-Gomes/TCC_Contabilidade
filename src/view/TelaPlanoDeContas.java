@@ -57,13 +57,13 @@ public class TelaPlanoDeContas extends JPanel {
     	lbl_grupo = new JLabel("Grupo:"), 
     	lbl_natureza = new JLabel("Natureza:"), 
     	lbl_situacao = new JLabel("Situação:");
-    	String[] obj_grupos= {"Ativos", "Passivos", "Custos", "Receita", "Despesa", "Patrimônio liquído"};
-    	String[] obj_naturezas = {"Devedora", "Credora"};
-      	String[] obj_situacoes = {"Ativo", "Inativo"};
+    	String[] obj_grupos= {"Todas", "Ativos", "Passivos", "Custos", "Receita", "Despesa", "Patrimônio liquído"};
+    	String[] obj_naturezas = {"Todas", "Devedora", "Credora"};
+      	String[] obj_situacoes = {"Todas","Ativo", "Inativo"};
     	JComboBox <String> cmbBox_grupo = new JComboBox<>(obj_grupos);
     	JComboBox <String> cmbBox_natureza = new JComboBox<>(obj_naturezas);
     	JComboBox <String> cmbBox_situacao = new JComboBox<>(obj_situacoes);
-    	JButton btn_pesquisar = new JButton("Pesquisar conta"), btn_mostrar_todos = new JButton("Mostrar todos"),
+    	JButton btn_pesquisar = new JButton("Pesquisar conta"), btn_mostrar_todos = new JButton("Mostrar todas"),
     	btn_criar_conta = new JButton("Adicionar conta"), btn_atualizar_conta = new JButton("Atualizar conta"),
     	btn_inativar_conta = new JButton("Inativar conta"), btn_razao = new JButton("Consultar razão");
     	
@@ -103,6 +103,12 @@ public class TelaPlanoDeContas extends JPanel {
         });
         botoes.add(btn_criar_conta);
         botoes.add(btn_atualizar_conta);
+        //Pra criar o JDialog, talvez depois jogue essa actionListener para os controllers
+        btn_atualizar_conta.addActionListener(e -> {
+        	Window janela_pai = SwingUtilities.getWindowAncestor(this);
+        	TelaAtualizarConta dialog = new TelaAtualizarConta(janela_pai);
+            dialog.setVisible(true);}
+            );
         botoes.add(btn_inativar_conta);
         
         //Pra criar o JDialog, talvez depois jogue essa actionListener para os controllers

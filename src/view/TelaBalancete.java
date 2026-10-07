@@ -24,7 +24,7 @@ public class TelaBalancete extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private final JTextField txt_conta = new JTextField(15);
 	private final DefaultTableModel modeloTabela = new DefaultTableModel(
-    new Object[] {"Conta", "Descrição", "Débitos", "Créditos", "Saldo Devedor"}, 0);
+    new Object[] {"Conta", "Descrição", "Débitos", "Créditos", "Saldo"}, 0);
 	private JTable TabelaBalancete;
             
 	//JSpinner serve para ser um campo de formulário de data sem precisar converter
@@ -61,7 +61,7 @@ public class TelaBalancete extends JPanel {
     	gbc_pesquisa.anchor = GridBagConstraints.WEST;
     	gbc_pesquisa.weightx = 0;
     	JPanel jp_lancamento = new JPanel(new GridBagLayout());
-    	jp_lancamento.setBorder(BorderFactory.createTitledBorder("Lançamentos da conta"));
+    	jp_lancamento.setBorder(BorderFactory.createTitledBorder("Contas do Balancete"));
     	GridBagConstraints gbc_lancamento = new GridBagConstraints();
     	gbc_lancamento.insets = new Insets(10, 2, 10, 2);
     	gbc_lancamento.anchor = GridBagConstraints.WEST;
@@ -71,8 +71,9 @@ public class TelaBalancete extends JPanel {
     	
     	JLabel lbl_conta = new JLabel("Conta:"), lbl_periodo = new JLabel("Período:"),
     	lbl_ate = new JLabel("até"), lbl_grupo = new JLabel("Grupo:"), lbl_nivel = new JLabel("Nível:"),
-    	lbl_total = new JLabel("TOTAL: "), lbl_placeholder = new JLabel("R$Placholder/R$Placeholder"),
-    	lbl_situacao = new JLabel("SITUAÇÃO:"), lbl_placeholder2 = new JLabel("Placholders conferidos");
+    	lbl_total_debito = new JLabel("TOTAL DÉBITO:"), lbl_total_credito = new JLabel("TOTAL CRÉDITO:"), 
+    	lbl_placeholder = new JLabel("R$Placholder"), lbl_placeholder2 = new JLabel("R$Placholder"),
+    	lbl_situacao = new JLabel("SITUAÇÃO:"), lbl_placeholder3 = new JLabel("Placholders conferidos");
     	
     	
     	
@@ -139,10 +140,12 @@ public class TelaBalancete extends JPanel {
         jp_lancamento.add(scrollPane, gbc_lancamento);
         
         
-        jp_dados.add(lbl_total);
+        jp_dados.add(lbl_total_debito);
         jp_dados.add(lbl_placeholder);
-        jp_dados.add(lbl_situacao);
+        jp_dados.add(lbl_total_credito);       
         jp_dados.add(lbl_placeholder2);
+        jp_dados.add(lbl_situacao);
+        jp_dados.add(lbl_placeholder3);
         
         gbc_lancamento.gridx = 0;
         gbc_lancamento.gridy = 1;

@@ -29,7 +29,7 @@ public class TelaLivroRazao extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private final JTextField historico = new JTextField(15);
 	private final DefaultTableModel modeloTabela = new DefaultTableModel(
-    new Object[] {"Data", "Documento", "Histórico", "Crédito", "Débito", "Saldo"}, 0);
+    new Object[] {"Data", "Documento", "Histórico", "Débito", "Crédito", "Saldo"}, 0);
 	private JTable TabelaLivroRazao;
             
 	//JSpinner serve para ser um campo de formulário de data sem precisar converter
@@ -77,7 +77,7 @@ public class TelaLivroRazao extends JDialog {
     	organizador_conta.anchor = GridBagConstraints.WEST;
     	organizador_conta.weightx = 0;
     	JPanel painel_credito = new JPanel(new GridBagLayout());
-    	painel_credito.setBorder(BorderFactory.createTitledBorder("Créditos e débitos"));
+    	painel_credito.setBorder(BorderFactory.createTitledBorder("Resumo do período"));
     	GridBagConstraints organizador_credito = new GridBagConstraints();
     	organizador_credito.insets = new Insets(10, 2, 10, 2);
     	organizador_credito.anchor = GridBagConstraints.WEST;

@@ -30,7 +30,7 @@ public class TelaAdicionarCustos extends JDialog {
 
 	    private void montar_tela() {
 	    	JPanel jp_principal = new JPanel(new GridBagLayout());
-	    	jp_principal.setBorder(BorderFactory.createTitledBorder("Nova Conta"));
+	    	jp_principal.setBorder(BorderFactory.createTitledBorder("Novo Custo"));
 	    	GridBagConstraints gbc_principal = new GridBagConstraints();
 	    	gbc_principal.insets = new Insets(10, 2, 10, 2);
 	    	gbc_principal.anchor = GridBagConstraints.WEST;

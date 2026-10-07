@@ -65,8 +65,8 @@ public class TelaAtualizarConta extends JDialog {
     	adicionar_componente(5, jp_principal, gbc_principal, lbl_tipo, cmbBox_tipo);
     	adicionar_componente(6, jp_principal, gbc_principal, lbl_situacao, cmbBox_situacao);
     	
-    	botoes.add(btn_atualizar);
     	botoes.add(btn_limpar);
+    	botoes.add(btn_atualizar);
     	botoes.add(btn_cancelar);    	
     	gbc_principal.gridy = 7;
     	gbc_principal.gridx = 0;

@@ -1,8 +1,8 @@
 package view;
 
 //import controller.ZeramentoContas
-import model.HistoricoPadrao;
-import model.ZeramentoContas;
+//import model.HistoricoPadrao;
+//import model.ZeramentoContas;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
@@ -28,6 +28,10 @@ import javax.swing.JComboBox;
 
 public class TelaZeramentoContas extends JPanel {
     
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
   private final JTextField id = new JTextField(7),
    contaReduzida = new JTextField(15),
    dataZeramento = new JTextField(8),

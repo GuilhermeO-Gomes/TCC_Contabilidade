@@ -1,18 +1,24 @@
 package view;
 
 //import controller.DepreciacaoController;
-import model.Depreciacao;
-import model.ZeramentoContas;
+//import model.Depreciacao;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 import javax.swing.*;
+import model.Depreciacao;
 import javax.swing.table.DefaultTableModel;
 
 public class TelaDepreciacao extends JPanel{
 
-    private final JTextField id = new JTextField(7),
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
+	private final JTextField id = new JTextField(7),
     taxa = new JTextField(10),
     tempo = new JTextField(4);
 

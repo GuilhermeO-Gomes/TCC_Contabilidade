@@ -44,7 +44,7 @@ public class TelaAtualizarCustos extends JDialog {
 
     private void montar_tela() {
     	JPanel jp_form = new JPanel(new GridBagLayout());
-    	jp_form.setBorder(BorderFactory.createTitledBorder("Nova Conta"));
+    	jp_form.setBorder(BorderFactory.createTitledBorder("Atualização de custo"));
     	GridBagConstraints gbc_form = new GridBagConstraints();
     	gbc_form.insets = new Insets(10, 2, 10, 2);
     	gbc_form.anchor = GridBagConstraints.WEST;

@@ -18,16 +18,15 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 public class TelaRateio extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private final JTextField txt_nome_rateio = new JTextField(15);
 	private final JTextField txt_conta_contabil = new JTextField(15);
-	private final JTextField txt_centro_custo = new JTextField(15);
 	private final DefaultTableModel modeloTabela = new DefaultTableModel(
-    new Object[] {"Centro de Custo", "Percentual(%)", "Valor" }, 0);
+    new Object[] {"Centro de Custo", "Percentual(%)" }, 0);
 	private JTable TabelaRateio;
             
     public TelaRateio(Window janela_pai) {
@@ -60,9 +59,8 @@ public class TelaRateio extends JDialog {
     	
     	
     	JLabel lbl_nome_rateio = new JLabel("Nome do Rateio:"), lbl_conta_contabil = new JLabel("Conta Contábil:"),
-    	lbl_centro_custo = new JLabel("Centro de Custo Origem:"), lbl_criterio = new JLabel("Critério:"), lbl_situacao = new JLabel("Situação:");
-    	//Ver se precisa adicionar Total
-    	//lbl_total = new JLabel("TOTAL: "), lbl_placeholder = new JLabel("100%");
+    	lbl_criterio = new JLabel("Critério:"), lbl_situacao = new JLabel("Situação:"), lbl_total_percentual = new JLabel("Total Percentual(%): 100%");
+    
     	
     	String[] obj_criterios= {"Critério 1", "Critério 2"};
     	String[] obj_situacoes = {"Situação 1", "Situação 2"};
@@ -71,8 +69,7 @@ public class TelaRateio extends JDialog {
     	JComboBox <String> situacao = new JComboBox<>(obj_situacoes);
     	JButton btn_adicionar_centro = new JButton("Adicionar Centro"), btn_atualizar = new JButton("Atualizar"), 
     	btn_remover = new JButton("Remover"), btn_salvar = new JButton("Salvar"), btn_limpar = new JButton("Limpar"), 
-    	btn_cancelar = new JButton("Cancelar"), btn_buscar_conta1 = new JButton ("Buscar Conta"), 
-    	btn_buscar_conta2 = new JButton ("Buscar Conta");
+    	btn_cancelar = new JButton("Cancelar"), btn_buscar_conta1 = new JButton ("Buscar Conta");
     	adicionar_componente(0, jp_config, gbc_config, lbl_nome_rateio, txt_nome_rateio);
     	adicionar_componente(1, jp_config, gbc_config, lbl_conta_contabil, txt_conta_contabil);
     	
@@ -82,20 +79,17 @@ public class TelaRateio extends JDialog {
     	gbc_config.fill = GridBagConstraints.NONE;
     	jp_config.add(btn_buscar_conta1, gbc_config);
     	
-    	adicionar_componente(2, jp_config, gbc_config, lbl_centro_custo, txt_centro_custo);
+    	adicionar_componente(2, jp_config, gbc_config, lbl_criterio, criterio);
+    	adicionar_componente(3, jp_config, gbc_config, lbl_situacao, situacao);
     	
-    	gbc_config.gridx = 2;
-    	gbc_config.gridy = 2;
-    	gbc_config.weightx = 0;
-    	gbc_config.fill = GridBagConstraints.NONE;
-    	jp_config.add(btn_buscar_conta2, gbc_config);
-    	
-    	adicionar_componente(3, jp_config, gbc_config, lbl_criterio, criterio);
-    	adicionar_componente(4, jp_config, gbc_config, lbl_situacao, situacao);
-  
     	botoes_distribuicao.add(btn_adicionar_centro);
     	botoes_distribuicao.add(btn_atualizar);
     	botoes_distribuicao.add(btn_remover);
+    	
+    	btn_adicionar_centro.addActionListener(e -> {
+        	Window janela_pai = SwingUtilities.getWindowAncestor(this);
+        	TelaAdicionarCentro dialog = new TelaAdicionarCentro(janela_pai);
+            dialog.setVisible(true);});
   
     	TabelaRateio = new JTable(modeloTabela);
         JScrollPane scrollPane =new JScrollPane(TabelaRateio);
@@ -106,10 +100,25 @@ public class TelaRateio extends JDialog {
         gbc_distribuicao.gridwidth = 1;
         gbc_distribuicao.fill = GridBagConstraints.BOTH;
         jp_distribuicao.add(scrollPane, gbc_distribuicao);
+        gbc_distribuicao.gridx = 0;
+        gbc_distribuicao.gridy = 1;
+        gbc_distribuicao.weightx = 0;
+        gbc_distribuicao.weighty = 0;
+        gbc_distribuicao.fill = GridBagConstraints.HORIZONTAL;
+        jp_distribuicao.add(botoes_distribuicao, gbc_distribuicao);
+        gbc_distribuicao.gridx = 0;
+        gbc_distribuicao.gridy = 2;
+        gbc_distribuicao.weightx = 0;
+        gbc_distribuicao.weighty = 0;
+        gbc_distribuicao.fill = GridBagConstraints.HORIZONTAL;
+        jp_distribuicao.add(lbl_total_percentual, gbc_distribuicao);
+        
+        
          
     	botoes.add(btn_salvar);
     	botoes.add(btn_limpar);
     	botoes.add(btn_cancelar);
+    	btn_cancelar.addActionListener(e -> dispose());
     	
     	add(jp_config, BorderLayout.NORTH);
     	add(jp_distribuicao, BorderLayout.CENTER);

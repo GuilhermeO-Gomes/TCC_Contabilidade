@@ -1,4 +1,4 @@
-package view;
+package view.planocontas;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;

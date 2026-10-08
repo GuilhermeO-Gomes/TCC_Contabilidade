@@ -79,10 +79,16 @@ public class TelaRateio extends JDialog {
     	gbc_config.fill = GridBagConstraints.NONE;
     	jp_config.add(btn_buscar_conta1, gbc_config);
     	
+    	btn_buscar_conta1.addActionListener(e -> {
+        	Window janela_pai = SwingUtilities.getWindowAncestor(this);
+        	TelaBuscarConta dialog = new TelaBuscarConta(janela_pai);
+            dialog.setVisible(true);});
+    	
     	adicionar_componente(2, jp_config, gbc_config, lbl_criterio, criterio);
     	adicionar_componente(3, jp_config, gbc_config, lbl_situacao, situacao);
     	
     	botoes_distribuicao.add(btn_adicionar_centro);
+    	
     	botoes_distribuicao.add(btn_atualizar);
     	botoes_distribuicao.add(btn_remover);
     	

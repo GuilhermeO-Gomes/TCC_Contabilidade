@@ -15,6 +15,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 public class TelaAdicionarCentro extends JDialog {
 	private static final long serialVersionUID = 1L;
@@ -41,6 +42,10 @@ public class TelaAdicionarCentro extends JDialog {
     	JButton btn_adicionar = new JButton("Adicionar"), btn_cancelar = new JButton("Cancelar"), btn_buscar_centro = new JButton("Buscar Centro");
     	
     	btn_cancelar.addActionListener(e -> dispose());
+    	btn_buscar_centro.addActionListener(e -> {
+        	Window janela_pai = SwingUtilities.getWindowAncestor(this);
+        	TelaBuscarCentro dialog = new TelaBuscarCentro(janela_pai);
+            dialog.setVisible(true);});
     	
     	adicionar_componente(0, jp_principal, gbc_principal, lbl_codigo, txt_centro_custo);
     	gbc_principal.gridy = 0;

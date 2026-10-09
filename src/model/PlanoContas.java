@@ -1,80 +1,118 @@
 package model;
 
 public class PlanoContas {
-    private String conta;
+    private String codigo;
     private String descricao;
-    private int reduzida;
-    private String saldo;
-    private String tipo;
-    private String cc;
-    private String situacao;
+    private Integer idContaSuperior; //Hierarquia de contas
+    private Integer nivel; //
+    private Integer idConta;
+    public enum Grupo{ATIVO, PASSIVO, PATRIMONIO_LIQUIDO, RECEITA, CUSTO, DESPESA};
+    public enum Natureza{DEVEDORA, CREDORA};
+    public enum TipoConta{SINTETICA, ANALITICA};
+    public enum Situacao{ATIVO, INATIVO};
+    
+    private Grupo grupo;
+    private Natureza natureza;
+    private TipoConta tipoConta;
+    private Situacao situacao;
 
     public PlanoContas() {
     }
 
-    public PlanoContas(String conta, String descricao, int reduzida, String saldo, String tipo, String cc, String situacao) {
-        this.conta = conta;
+    public PlanoContas(String codigo, String descricao, Integer idContaSuperior,Integer nivel, Grupo grupo, 
+    		Natureza natureza, TipoConta tipoConta, Situacao situacao) {
+        this.codigo = codigo;
         this.descricao = descricao;
-        this.reduzida = reduzida;
-        this.saldo = saldo;
-        this.tipo = tipo;
-        this.cc = cc;
+        this.idContaSuperior = idContaSuperior;
+        this.nivel = nivel;
+        this.grupo = grupo;
+        this.tipoConta = tipoConta;
+        this.natureza = natureza;
+        this.situacao = situacao;
+    }
+    public PlanoContas(String codigo, String descricao, Integer idContaSuperior,Integer nivel, Integer idConta, Grupo grupo, 
+    		Natureza natureza, TipoConta tipoConta, Situacao situacao) {
+        this.codigo = codigo;
+        this.descricao = descricao;
+        this.idContaSuperior = idContaSuperior;
+        this.nivel = nivel;
+        this.idConta = idConta;
+        this.grupo = grupo;
+        this.tipoConta = tipoConta;
+        this.natureza = natureza;
         this.situacao = situacao;
     }
 
-    public String getConta() {
-        return conta;
-    }
+	public Integer getIdConta() {
+		return idConta;
+	}
 
-    public void setConta(String conta) {
-        this.conta = conta;
-    }
+	public void setIdConta(Integer idConta) {
+		this.idConta = idConta;
+	}
 
-    public String getDescricao() {
-        return descricao;
-    }
+	public String getCodigo() {
+		return codigo;
+	}
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
 
-    public int getReduzida() {
-        return reduzida;
-    }
+	public String getDescricao() {
+		return descricao;
+	}
 
-    public void setReduzida(int reduzida) {
-        this.reduzida = reduzida;
-    }
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
 
-    public String getSaldo() {
-        return saldo;
-    }
+	public Integer getIdContaSuperior() {
+		return idContaSuperior;
+	}
 
-    public void setSaldo(String saldo) {
-        this.saldo = saldo;
-    }
+	public void setIdContaSuperior(Integer idContaSuperior) {
+		this.idContaSuperior = idContaSuperior;
+	}
 
-    public String getTipo() {
-        return tipo;
-    }
+	public Integer getNivel() {
+		return nivel;
+	}
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
+	public void setNivel(Integer nivel) {
+		this.nivel = nivel;
+	}
 
-    public String getCc() {
-        return cc;
-    }
+	public Grupo getGrupo() {
+		return grupo;
+	}
 
-    public void setCc(String cc) {
-        this.cc = cc;
-    }
+	public void setGrupo(Grupo grupo) {
+		this.grupo = grupo;
+	}
 
-    public String getSituacao() {
-        return situacao;
-    }
+	public Natureza getNatureza() {
+		return natureza;
+	}
 
-    public void setSituacao(String situacao) {
-        this.situacao = situacao;
-    }
-}
+	public void setNatureza(Natureza natureza) {
+		this.natureza = natureza;
+	}
+
+	public TipoConta getTipoConta() {
+		return tipoConta;
+	}
+
+	public void setTipoConta(TipoConta tipoConta) {
+		this.tipoConta = tipoConta;
+	}
+
+	public Situacao getSituacao() {
+		return situacao;
+	}
+
+	public void setSituacao(Situacao situacao) {
+		this.situacao = situacao;
+	}}
+    
+

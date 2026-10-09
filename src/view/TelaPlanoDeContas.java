@@ -19,7 +19,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
-import controller.PlanoContasController;
+
 
 public class TelaPlanoDeContas extends JPanel {
 
@@ -32,14 +32,13 @@ public class TelaPlanoDeContas extends JPanel {
     );
 
     private JTable tabelaPlanoDeContas;
-    private PlanoContasController controller;
+
 
     public TelaPlanoDeContas() {    	
     	setLayout(new BorderLayout(8,8));
     	setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         montar_tela();
-        controller = new PlanoContasController(this);
-        controller.carregarTabela();
+    
     }
 
     private void montar_tela() {

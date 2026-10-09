@@ -19,7 +19,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
-import controller.CentroCustosController;
+
 
 public class TelaCentroCustos extends JPanel {
 	    private static final long serialVersionUID = 1L;
@@ -30,14 +30,12 @@ public class TelaCentroCustos extends JPanel {
 	    );
 
 	    private JTable tabelaCentroCustos;
-	    private CentroCustosController controller;
 
 	    public TelaCentroCustos() {
 	    	setLayout(new BorderLayout(8,8));
 	    	setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 	        montar_tela();
-	        controller = new CentroCustosController(this);
-	        controller.carregarTabela();
+
 	    }
 
 	    private void montar_tela() {

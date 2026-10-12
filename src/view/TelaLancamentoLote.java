@@ -11,15 +11,11 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Component;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 
-public class TelaLancamentoLote extends JPanel {
+
+public class TelaLancamentoLote extends JDialog {
     
     private final JTextField id = new JTextField(10),
     nomeLote = new JTextField(30),
@@ -35,7 +31,8 @@ public class TelaLancamentoLote extends JPanel {
 
     public TelaLancamentoLote() {
         setLayout(new BorderLayout(8,8));
-        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        ((JPanel) getContentPane()).setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         //controller = new LancamentoLoteController(this);
         montar();
         
@@ -44,7 +41,7 @@ public class TelaLancamentoLote extends JPanel {
     private void montar() {
         JPanel f = new JPanel(new GridBagLayout());
         f.setBorder(
-           BorderFactory.createTitledBorder("Identificação")
+            BorderFactory.createTitledBorder("Identificação")
         );
         GridBagConstraints g = new GridBagConstraints();
         g.insets = new Insets(3, 4, 3, 4);
@@ -89,14 +86,11 @@ public class TelaLancamentoLote extends JPanel {
     JPanel botao = new JPanel(new FlowLayout(FlowLayout.LEFT));
     JButton salvar = new JButton("Salvar"), //opção utilizada para salvar a criação ou alterações no lote
       bloquear = new JButton("Bloquear Lote"),//bloquear o lote para que nenhum outro usuário faça qualquer modificação
-      excluir = new JButton("Excluir"),//opção utilizada para deletar o lote e suas alterações
-      historico = new JButton("Histórico"), //opção para visualizar todas as alterações feita nesse lote e por qual usuario a alteração foi feita.
       fechar = new JButton("Fechar");
     
     botao.add(salvar);
     botao.add(bloquear);
-    botao.add(excluir);
-    botao.add(historico);
+
     botao.add(fechar);
 
     salvar.addActionListener(
@@ -115,21 +109,6 @@ public class TelaLancamentoLote extends JPanel {
         }
     );
 
-    excluir.addActionListener(
-        new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                //controller.excluir();
-            }
-        }
-    );
-
-    historico.addActionListener(
-        new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                //controller.historico();
-            }
-        }
-    );
 
     fechar.addActionListener(
         new ActionListener() {

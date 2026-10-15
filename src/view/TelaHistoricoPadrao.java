@@ -1,203 +1,472 @@
 package view;
 
-
 import java.awt.*;
-import java.awt.event.*;
-import java.util.List;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+import model.HistoricoPadrao;
 
 public class TelaHistoricoPadrao extends JPanel {
-	private static final long serialVersionUID = 1L;
-	private final JTextField id = new JTextField(1),
-		descricao = new JTextField(28),
-		pesquisa = new JTextField(22);
-		private final JCheckBox ativo = new JCheckBox("Historico Padrão ativo", true);
-		private final DefaultTableModel modelo =  new DefaultTableModel(
-				new Object[] {"ID", "Descrição", "Ativo"},
-				0
-				) { public boolean isCellEditable (int l, int c) {
-					return false;
-				}
-			};
-			
-			private final JButton novo =
-		            new JButton("Novo"),
-			salvar =new JButton("Salvar"),
-			inativar =new JButton("Inativar"),
-			limpar = new JButton("Limpar"),
-			buscar = new JButton("Buscar");
-			
-		private final JTable tabela = new JTable(modelo);
-		
-		
-		public TelaHistoricoPadrao() {
-			
-			setLayout(new BorderLayout (8,8));
-			setBorder(BorderFactory.createEmptyBorder (10,10,10,10));
-			montar();
-		}
-				
-		
-		public void montar() {
-			JPanel f = new JPanel(new GridBagLayout());
-			f.setBorder(BorderFactory.createTitledBorder("Historicos Padrões no Sistema"));
-			GridBagConstraints g = new GridBagConstraints();
-			g.insets = new Insets(4,4,4,4);
-			componente(f,g,0,"Codigo", id);
-			componente(f,g,1,"Descrição", descricao);
-			g.gridx = 1;
-			g.gridy = 3;
-			f.add(ativo, g);
-			id.setEditable(false);
-			JLabel aviso = new JLabel("");
-			g.gridy = 4;
-			f.add(aviso, g);
-			JPanel b = new JPanel(new FlowLayout(FlowLayout.LEFT));
-			b.add(novo);
-			b.add(salvar);
-			b.add(inativar);
-			b.add(limpar);
-			JPanel n = new JPanel(new BorderLayout());
-			n.add(f);
-			n.add(b, BorderLayout.SOUTH);
-			add(n, BorderLayout.NORTH);
-			JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
-			p.add(new JLabel("Pesquisar:"));
-			p.add(pesquisa);
-			JButton buscar = new JButton("Buscar");
-			 
-			 p.add(buscar);
-			
-			 JPanel c = new JPanel(new BorderLayout());
-			 c.add(p, BorderLayout.NORTH);
-			 c.add(new JScrollPane(tabela));
-			 add(c);
-			 tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			
-			 
-		}
-		
-		private void componente (
-				 JPanel p,
-				    GridBagConstraints g,
-				    int y,
-				    String r,
-				    Component t
-				) {
-			 g.gridx = 0;
-			    g.gridy = y;
-			    g.weightx = 0;
-			    g.fill = GridBagConstraints.NONE;
-			    p.add(new JLabel(r), g);
-			    g.gridx = 1;
-			    g.weightx = 1;
-			    g.fill = GridBagConstraints.HORIZONTAL;
-			    p.add(t, g);
-		}
-		
-		 public void limpar() {
 
-		        id.setText("");
-		        descricao.setText("");
-		        ativo.setSelected(true);
-		    }
-		
-		public void limparTabela() {
-	        modelo.setRowCount(0);
-	    }
+    private static final long serialVersionUID = 1L;
 
 
-	    public void adicionarLinha(
-	            int id,
-	            String descricao,
-	            boolean ativo) {
+    private final JTextField id =
+        new JTextField(5);
 
-	        modelo.addRow(
-	                new Object[] {
-	                        id,
-	                        descricao,
-	                        ativo
-	                }
-	        );
-	    }
+    private final JTextField descricao =
+        new JTextField(28);
 
-		
-		
-		
-	    public int getId() {
-
-	        try {
-	            return Integer.parseInt(
-	                    id.getText()
-	            );
-
-	        } catch (NumberFormatException e) {
-	            return 0;
-	        }
-	    }
+    private final JTextField pesquisa =
+        new JTextField(22);
 
 
-	    public String getDescricao() {
-	        return descricao.getText();
-	    }
+    private final JCheckBox ativo =
+        new JCheckBox(
+            "Histórico Padrão ativo",
+            true
+        );
 
 
-	    public String getPesquisa() {
-	        return pesquisa.getText();
-	    }
+    private final JButton novo =
+        new JButton("Novo");
+
+    private final JButton salvar =
+        new JButton("Salvar");
+
+    private final JButton inativar =
+        new JButton("Inativar");
+
+    private final JButton limpar =
+        new JButton("Limpar");
+
+    private final JButton buscar =
+        new JButton("Buscar");
 
 
-	    public boolean isAtivo() {
-	        return ativo.isSelected();
-	    }
+    private final DefaultTableModel modelo =
+        new DefaultTableModel(
+            new Object[] {
+                "ID",
+                "Descrição",
+                "Ativo"
+            },
+            0
+        ) {
+
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public boolean isCellEditable(
+                    int linha,
+                    int coluna) {
+
+                return false;
+            }
+        };
 
 
-	    public JTable getTabela() {
-	        return tabela;
-	    }
+    private final JTable tabela =
+        new JTable(modelo);
 
 
-	    public JButton getNovo() {
-	        return novo;
-	    }
+    public TelaHistoricoPadrao() {
+
+        setLayout(
+            new BorderLayout(8, 8)
+        );
+
+        setBorder(
+            BorderFactory.createEmptyBorder(
+                10,
+                10,
+                10,
+                10
+            )
+        );
+
+        montar();
+    }
 
 
-	    public JButton getSalvar() {
-	        return salvar;
-	    }
+    private void montar() {
+
+        /*
+         * ==========================================
+         * FORMULÁRIO
+         * ==========================================
+         */
+
+        JPanel formulario =
+            new JPanel(
+                new GridBagLayout()
+            );
+
+        formulario.setBorder(
+            BorderFactory.createTitledBorder(
+                "Históricos Padrões no Sistema"
+            )
+        );
 
 
-	    public JButton getInativar() {
-	        return inativar;
-	    }
+        GridBagConstraints g =
+            new GridBagConstraints();
+
+        g.insets =
+            new Insets(4, 4, 4, 4);
 
 
-	    public JButton getLimpar() {
-	        return limpar;
-	    }
+        componente(
+            formulario,
+            g,
+            0,
+            "Código",
+            id
+        );
 
 
-	    public JButton getBuscar() {
-	        return buscar;
-	    }
+        componente(
+            formulario,
+            g,
+            1,
+            "Descrição",
+            descricao
+        );
 
 
+        g.gridx = 1;
+        g.gridy = 2;
 
-	    public void setId(int valor) {
-	        id.setText(
-	                String.valueOf(valor)
-	        );
-	    }
-
-
-	    public void setDescricao(String valor) {
-	        descricao.setText(valor);
-	    }
+        formulario.add(
+            ativo,
+            g
+        );
 
 
-	    public void setAtivo(boolean valor) {
-	        ativo.setSelected(valor);
-	    }
-	}
+        /*
+         * O ID será gerado pelo banco.
+         */
+
+        id.setEditable(false);
+
+
+        /*
+         * ==========================================
+         * BOTÕES
+         * ==========================================
+         */
+
+        JPanel botoes =
+            new JPanel(
+                new FlowLayout(
+                    FlowLayout.LEFT
+                )
+            );
+
+        botoes.add(novo);
+        botoes.add(salvar);
+        botoes.add(inativar);
+        botoes.add(limpar);
+
+
+        JPanel superior =
+            new JPanel(
+                new BorderLayout()
+            );
+
+        superior.add(
+            formulario,
+            BorderLayout.CENTER
+        );
+
+        superior.add(
+            botoes,
+            BorderLayout.SOUTH
+        );
+
+        add(
+            superior,
+            BorderLayout.NORTH
+        );
+
+
+        /*
+         * ==========================================
+         * PESQUISA
+         * ==========================================
+         */
+
+        JPanel painelPesquisa =
+            new JPanel(
+                new FlowLayout(
+                    FlowLayout.LEFT
+                )
+            );
+
+        painelPesquisa.add(
+            new JLabel("Pesquisar:")
+        );
+
+        painelPesquisa.add(
+            pesquisa
+        );
+
+        painelPesquisa.add(
+            buscar
+        );
+
+
+        /*
+         * ==========================================
+         * TABELA
+         * ==========================================
+         */
+
+        JPanel painelTabela =
+            new JPanel(
+                new BorderLayout()
+            );
+
+        painelTabela.setBorder(
+            BorderFactory.createTitledBorder(
+                "Históricos Padrões"
+            )
+        );
+
+
+        tabela.setSelectionMode(
+            ListSelectionModel.SINGLE_SELECTION
+        );
+
+        tabela.setFillsViewportHeight(true);
+
+        tabela.setAutoCreateRowSorter(true);
+
+        tabela
+            .getTableHeader()
+            .setReorderingAllowed(false);
+
+
+        painelTabela.add(
+            painelPesquisa,
+            BorderLayout.NORTH
+        );
+
+        painelTabela.add(
+            new JScrollPane(tabela),
+            BorderLayout.CENTER
+        );
+
+
+        add(
+            painelTabela,
+            BorderLayout.CENTER
+        );
+    }
+
+
+    private void componente(
+            JPanel painel,
+            GridBagConstraints g,
+            int y,
+            String texto,
+            Component componente) {
+
+        g.gridx = 0;
+        g.gridy = y;
+
+        g.weightx = 0;
+
+        g.fill =
+            GridBagConstraints.NONE;
+
+        painel.add(
+            new JLabel(texto),
+            g
+        );
+
+
+        g.gridx = 1;
+
+        g.weightx = 1;
+
+        g.fill =
+            GridBagConstraints.HORIZONTAL;
+
+        painel.add(
+            componente,
+            g
+        );
+    }
+
+
+    /*
+     * ==========================================
+     * LIMPAR FORMULÁRIO
+     * ==========================================
+     */
+
+    public void limpar() {
+
+        id.setText("");
+
+        descricao.setText("");
+
+        ativo.setSelected(true);
+    }
+
+
+    /*
+     * ==========================================
+     * TABELA
+     * ==========================================
+     */
+
+    public void limparTabela() {
+
+        modelo.setRowCount(0);
+    }
+
+
+    public void adicionarLinha(
+            HistoricoPadrao historico) {
+
+        modelo.addRow(
+            new Object[] {
+                historico.getId(),
+                historico.getDescricao(),
+                historico.isAtivo()
+            }
+        );
+    }
+
+
+    /*
+     * ==========================================
+     * ID SELECIONADO
+     * ==========================================
+     */
+
+    public long getIdSelecionado() {
+
+        int linha =
+            tabela.getSelectedRow();
+
+
+        if (linha == -1) {
+
+            return 0;
+        }
+
+
+        int linhaModelo =
+            tabela.convertRowIndexToModel(
+                linha
+            );
+
+
+        return Long.parseLong(
+            modelo
+                .getValueAt(
+                    linhaModelo,
+                    0
+                )
+                .toString()
+        );
+    }
+
+
+    /*
+     * ==========================================
+     * GETTERS
+     * ==========================================
+     */
+
+    public long getId() {
+
+        try {
+
+            return Long.parseLong(
+                id.getText()
+            );
+
+        } catch (NumberFormatException e) {
+
+            return 0;
+        }
+    }
+
+
+    public String getDescricao() {
+        return descricao.getText();
+    }
+
+
+    public String getPesquisa() {
+        return pesquisa.getText();
+    }
+
+
+    public boolean isAtivo() {
+        return ativo.isSelected();
+    }
+
+
+    public JTable getTabela() {
+        return tabela;
+    }
+
+
+    public JButton getNovo() {
+        return novo;
+    }
+
+
+    public JButton getSalvar() {
+        return salvar;
+    }
+
+
+    public JButton getInativar() {
+        return inativar;
+    }
+
+
+    public JButton getLimpar() {
+        return limpar;
+    }
+
+
+    public JButton getBuscar() {
+        return buscar;
+    }
+
+
+    /*
+     * ==========================================
+     * SETTERS
+     * ==========================================
+     */
+
+    public void setId(long valor) {
+
+        id.setText(
+            String.valueOf(valor)
+        );
+    }
+
+
+    public void setDescricao(
+            String valor) {
+
+        descricao.setText(valor);
+    }
+
+
+    public void setAtivo(
+            boolean valor) {
+
+        ativo.setSelected(valor);
+    }
+}

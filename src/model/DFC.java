@@ -1,69 +1,97 @@
 package model;
 
-import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class DFC {
 
-    private LocalDate dataInicio;
-    private LocalDate dataFim;
-    private BigDecimal saldoInicial = BigDecimal.ZERO;
-    private BigDecimal variacaoCaixa = BigDecimal.ZERO;
-    private BigDecimal saldoFinal = BigDecimal.ZERO;
+    private long id;
+    private long empresaId;
+    private String descricao;
+    private String metodo = "DIRETO";
+    private boolean favorito = false;
+    private boolean ativo = true;
+    private LocalDateTime criadoEm;
     private ArrayList<ItemDFC> itens = new ArrayList<>();
 
     public DFC() {
     }
 
-    public DFC(LocalDate dataInicio, LocalDate dataFim, BigDecimal saldoInicial, BigDecimal variacaoCaixa,
-            BigDecimal saldoFinal, ArrayList<ItemDFC> itens) {
-        this.dataInicio = dataInicio;
-        this.dataFim = dataFim;
-        this.saldoInicial = saldoInicial;
-        this.variacaoCaixa = variacaoCaixa;
-        this.saldoFinal = saldoFinal;
+    public DFC(
+            long id,
+            long empresaId,
+            String descricao,
+            String metodo,
+            boolean favorito,
+            boolean ativo,
+            LocalDateTime criadoEm,
+            ArrayList<ItemDFC> itens) {
+
+        this.id = id;
+        this.empresaId = empresaId;
+        this.descricao = descricao;
+        this.metodo = metodo;
+        this.favorito = favorito;
+        this.ativo = ativo;
+        this.criadoEm = criadoEm;
         this.itens = itens;
     }
 
-    public LocalDate getDataInicio() {
-        return dataInicio;
+    public long getId() {
+        return id;
     }
 
-    public void setDataInicio(LocalDate dataInicio) {
-        this.dataInicio = dataInicio;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public LocalDate getDataFim() {
-        return dataFim;
+    public long getEmpresaId() {
+        return empresaId;
     }
 
-    public void setDataFim(LocalDate dataFim) {
-        this.dataFim = dataFim;
+    public void setEmpresaId(long empresaId) {
+        this.empresaId = empresaId;
     }
 
-    public BigDecimal getSaldoInicial() {
-        return saldoInicial;
+    public String getDescricao() {
+        return descricao;
     }
 
-    public void setSaldoInicial(BigDecimal saldoInicial) {
-        this.saldoInicial = saldoInicial;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
-    public BigDecimal getVariacaoCaixa() {
-        return variacaoCaixa;
+    public String getMetodo() {
+        return metodo;
     }
 
-    public void setVariacaoCaixa(BigDecimal variacaoCaixa) {
-        this.variacaoCaixa = variacaoCaixa;
+    public void setMetodo(String metodo) {
+        this.metodo = metodo;
     }
 
-    public BigDecimal getSaldoFinal() {
-        return saldoFinal;
+    public boolean isFavorito() {
+        return favorito;
     }
 
-    public void setSaldoFinal(BigDecimal saldoFinal) {
-        this.saldoFinal = saldoFinal;
+    public void setFavorito(boolean favorito) {
+        this.favorito = favorito;
+    }
+
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
+    }
+
+    public LocalDateTime getCriadoEm() {
+        return criadoEm;
+    }
+
+    public void setCriadoEm(LocalDateTime criadoEm) {
+        this.criadoEm = criadoEm;
     }
 
     public ArrayList<ItemDFC> getItens() {
@@ -72,5 +100,10 @@ public class DFC {
 
     public void setItens(ArrayList<ItemDFC> itens) {
         this.itens = itens;
+    }
+
+    @Override
+    public String toString() {
+        return descricao;
     }
 }

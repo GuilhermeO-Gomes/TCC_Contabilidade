@@ -10,9 +10,11 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -22,8 +24,14 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
+import model.DFC;
+import model.DfcLinhaRelatorio;
+import model.DfcRelatorio;
 
 public class TelaDFC extends JPanel {
 
@@ -35,7 +43,10 @@ public class TelaDFC extends JPanel {
             txtVar = new JTextField("0,00", 12),
             txtSaldoFim = new JTextField("0,00", 12);
 
-    // O controller fornece os dados, calcula os saldos e gera os arquivos.
+    private long empresaId;
+    private final JTextField txtEmpresa = new JTextField(25),
+            txtMetodo = new JTextField(15);
+    private final JComboBox<DFC> cbDFC = new JComboBox<>();
     private final JButton btGerar = new JButton("Gerar DFC"),
             btPDF = new JButton("Exportar PDF"),
             btExcel = new JButton("Exportar Excel"),
@@ -59,6 +70,31 @@ public class TelaDFC extends JPanel {
         setLayout(new BorderLayout(8, 8));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         montar();
+        DocumentListener periodo = new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                limparResultado();
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                limparResultado();
+            }
+
+            public void changedUpdate(DocumentEvent e) {
+                limparResultado();
+            }
+        };
+        txtInicio.getDocument().addDocumentListener(periodo);
+        txtFim.getDocument().addDocumentListener(periodo);
+        txtEmpresa.setEditable(false);
+        txtMetodo.setEditable(false);
+        limparResultado();
+        btGerar.setEnabled(false);
+        cbDFC.addActionListener(e -> {
+            DFC configuracao = (DFC) cbDFC.getSelectedItem();
+            txtMetodo.setText(configuracao == null ? "" : configuracao.getMetodo());
+            limparResultado();
+            btGerar.setEnabled(configuracao != null);
+        });
     }
 
     private void montar() {
@@ -73,6 +109,10 @@ public class TelaDFC extends JPanel {
         periodo.add(new JLabel("  até  "));
         periodo.add(txtFim);
         componente(f, g, 0, "Período (dd/mm/aaaa):", periodo);
+
+        componente(f, g, 1, "Empresa:", txtEmpresa);
+        componente(f, g, 2, "Configuração DFC:", cbDFC);
+        componente(f, g, 3, "Método:", txtMetodo);
 
         JPanel b = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
         b.add(btGerar);
@@ -170,8 +210,6 @@ public class TelaDFC extends JPanel {
         dialogo.setMinimumSize(new Dimension(700, 420));
         dialogo.setLocationRelativeTo(this);
         dialogo.setVisible(true);
-        // A janela é recriada na próxima consulta com os valores atualizados.
-        tab.setModel(new DefaultTableModel());
     }
 
     private void componente(JPanel painel, GridBagConstraints organizador,
@@ -192,11 +230,94 @@ public class TelaDFC extends JPanel {
     public void limpar() {
         txtInicio.setText("");
         txtFim.setText("");
+        cbDFC.setSelectedIndex(-1);
+        limparResultado();
+    }
+
+    public void limparResultado() {
         tabela.clearSelection();
         modelo.setRowCount(0);
         txtSaldoIni.setText("0,00");
         txtVar.setText("0,00");
         txtSaldoFim.setText("0,00");
+        btVisualizar.setEnabled(false);
+        btPDF.setEnabled(false);
+        btExcel.setEnabled(false);
+    }
+
+    public void setContexto(long empresaId, String empresa) {
+        this.empresaId = empresaId;
+        txtEmpresa.setText(empresa);
+        cbDFC.removeAllItems();
+        limpar();
+    }
+
+    public void carregarConfiguracoes(List<DFC> configuracoes) {
+        cbDFC.removeAllItems();
+        for (DFC configuracao : configuracoes) {
+            if (configuracao.getEmpresaId() == empresaId && configuracao.isAtivo()) {
+                cbDFC.addItem(configuracao);
+            }
+        }
+        cbDFC.setSelectedIndex(-1);
+    }
+
+    public void exibirRelatorio(DfcRelatorio relatorio) {
+        DFC configuracao = (DFC) cbDFC.getSelectedItem();
+        if (configuracao == null || relatorio.getDfcId() != configuracao.getId()
+                || relatorio.getEmpresaId() != empresaId) {
+            throw new IllegalArgumentException("O relatório não pertence à configuração selecionada.");
+        }
+        if (relatorio.getDataInicio() == null || relatorio.getDataFim() == null
+                || relatorio.getDataInicio().isAfter(relatorio.getDataFim())
+                || relatorio.getSaldoInicial().add(relatorio.getVariacaoCaixa()).compareTo(relatorio.getSaldoFinal()) != 0) {
+            throw new IllegalArgumentException("Confira o período e a consistência dos saldos da DFC.");
+        }
+        java.time.format.DateTimeFormatter formato = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        txtInicio.setText(relatorio.getDataInicio().format(formato));
+        txtFim.setText(relatorio.getDataFim().format(formato));
+        limparResultado();
+        java.util.ArrayList<DfcLinhaRelatorio> linhas = new java.util.ArrayList<>(relatorio.getLinhas());
+        linhas.sort(java.util.Comparator.comparingInt(DfcLinhaRelatorio::getOrdem));
+        java.util.Map<Long, DfcLinhaRelatorio> porId = new java.util.HashMap<>();
+        for (DfcLinhaRelatorio linha : linhas) {
+            porId.put(linha.getItemId(), linha);
+        }
+        for (DfcLinhaRelatorio linha : linhas) {
+            String descricao = linha.getDescricao();
+            Long superior = linha.getItemSuperiorId();
+            java.util.HashSet<Long> visitados = new java.util.HashSet<>();
+            visitados.add(linha.getItemId());
+            while (superior != null && porId.containsKey(superior) && visitados.add(superior)) {
+                descricao = "    " + descricao;
+                superior = porId.get(superior).getItemSuperiorId();
+            }
+            modelo.addRow(new Object[] {linha.getGrupo(), descricao,
+                    linha.getEntradas(), linha.getSaidas(), linha.getFluxoLiquido()});
+        }
+        java.text.NumberFormat moeda = java.text.NumberFormat.getNumberInstance(
+                new java.util.Locale("pt", "BR"));
+        moeda.setMinimumFractionDigits(2);
+        moeda.setMaximumFractionDigits(2);
+        txtSaldoIni.setText(moeda.format(relatorio.getSaldoInicial()));
+        txtVar.setText(moeda.format(relatorio.getVariacaoCaixa()));
+        txtSaldoFim.setText(moeda.format(relatorio.getSaldoFinal()));
+        boolean temLinhas = modelo.getRowCount() > 0;
+        btVisualizar.setEnabled(temLinhas);
+        btPDF.setEnabled(temLinhas);
+        btExcel.setEnabled(temLinhas);
+    }
+
+    public long getEmpresaId() {
+        return empresaId;
+    }
+
+    public JComboBox<DFC> getCbDFC() {
+        return cbDFC;
+    }
+
+    public JTextField getTxtMetodo() {
+        return txtMetodo;
     }
 
     public JTextField getTxtInicio() {

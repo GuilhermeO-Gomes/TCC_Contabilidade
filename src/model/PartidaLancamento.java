@@ -4,64 +4,73 @@ import java.math.BigDecimal;
 
 public class PartidaLancamento {
 
-    private int idItem;
-    private int idLancamento;
-    private String conta;
-    private Integer idCentroCusto;
-    private String tipoPartida;
+    private long id;
+    private long lancamentoId;
+    private long contaId;
+    private Long centroCustoId;
+    private TipoMovimento tipoMovimento;
     private BigDecimal valor = BigDecimal.ZERO;
+    private String descricao;
 
     public PartidaLancamento() {
     }
 
-    public PartidaLancamento(int idItem, int idLancamento, String conta, Integer idCentroCusto,
-            String tipoPartida, BigDecimal valor) {
-        this.idItem = idItem;
-        this.idLancamento = idLancamento;
-        this.conta = conta;
-        this.idCentroCusto = idCentroCusto;
-        this.tipoPartida = tipoPartida;
+    public PartidaLancamento(
+            long id,
+            long lancamentoId,
+            long contaId,
+            Long centroCustoId,
+            TipoMovimento tipoMovimento,
+            BigDecimal valor,
+            String descricao) {
+
+        this.id = id;
+        this.lancamentoId = lancamentoId;
+        this.contaId = contaId;
+        this.centroCustoId = centroCustoId;
+        this.tipoMovimento = tipoMovimento;
         this.valor = valor;
+        this.descricao = descricao;
     }
 
-    public int getIdItem() {
-        return idItem;
+    public long getId() {
+        return id;
     }
 
-    public void setIdItem(int idItem) {
-        this.idItem = idItem;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public int getIdLancamento() {
-        return idLancamento;
+    public long getLancamentoId() {
+        return lancamentoId;
     }
 
-    public void setIdLancamento(int idLancamento) {
-        this.idLancamento = idLancamento;
+    public void setLancamentoId(long lancamentoId) {
+        this.lancamentoId = lancamentoId;
     }
 
-    public String getConta() {
-        return conta;
+    public long getContaId() {
+        return contaId;
     }
 
-    public void setConta(String conta) {
-        this.conta = conta;
+    public void setContaId(long contaId) {
+        this.contaId = contaId;
     }
 
-    public Integer getIdCentroCusto() {
-        return idCentroCusto;
+    public Long getCentroCustoId() {
+        return centroCustoId;
     }
 
-    public void setIdCentroCusto(Integer idCentroCusto) {
-        this.idCentroCusto = idCentroCusto;
+    public void setCentroCustoId(Long centroCustoId) {
+        this.centroCustoId = centroCustoId;
     }
 
-    public String getTipoPartida() {
-        return tipoPartida;
+    public TipoMovimento getTipoMovimento() {
+        return tipoMovimento;
     }
 
-    public void setTipoPartida(String tipoPartida) {
-        this.tipoPartida = tipoPartida;
+    public void setTipoMovimento(TipoMovimento tipoMovimento) {
+        this.tipoMovimento = tipoMovimento;
     }
 
     public BigDecimal getValor() {
@@ -70,5 +79,13 @@ public class PartidaLancamento {
 
     public void setValor(BigDecimal valor) {
         this.valor = valor;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 }

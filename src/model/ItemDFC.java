@@ -1,33 +1,69 @@
 package model;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
 
 public class ItemDFC {
 
-    private String atividade;
+    private long id;
+    private long dfcId;
+    private int ordem;
     private String descricao;
-    private BigDecimal entradas = BigDecimal.ZERO;
-    private BigDecimal saidas = BigDecimal.ZERO;
-    private BigDecimal fluxoLiquido = BigDecimal.ZERO;
+    private String grupo;
+    private String tipoLinha = "DETALHE";
+    private String efeito = "SOMA";
+    private Long itemSuperiorId;
+    private boolean ativo = true;
+    private ArrayList<DfcItemAglutinacao> aglutinacoes = new ArrayList<>();
 
     public ItemDFC() {
     }
 
-    public ItemDFC(String atividade, String descricao, BigDecimal entradas, BigDecimal saidas,
-            BigDecimal fluxoLiquido) {
-        this.atividade = atividade;
+    public ItemDFC(
+            long id,
+            long dfcId,
+            int ordem,
+            String descricao,
+            String grupo,
+            String tipoLinha,
+            String efeito,
+            Long itemSuperiorId,
+            boolean ativo,
+            ArrayList<DfcItemAglutinacao> aglutinacoes) {
+
+        this.id = id;
+        this.dfcId = dfcId;
+        this.ordem = ordem;
         this.descricao = descricao;
-        this.entradas = entradas;
-        this.saidas = saidas;
-        this.fluxoLiquido = fluxoLiquido;
+        this.grupo = grupo;
+        this.tipoLinha = tipoLinha;
+        this.efeito = efeito;
+        this.itemSuperiorId = itemSuperiorId;
+        this.ativo = ativo;
+        this.aglutinacoes = aglutinacoes;
     }
 
-    public String getAtividade() {
-        return atividade;
+    public long getId() {
+        return id;
     }
 
-    public void setAtividade(String atividade) {
-        this.atividade = atividade;
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getDfcId() {
+        return dfcId;
+    }
+
+    public void setDfcId(long dfcId) {
+        this.dfcId = dfcId;
+    }
+
+    public int getOrdem() {
+        return ordem;
+    }
+
+    public void setOrdem(int ordem) {
+        this.ordem = ordem;
     }
 
     public String getDescricao() {
@@ -38,27 +74,51 @@ public class ItemDFC {
         this.descricao = descricao;
     }
 
-    public BigDecimal getEntradas() {
-        return entradas;
+    public String getGrupo() {
+        return grupo;
     }
 
-    public void setEntradas(BigDecimal entradas) {
-        this.entradas = entradas;
+    public void setGrupo(String grupo) {
+        this.grupo = grupo;
     }
 
-    public BigDecimal getSaidas() {
-        return saidas;
+    public String getTipoLinha() {
+        return tipoLinha;
     }
 
-    public void setSaidas(BigDecimal saidas) {
-        this.saidas = saidas;
+    public void setTipoLinha(String tipoLinha) {
+        this.tipoLinha = tipoLinha;
     }
 
-    public BigDecimal getFluxoLiquido() {
-        return fluxoLiquido;
+    public String getEfeito() {
+        return efeito;
     }
 
-    public void setFluxoLiquido(BigDecimal fluxoLiquido) {
-        this.fluxoLiquido = fluxoLiquido;
+    public void setEfeito(String efeito) {
+        this.efeito = efeito;
+    }
+
+    public Long getItemSuperiorId() {
+        return itemSuperiorId;
+    }
+
+    public void setItemSuperiorId(Long itemSuperiorId) {
+        this.itemSuperiorId = itemSuperiorId;
+    }
+
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
+    }
+
+    public ArrayList<DfcItemAglutinacao> getAglutinacoes() {
+        return aglutinacoes;
+    }
+
+    public void setAglutinacoes(ArrayList<DfcItemAglutinacao> aglutinacoes) {
+        this.aglutinacoes = aglutinacoes;
     }
 }

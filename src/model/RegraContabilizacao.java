@@ -1,31 +1,74 @@
 package model;
 
+import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.ArrayList;
+
 public class RegraContabilizacao {
 
-    private int idRegra;
+    private long id;
+    private long empresaId;
+    private String moduloOrigem;
+    private String eventoOrigem;
     private String descricaoEvento;
-    private String contaDebito;
-    private String contaCredito;
-    private boolean ativa = true;
+    private boolean ativo = true;
+    private LocalDateTime criadoEm;
+    private ArrayList<RegraContabilizacaoItem> itens = new ArrayList<>();
 
     public RegraContabilizacao() {
     }
 
-    public RegraContabilizacao(int idRegra, String descricaoEvento, String contaDebito,
-            String contaCredito, boolean ativa) {
-        this.idRegra = idRegra;
+    public RegraContabilizacao(
+            long id,
+            long empresaId,
+            String moduloOrigem,
+            String eventoOrigem,
+            String descricaoEvento,
+            boolean ativo,
+            LocalDateTime criadoEm,
+            ArrayList<RegraContabilizacaoItem> itens) {
+
+        this.id = id;
+        this.empresaId = empresaId;
+        this.moduloOrigem = moduloOrigem;
+        this.eventoOrigem = eventoOrigem;
         this.descricaoEvento = descricaoEvento;
-        this.contaDebito = contaDebito;
-        this.contaCredito = contaCredito;
-        this.ativa = ativa;
+        this.ativo = ativo;
+        this.criadoEm = criadoEm;
+        this.itens = itens;
     }
 
-    public int getIdRegra() {
-        return idRegra;
+    public long getId() {
+        return id;
     }
 
-    public void setIdRegra(int idRegra) {
-        this.idRegra = idRegra;
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getEmpresaId() {
+        return empresaId;
+    }
+
+    public void setEmpresaId(long empresaId) {
+        this.empresaId = empresaId;
+    }
+
+    public String getModuloOrigem() {
+        return moduloOrigem;
+    }
+
+    public void setModuloOrigem(String moduloOrigem) {
+        this.moduloOrigem = moduloOrigem;
+    }
+
+    public String getEventoOrigem() {
+        return eventoOrigem;
+    }
+
+    public void setEventoOrigem(String eventoOrigem) {
+        this.eventoOrigem = eventoOrigem;
     }
 
     public String getDescricaoEvento() {
@@ -36,27 +79,61 @@ public class RegraContabilizacao {
         this.descricaoEvento = descricaoEvento;
     }
 
-    public String getContaDebito() {
-        return contaDebito;
+    public boolean isAtivo() {
+        return ativo;
     }
 
-    public void setContaDebito(String contaDebito) {
-        this.contaDebito = contaDebito;
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
     }
 
-    public String getContaCredito() {
-        return contaCredito;
+    public LocalDateTime getCriadoEm() {
+        return criadoEm;
     }
 
-    public void setContaCredito(String contaCredito) {
-        this.contaCredito = contaCredito;
+    public void setCriadoEm(LocalDateTime criadoEm) {
+        this.criadoEm = criadoEm;
     }
 
-    public boolean isAtiva() {
-        return ativa;
+    public ArrayList<RegraContabilizacaoItem> getItens() {
+        return itens;
     }
 
-    public void setAtiva(boolean ativa) {
-        this.ativa = ativa;
+    public void setItens(ArrayList<RegraContabilizacaoItem> itens) {
+        this.itens = itens;
+    }
+    public boolean itensValidos() {
+        if (itens == null || itens.isEmpty()) {
+            return false;
+        }
+        HashSet<Integer> ordens = new HashSet<>();
+        for (RegraContabilizacaoItem item : itens) {
+            if (item == null || item.getContaId() <= 0 || item.getOrdem() < 0
+                    || !ordens.add(item.getOrdem()) || item.getTipoMovimento() == null
+                    || item.getPercentual() == null || item.getPercentual().signum() <= 0
+                    || item.getPercentual().compareTo(new BigDecimal("100")) > 0
+                    || item.getPercentual().stripTrailingZeros().scale() > 4
+                    || (item.getDescricao() != null && item.getDescricao().length() > 255)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean percentuaisValidos() {
+        if (!itensValidos()) {
+            return false;
+        }
+        BigDecimal debitos = BigDecimal.ZERO;
+        BigDecimal creditos = BigDecimal.ZERO;
+        for (RegraContabilizacaoItem item : itens) {
+            if (item.getTipoMovimento() == TipoMovimento.DEBITO) {
+                debitos = debitos.add(item.getPercentual());
+            } else {
+                creditos = creditos.add(item.getPercentual());
+            }
+        }
+        BigDecimal cem = new BigDecimal("100");
+        return debitos.compareTo(cem) == 0 && creditos.compareTo(cem) == 0;
     }
 }

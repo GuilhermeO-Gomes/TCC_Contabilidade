@@ -10,6 +10,9 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -27,6 +30,10 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import model.Lancamento;
+import model.PartidaLancamento;
+import model.TipoMovimento;
+
 public class TelaLancamentos extends JPanel {
 
     private static final long serialVersionUID = 1L;
@@ -43,13 +50,25 @@ public class TelaLancamentos extends JPanel {
             txtFim = new JTextField(10),
             txtPesq = new JTextField(25);
 
-    private final JComboBox<String> cbLote = new JComboBox<>(new String[] {"Selecione um lote"}),
-            cbHist = new JComboBox<>(new String[] {"Selecione um histórico"}),
-            cbConta = new JComboBox<>(new String[] {"Selecione uma conta"}),
-            cbTipo = new JComboBox<>(new String[] {"Débito", "Crédito"}),
-            cbCC = new JComboBox<>(new String[] {"Não informado"}),
-            cbContaPesq = new JComboBox<>(new String[] {"Todas as contas"}),
-            cbCCPesq = new JComboBox<>(new String[] {"Todos os centros de custos"});
+    private long empresaId;
+    private Lancamento selecionado;
+    private final ArrayList<PartidaLancamento> partidas = new ArrayList<>();
+    private final ArrayList<Lancamento> lancamentos = new ArrayList<>();
+    private final JTextField txtEmpresa = new JTextField(25),
+            txtStatus = new JTextField("RASCUNHO", 15),
+            txtOrigem = new JTextField("MANUAL", 15),
+            txtDescricaoPartida = new JTextField(25);
+    private final JComboBox<Long> cbExercicio = new JComboBox<>(),
+            cbLote = new JComboBox<>(),
+            cbHist = new JComboBox<>(),
+            cbConta = new JComboBox<>(),
+            cbCC = new JComboBox<>(),
+            cbContaPesq = new JComboBox<>(),
+            cbCCPesq = new JComboBox<>();
+    private final JComboBox<TipoMovimento> cbTipo = new JComboBox<>(TipoMovimento.values());
+    private final JComboBox<String> cbStatusPesq = new JComboBox<>(
+            new String[] {"Todos", "RASCUNHO", "CONTABILIZADO", "ESTORNADO"});
+    private final JButton btContabilizar = new JButton("Contabilizar");
 
     private final JButton btNovo = new JButton("Novo"),
             btSalvar = new JButton("Salvar"),
@@ -64,7 +83,7 @@ public class TelaLancamentos extends JPanel {
             btEstornar = new JButton("Estornar lançamento");
 
     private final DefaultTableModel modeloPartidas = new DefaultTableModel(
-            new Object[] {"Conta", "Centro de custos", "Débito (R$)", "Crédito (R$)"}, 0
+            new Object[] {"Conta", "Centro de custos", "Débito (R$)", "Crédito (R$)", "Descrição"}, 0
     ) {
         private static final long serialVersionUID = 1L;
         public boolean isCellEditable(int l, int c) {
@@ -73,7 +92,7 @@ public class TelaLancamentos extends JPanel {
     };
 
     private final DefaultTableModel modeloLancamentos = new DefaultTableModel(
-            new Object[] {"Código", "Data", "Documento", "Lote", "Histórico", "Débito (R$)", "Crédito (R$)"}, 0
+            new Object[] {"Código", "Data", "Documento", "Lote", "Histórico", "Débito (R$)", "Crédito (R$)", "Status"}, 0
     ) {
         private static final long serialVersionUID = 1L;
         public boolean isCellEditable(int l, int c) {
@@ -94,6 +113,35 @@ public class TelaLancamentos extends JPanel {
         setLayout(new BorderLayout(8, 8));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         montar();
+        btNovo.addActionListener(e -> limpar());
+        btAdicionar.addActionListener(e -> gravarPartida(false));
+        btAlterar.addActionListener(e -> gravarPartida(true));
+        btRemover.addActionListener(e -> {
+            int linha = tabelaPartidas.getSelectedRow();
+            if ("RASCUNHO".equals(txtStatus.getText()) && linha != -1) {
+                partidas.remove(linha);
+                modeloPartidas.removeRow(linha);
+                atualizarTotais();
+                limparPartida();
+            }
+        });
+        btAbrir.addActionListener(e -> {
+            int linha = tabelaLancamentos.getSelectedRow();
+            if (linha != -1) {
+                long id = ((Number) tabelaLancamentos.getValueAt(linha, 0)).longValue();
+                for (Lancamento lancamento : lancamentos) {
+                    if (lancamento.getId() == id) {
+                        exibirLancamento(lancamento);
+                        abas.setSelectedIndex(0);
+                        break;
+                    }
+                }
+            }
+        });
+        txtEmpresa.setEditable(false);
+        txtStatus.setEditable(false);
+        txtOrigem.setEditable(false);
+        setStatus("RASCUNHO");
     }
 
     private void montar() {
@@ -124,6 +172,10 @@ public class TelaLancamentos extends JPanel {
         componente(dados, g, 3, "Lote:", cbLote);
         componente(dados, g, 4, "Histórico padrão:", cbHist);
         componente(dados, g, 5, "Complemento:", txtHist);
+        componente(dados, g, 6, "Empresa:", txtEmpresa);
+        componente(dados, g, 7, "Exercício:", cbExercicio);
+        componente(dados, g, 8, "Origem:", txtOrigem);
+        componente(dados, g, 9, "Status:", txtStatus);
         txtCod.setEditable(false);
         txtHist.setToolTipText("Descrição complementar do lançamento.");
 
@@ -135,6 +187,7 @@ public class TelaLancamentos extends JPanel {
         componente(partida, g, 1, "Tipo:", cbTipo);
         componente(partida, g, 2, "Centro de custos:", cbCC);
         componente(partida, g, 3, "Valor (R$):", txtValor);
+        componente(partida, g, 4, "Descrição:", txtDescricaoPartida);
         txtValor.setHorizontalAlignment(JTextField.RIGHT);
         txtValor.setToolTipText("Exemplo: 1500,00");
         cbCC.setToolTipText("Informe quando a conta exigir centro de custos.");
@@ -188,11 +241,12 @@ public class TelaLancamentos extends JPanel {
         botoes.add(btNovo);
         botoes.add(btSalvar);
         botoes.add(btAtual);
+        botoes.add(btContabilizar);
         botoes.add(btLimpar);
 
         JPanel rodape = new JPanel(new BorderLayout(4, 4));
         rodape.add(totais, BorderLayout.NORTH);
-        rodape.add(new JLabel("O total de débitos deve ser igual ao total de créditos."), BorderLayout.CENTER);
+        rodape.add(new JLabel("Contabilizar exige débitos e créditos iguais. O rascunho pode ficar desequilibrado."), BorderLayout.CENTER);
         rodape.add(botoes, BorderLayout.SOUTH);
         painel.add(rodape, BorderLayout.SOUTH);
         return painel;
@@ -236,24 +290,23 @@ public class TelaLancamentos extends JPanel {
         cbTipo.setSelectedIndex(credito ? 1 : 0);
         Object selecionado = tabelaPartidas.getValueAt(linha, credito ? 3 : 2);
         txtValor.setText(selecionado == null ? "" : selecionado.toString());
+        Object descricao = tabelaPartidas.getValueAt(linha, 4);
+        txtDescricaoPartida.setText(descricao == null ? "" : descricao.toString());
         btAdicionar.setEnabled(false);
         btAlterar.setEnabled(true);
         abrirPartida("Editar partida");
     }
 
-    private void selecionarItem(JComboBox<String> combo, Object valor) {
-        String item = valor == null ? "" : valor.toString();
-        for (int i = 0; i < combo.getItemCount(); i++) {
-            if (item.equals(combo.getItemAt(i))) {
-                combo.setSelectedIndex(i);
-                return;
+    private void selecionarItem(JComboBox<Long> combo, Object valor) {
+        combo.setSelectedIndex(-1);
+        if (valor instanceof Number) {
+            long id = ((Number) valor).longValue();
+            for (int i = 0; i < combo.getItemCount(); i++) {
+                if (combo.getItemAt(i).longValue() == id) {
+                    combo.setSelectedIndex(i);
+                    return;
+                }
             }
-        }
-        if (!item.isEmpty()) {
-            combo.addItem(item);
-            combo.setSelectedItem(item);
-        } else {
-            combo.setSelectedIndex(-1);
         }
     }
 
@@ -275,6 +328,8 @@ public class TelaLancamentos extends JPanel {
         componente(filtros, g, 1, "Histórico / descrição:", txtPesq);
         componente(filtros, g, 2, "Conta:", cbContaPesq);
         componente(filtros, g, 3, "Centro de custos:", cbCCPesq);
+
+        componente(filtros, g, 4, "Status:", cbStatusPesq);
 
         JPanel busca = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
         busca.add(btBuscar);
@@ -304,7 +359,9 @@ public class TelaLancamentos extends JPanel {
         btEstornar.setEnabled(false);
         btEstornar.setToolTipText("O estorno gera um lançamento reverso e preserva o original.");
         tabelaLancamentos.getSelectionModel().addListSelectionListener(e -> {
-            btEstornar.setEnabled(tabelaLancamentos.getSelectedRow() != -1);
+            int linha = tabelaLancamentos.getSelectedRow();
+            btEstornar.setEnabled(linha != -1
+                    && "CONTABILIZADO".equals(tabelaLancamentos.getValueAt(linha, 7)));
         });
         painel.add(botoes, BorderLayout.SOUTH);
         return painel;
@@ -326,27 +383,32 @@ public class TelaLancamentos extends JPanel {
     }
 
     public void limparPartida() {
-        cbConta.setSelectedIndex(0);
+        cbConta.setSelectedIndex(-1);
         cbTipo.setSelectedIndex(0);
-        cbCC.setSelectedIndex(0);
+        cbCC.setSelectedIndex(-1);
         txtValor.setText("");
+        txtDescricaoPartida.setText("");
         tabelaPartidas.clearSelection();
-        btAdicionar.setEnabled(true);
+        btAdicionar.setEnabled("RASCUNHO".equals(txtStatus.getText()));
         btAlterar.setEnabled(false);
     }
 
     public void limpar() {
+        selecionado = null;
+        partidas.clear();
         txtCod.setText("");
         txtData.setText("");
         txtDoc.setText("");
-        cbLote.setSelectedIndex(0);
-        cbHist.setSelectedIndex(0);
+        cbLote.setSelectedIndex(-1);
+        cbHist.setSelectedIndex(-1);
         txtHist.setText("");
         limparPartida();
         modeloPartidas.setRowCount(0);
         txtDeb.setText("0,00");
         txtCred.setText("0,00");
         txtDif.setText("0,00");
+        txtOrigem.setText("MANUAL");
+        setStatus("RASCUNHO");
     }
 
     public JTextField getTxtCod() {
@@ -393,31 +455,31 @@ public class TelaLancamentos extends JPanel {
         return txtPesq;
     }
 
-    public JComboBox<String> getCbLote() {
+    public JComboBox<Long> getCbLote() {
         return cbLote;
     }
 
-    public JComboBox<String> getCbHist() {
+    public JComboBox<Long> getCbHist() {
         return cbHist;
     }
 
-    public JComboBox<String> getCbConta() {
+    public JComboBox<Long> getCbConta() {
         return cbConta;
     }
 
-    public JComboBox<String> getCbTipo() {
+    public JComboBox<TipoMovimento> getCbTipo() {
         return cbTipo;
     }
 
-    public JComboBox<String> getCbCC() {
+    public JComboBox<Long> getCbCC() {
         return cbCC;
     }
 
-    public JComboBox<String> getCbContaPesq() {
+    public JComboBox<Long> getCbContaPesq() {
         return cbContaPesq;
     }
 
-    public JComboBox<String> getCbCCPesq() {
+    public JComboBox<Long> getCbCCPesq() {
         return cbCCPesq;
     }
 
@@ -488,4 +550,240 @@ public class TelaLancamentos extends JPanel {
     public JDialog getDialogoPartida() {
         return dialogoPartida;
     }
+
+    public void setContexto(long empresaId, String empresa) {
+        this.empresaId = empresaId;
+        txtEmpresa.setText(empresa);
+        cbExercicio.removeAllItems();
+        cbLote.removeAllItems();
+        cbHist.removeAllItems();
+        cbConta.removeAllItems();
+        cbCC.removeAllItems();
+        cbContaPesq.removeAllItems();
+        cbCCPesq.removeAllItems();
+        modeloLancamentos.setRowCount(0);
+        lancamentos.clear();
+        limpar();
+    }
+
+    public void setStatus(String status) {
+        txtStatus.setText(status);
+        boolean rascunho = "RASCUNHO".equals(status);
+        txtData.setEditable(rascunho);
+        txtDoc.setEditable(rascunho);
+        txtHist.setEditable(rascunho);
+        cbExercicio.setEnabled(rascunho);
+        cbLote.setEnabled(rascunho);
+        cbHist.setEnabled(rascunho);
+        cbConta.setEnabled(rascunho);
+        cbCC.setEnabled(rascunho);
+        cbTipo.setEnabled(rascunho);
+        txtValor.setEditable(rascunho);
+        txtDescricaoPartida.setEditable(rascunho);
+        btSalvar.setEnabled(rascunho);
+        btAtual.setEnabled(rascunho && !txtCod.getText().isEmpty());
+        btContabilizar.setEnabled(rascunho);
+        btNovaPartida.setEnabled(rascunho);
+        btEditarPartida.setEnabled(rascunho);
+        btRemover.setEnabled(rascunho);
+        btAdicionar.setEnabled(rascunho);
+        btAlterar.setEnabled(rascunho && tabelaPartidas.getSelectedRow() != -1);
+    }
+
+    public long getEmpresaId() {
+        return empresaId;
+    }
+
+    public JComboBox<Long> getCbExercicio() {
+        return cbExercicio;
+    }
+
+    public JTextField getTxtStatus() {
+        return txtStatus;
+    }
+
+    public JTextField getTxtOrigem() {
+        return txtOrigem;
+    }
+
+    public JTextField getTxtDescricaoPartida() {
+        return txtDescricaoPartida;
+    }
+
+    public JComboBox<String> getCbStatusPesq() {
+        return cbStatusPesq;
+    }
+
+    public JButton getBtContabilizar() {
+        return btContabilizar;
+    }
+
+    public void carregarCombo(JComboBox<Long> combo, java.util.Map<Long, String> opcoes) {
+        final java.util.Map<Long, String> descricoes = new java.util.LinkedHashMap<>(opcoes);
+        combo.removeAllItems();
+        combo.setRenderer(new javax.swing.DefaultListCellRenderer() {
+            private static final long serialVersionUID = 1L;
+
+            public Component getListCellRendererComponent(javax.swing.JList<?> lista, Object valor,
+                    int indice, boolean selecionado, boolean foco) {
+                super.getListCellRendererComponent(lista, valor, indice, selecionado, foco);
+                setText(valor == null ? "" : descricoes.get(valor));
+                return this;
+            }
+        });
+        for (Long id : descricoes.keySet()) {
+            combo.addItem(id);
+        }
+        combo.setSelectedIndex(-1);
+    }
+
+    private void gravarPartida(boolean alterar) {
+        if (!"RASCUNHO".equals(txtStatus.getText())) {
+            return;
+        }
+        int linha = tabelaPartidas.getSelectedRow();
+        if (alterar && linha == -1) {
+            return;
+        }
+        try {
+            PartidaLancamento partida = lerPartida();
+            if (alterar) {
+                partida.setId(partidas.get(linha).getId());
+                partidas.set(linha, partida);
+                modeloPartidas.removeRow(linha);
+                modeloPartidas.insertRow(linha, dadosPartida(partida));
+            } else {
+                partidas.add(partida);
+                modeloPartidas.addRow(dadosPartida(partida));
+            }
+            atualizarTotais();
+            limparPartida();
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+    }
+
+    public PartidaLancamento lerPartida() {
+        Long conta = (Long) cbConta.getSelectedItem();
+        if (conta == null || conta <= 0 || cbTipo.getSelectedItem() == null) {
+            throw new IllegalArgumentException("Selecione conta e movimento da partida.");
+        }
+        String texto = txtValor.getText().trim();
+        if (texto.contains(",")) {
+            texto = texto.replace(".", "").replace(',', '.');
+        }
+        BigDecimal valor;
+        try {
+            valor = new BigDecimal(texto);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Informe um valor monetário válido.");
+        }
+        if (valor.signum() <= 0 || valor.stripTrailingZeros().scale() > 2 || valor.precision() - valor.scale() > 13) {
+            throw new IllegalArgumentException("O valor deve ser positivo e caber em DECIMAL(15,2).");
+        }
+        if (txtDescricaoPartida.getText().length() > 255) {
+            throw new IllegalArgumentException("A descrição da partida aceita até 255 caracteres.");
+        }
+        PartidaLancamento partida = new PartidaLancamento();
+        partida.setLancamentoId(selecionado == null ? 0 : selecionado.getId());
+        partida.setContaId(conta);
+        partida.setCentroCustoId((Long) cbCC.getSelectedItem());
+        partida.setTipoMovimento((TipoMovimento) cbTipo.getSelectedItem());
+        partida.setValor(valor);
+        partida.setDescricao(txtDescricaoPartida.getText().trim());
+        return partida;
+    }
+
+    private Object[] dadosPartida(PartidaLancamento partida) {
+        boolean debito = partida.getTipoMovimento() == TipoMovimento.DEBITO;
+        return new Object[] {partida.getContaId(), partida.getCentroCustoId(),
+                debito ? partida.getValor() : BigDecimal.ZERO,
+                debito ? BigDecimal.ZERO : partida.getValor(), partida.getDescricao()};
+    }
+
+    private void atualizarTotais() {
+        Lancamento lancamento = new Lancamento();
+        lancamento.setPartidas(partidas);
+        java.text.NumberFormat formato = java.text.NumberFormat.getNumberInstance(new java.util.Locale("pt", "BR"));
+        formato.setMinimumFractionDigits(2);
+        formato.setMaximumFractionDigits(2);
+        txtDeb.setText(formato.format(lancamento.getTotalDebitos()));
+        txtCred.setText(formato.format(lancamento.getTotalCreditos()));
+        txtDif.setText(formato.format(lancamento.getTotalDebitos().subtract(lancamento.getTotalCreditos())));
+    }
+
+    public Lancamento lerLancamento() {
+        if (!"RASCUNHO".equals(txtStatus.getText())) {
+            throw new IllegalArgumentException("Somente rascunhos podem ser alterados.");
+        }
+        if (empresaId <= 0 || cbExercicio.getSelectedItem() == null
+                || txtDoc.getText().trim().isEmpty() || txtHist.getText().trim().isEmpty()) {
+            throw new IllegalArgumentException("Informe empresa, exercício, documento e descrição.");
+        }
+        if (txtDoc.getText().trim().length() > 50 || txtHist.getText().trim().length() > 255) {
+            throw new IllegalArgumentException("Documento ou descrição excedem o tamanho permitido.");
+        }
+        Lancamento lancamento = new Lancamento();
+        try {
+            java.time.format.DateTimeFormatter formato = java.time.format.DateTimeFormatter.ofPattern("dd/MM/uuuu")
+                    .withResolverStyle(java.time.format.ResolverStyle.STRICT);
+            lancamento.setDataLancamento(java.time.LocalDate.parse(txtData.getText().trim(), formato));
+        } catch (java.time.format.DateTimeParseException e) {
+            throw new IllegalArgumentException("Informe uma data válida no formato dd/mm/aaaa.");
+        }
+        if (selecionado != null) {
+            lancamento.setId(selecionado.getId());
+            lancamento.setCriadoPor(selecionado.getCriadoPor());
+            lancamento.setCriadoEm(selecionado.getCriadoEm());
+            lancamento.setEstornoDeId(selecionado.getEstornoDeId());
+        }
+        lancamento.setEmpresaId(empresaId);
+        lancamento.setExercicioSocialId((Long) cbExercicio.getSelectedItem());
+        lancamento.setNumeroDocumento(txtDoc.getText().trim());
+        lancamento.setDescricao(txtHist.getText().trim());
+        lancamento.setOrigem(txtOrigem.getText());
+        lancamento.setLoteId((Long) cbLote.getSelectedItem());
+        lancamento.setHistoricoPadraoId((Long) cbHist.getSelectedItem());
+        lancamento.setPartidas(new ArrayList<>(partidas));
+        return lancamento;
+    }
+
+    public void exibirLancamento(Lancamento lancamento) {
+        if (lancamento.getEmpresaId() != empresaId) {
+            throw new IllegalArgumentException("O lançamento não pertence à empresa selecionada.");
+        }
+        limpar();
+        selecionado = lancamento;
+        txtCod.setText(String.valueOf(lancamento.getId()));
+        txtData.setText(lancamento.getDataLancamento().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        txtDoc.setText(lancamento.getNumeroDocumento());
+        txtHist.setText(lancamento.getDescricao());
+        txtOrigem.setText(lancamento.getOrigem());
+        selecionarItem(cbExercicio, lancamento.getExercicioSocialId());
+        selecionarItem(cbLote, lancamento.getLoteId());
+        selecionarItem(cbHist, lancamento.getHistoricoPadraoId());
+        for (PartidaLancamento partida : lancamento.getPartidas()) {
+            PartidaLancamento copia = new PartidaLancamento(partida.getId(), partida.getLancamentoId(),
+                    partida.getContaId(), partida.getCentroCustoId(), partida.getTipoMovimento(),
+                    partida.getValor(), partida.getDescricao());
+            partidas.add(copia);
+            modeloPartidas.addRow(dadosPartida(copia));
+        }
+        atualizarTotais();
+        setStatus(lancamento.getStatus());
+    }
+
+    public void carregarLancamentos(List<Lancamento> registros) {
+        lancamentos.clear();
+        modeloLancamentos.setRowCount(0);
+        for (Lancamento lancamento : registros) {
+            if (empresaId > 0 && lancamento.getEmpresaId() == empresaId) {
+                lancamentos.add(lancamento);
+                modeloLancamentos.addRow(new Object[] {lancamento.getId(), lancamento.getDataLancamento(),
+                        lancamento.getNumeroDocumento(), lancamento.getLoteId(), lancamento.getDescricao(),
+                        lancamento.getTotalDebitos(), lancamento.getTotalCreditos(), lancamento.getStatus()});
+            }
+        }
+    }
+
 }

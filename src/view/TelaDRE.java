@@ -4,6 +4,8 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+import model.DRE;
+
 public class TelaDRE extends JPanel {
 
     private static final long serialVersionUID = 1L;
@@ -29,6 +31,8 @@ public class TelaDRE extends JPanel {
 
     private final JButton novo = new JButton("Novo");
     private final JButton editar = new JButton("Editar");
+    private final JButton itens = new JButton("Configurar Itens");
+    private final JButton buscar = new JButton("Buscar");
 
     public TelaDRE() {
 
@@ -52,6 +56,10 @@ public class TelaDRE extends JPanel {
         botoes.add(novo);
         botoes.add(editar);
 
+        botoes.add(Box.createHorizontalStrut(15));
+
+        botoes.add(itens);
+
         JPanel busca = new JPanel(
             new FlowLayout(FlowLayout.LEFT)
         );
@@ -59,8 +67,6 @@ public class TelaDRE extends JPanel {
         busca.add(new JLabel("Pesquisar:"));
         busca.add(pesquisa);
 
-        JButton buscar = new JButton("Buscar");
-        busca.add(buscar);
 
         topo.add(botoes, BorderLayout.NORTH);
         topo.add(busca, BorderLayout.SOUTH);
@@ -102,22 +108,25 @@ public class TelaDRE extends JPanel {
     public JButton getEditar() {
         return editar;
     }
+    
+    public JButton getItens() {
+        return itens;
+    }
 
     public void limparTabela() {
         modelo.setRowCount(0);
     }
 
     public void adicionarLinha(
-            int id,
-            String descricao,
-            boolean favorito) {
+            DRE dre) {
 
         modelo.addRow(
             new Object[] {
-                id,
-                descricao,
-                favorito
+                dre.getId(),
+                dre.getDescricao(),
+                dre.isFavorito()
             }
         );
+    
     }
 }

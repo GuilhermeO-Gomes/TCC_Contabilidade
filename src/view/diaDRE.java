@@ -9,7 +9,7 @@ public class diaDRE extends JDialog {
 
     private final JTextField id = new JTextField(5);
     private final JTextField descricao = new JTextField(28);
-    private final JCheckBox favorito = new JCheckBox("Favorito", true);
+    private final JCheckBox favorito = new JCheckBox("Favorito", false);
 
     private final JButton salvar = new JButton("Salvar");
 
@@ -71,14 +71,19 @@ public class diaDRE extends JDialog {
         painel.add(componente, g);
     }
 
-    public int getId() {
+    public long getId() {
+
         try {
-            return Integer.parseInt(id.getText());
+
+            return Long.parseLong(
+                id.getText()
+            );
+
         } catch (NumberFormatException e) {
+
             return 0;
         }
     }
-
     public String getDescricao() {
         return descricao.getText();
     }
@@ -91,8 +96,11 @@ public class diaDRE extends JDialog {
         return salvar;
     }
 
-    public void setId(int id) {
-        this.id.setText(String.valueOf(id));
+    public void setId(long id) {
+
+        this.id.setText(
+            String.valueOf(id)
+        );
     }
 
     public void setDescricao(String descricao) {

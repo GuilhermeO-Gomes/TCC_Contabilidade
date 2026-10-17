@@ -2,30 +2,49 @@ package model;
 
 public class HistoricoPadrao {
 
-    private int id;
+    private long id;
+    private long empresaId;
+
     private String descricao;
+
     private boolean ativo;
 
+
     public HistoricoPadrao() {
+        this.ativo = true;
     }
 
+
     public HistoricoPadrao(
-            int id,
+            long id,
+            long empresaId,
             String descricao,
             boolean ativo) {
 
         this.id = id;
+        this.empresaId = empresaId;
         this.descricao = descricao;
         this.ativo = ativo;
     }
 
-    public int getId() {
+
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
+
+
+    public long getEmpresaId() {
+        return empresaId;
+    }
+
+    public void setEmpresaId(long empresaId) {
+        this.empresaId = empresaId;
+    }
+
 
     public String getDescricao() {
         return descricao;
@@ -34,6 +53,7 @@ public class HistoricoPadrao {
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
+
 
     public boolean isAtivo() {
         return ativo;

@@ -2,26 +2,49 @@ package model;
 
 public class DRE {
 
-    private int id;
+    private long id;
+    private long empresaId;
+
     private String descricao;
+
     private boolean favorito;
 
+
     public DRE() {
+        this.favorito = false;
     }
 
-    public DRE(int id, String descricao, boolean favorito) {
+
+    public DRE(
+            long id,
+            long empresaId,
+            String descricao,
+            boolean favorito) {
+
         this.id = id;
+        this.empresaId = empresaId;
         this.descricao = descricao;
         this.favorito = favorito;
     }
 
-    public int getId() {
+
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
+
+
+    public long getEmpresaId() {
+        return empresaId;
+    }
+
+    public void setEmpresaId(long empresaId) {
+        this.empresaId = empresaId;
+    }
+
 
     public String getDescricao() {
         return descricao;
@@ -30,6 +53,7 @@ public class DRE {
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
+
 
     public boolean isFavorito() {
         return favorito;

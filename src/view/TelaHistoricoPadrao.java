@@ -92,11 +92,7 @@ public class TelaHistoricoPadrao extends JPanel {
 
     private void montar() {
 
-        /*
-         * ==========================================
-         * FORMULÁRIO
-         * ==========================================
-         */
+       
 
         JPanel formulario =
             new JPanel(
@@ -144,18 +140,11 @@ public class TelaHistoricoPadrao extends JPanel {
         );
 
 
-        /*
-         * O ID será gerado pelo banco.
-         */
+      
 
         id.setEditable(false);
 
 
-        /*
-         * ==========================================
-         * BOTÕES
-         * ==========================================
-         */
 
         JPanel botoes =
             new JPanel(
@@ -191,11 +180,6 @@ public class TelaHistoricoPadrao extends JPanel {
         );
 
 
-        /*
-         * ==========================================
-         * PESQUISA
-         * ==========================================
-         */
 
         JPanel painelPesquisa =
             new JPanel(
@@ -217,12 +201,7 @@ public class TelaHistoricoPadrao extends JPanel {
         );
 
 
-        /*
-         * ==========================================
-         * TABELA
-         * ==========================================
-         */
-
+      
         JPanel painelTabela =
             new JPanel(
                 new BorderLayout()
@@ -301,11 +280,6 @@ public class TelaHistoricoPadrao extends JPanel {
     }
 
 
-    /*
-     * ==========================================
-     * LIMPAR FORMULÁRIO
-     * ==========================================
-     */
 
     public void limpar() {
 
@@ -317,11 +291,7 @@ public class TelaHistoricoPadrao extends JPanel {
     }
 
 
-    /*
-     * ==========================================
-     * TABELA
-     * ==========================================
-     */
+   
 
     public void limparTabela() {
 
@@ -341,12 +311,6 @@ public class TelaHistoricoPadrao extends JPanel {
         );
     }
 
-
-    /*
-     * ==========================================
-     * ID SELECIONADO
-     * ==========================================
-     */
 
     public long getIdSelecionado() {
 
@@ -377,11 +341,6 @@ public class TelaHistoricoPadrao extends JPanel {
     }
 
 
-    /*
-     * ==========================================
-     * GETTERS
-     * ==========================================
-     */
 
     public long getId() {
 
@@ -443,11 +402,7 @@ public class TelaHistoricoPadrao extends JPanel {
     }
 
 
-    /*
-     * ==========================================
-     * SETTERS
-     * ==========================================
-     */
+ 
 
     public void setId(long valor) {
 

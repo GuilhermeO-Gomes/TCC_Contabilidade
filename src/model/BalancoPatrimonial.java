@@ -2,84 +2,64 @@ package model;
 
 public class BalancoPatrimonial {
 
-    private int id;
-    private int ordem;
-    private String codigoAglutinacao;
-    private String grupo;
-    private String codigoAglutinacaoSuperior;
-    private boolean ativo;
+    private long id;
+    private long empresaId;
+
+    private String descricao;
+
+    private boolean favorito;
+
 
     public BalancoPatrimonial() {
+        this.favorito = false;
     }
+
 
     public BalancoPatrimonial(
-            int id,
-            int ordem,
-            String codigoAglutinacao,
-            String grupo,
-            String codigoAglutinacaoSuperior,
-            boolean ativo) {
+            long id,
+            long empresaId,
+            String descricao,
+            boolean favorito) {
 
         this.id = id;
-        this.ordem = ordem;
-        this.codigoAglutinacao = codigoAglutinacao;
-        this.grupo = grupo;
-        this.codigoAglutinacaoSuperior =
-                codigoAglutinacaoSuperior;
-        this.ativo = ativo;
+        this.empresaId = empresaId;
+        this.descricao = descricao;
+        this.favorito = favorito;
     }
 
-    public int getId() {
+
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public int getOrdem() {
-        return ordem;
+
+    public long getEmpresaId() {
+        return empresaId;
     }
 
-    public void setOrdem(int ordem) {
-        this.ordem = ordem;
+    public void setEmpresaId(long empresaId) {
+        this.empresaId = empresaId;
     }
 
-    public String getCodigoAglutinacao() {
-        return codigoAglutinacao;
+
+    public String getDescricao() {
+        return descricao;
     }
 
-    public void setCodigoAglutinacao(
-            String codigoAglutinacao) {
-
-        this.codigoAglutinacao =
-                codigoAglutinacao;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
-    public String getGrupo() {
-        return grupo;
+
+    public boolean isFavorito() {
+        return favorito;
     }
 
-    public void setGrupo(String grupo) {
-        this.grupo = grupo;
-    }
-
-    public String getCodigoAglutinacaoSuperior() {
-        return codigoAglutinacaoSuperior;
-    }
-
-    public void setCodigoAglutinacaoSuperior(
-            String codigo) {
-
-        this.codigoAglutinacaoSuperior =
-                codigo;
-    }
-
-    public boolean isAtivo() {
-        return ativo;
-    }
-
-    public void setAtivo(boolean ativo) {
-        this.ativo = ativo;
+    public void setFavorito(boolean favorito) {
+        this.favorito = favorito;
     }
 }

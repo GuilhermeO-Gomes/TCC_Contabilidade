@@ -193,6 +193,35 @@ public class diaBalancoPatrimonialItem
             BorderLayout.CENTER
         );
     }
+    
+    public void limparCodigosAglutinacao() {
+
+        codigoAglutinacao.removeAllItems();
+    }
+
+
+    public void adicionarCodigoAglutinacao(
+            String valor) {
+
+        codigoAglutinacao.addItem(valor);
+    }
+
+
+    public void limparItensSuperiores() {
+
+        itemSuperior.removeAllItems();
+
+        itemSuperior.addItem(
+            "Nenhum"
+        );
+    }
+
+
+    public void adicionarItemSuperior(
+            String valor) {
+
+        itemSuperior.addItem(valor);
+    }
 
 
     private void componente(
@@ -250,6 +279,31 @@ public class diaBalancoPatrimonialItem
 
     public String getOrdem() {
         return ordem.getText();
+    }
+    
+    public String getCodigoAglutinacaoSelecionado() {
+
+        Object selecionado =
+            codigoAglutinacao.getSelectedItem();
+
+        if (selecionado == null) {
+            return null;
+        }
+
+        return selecionado.toString();
+    }
+
+
+    public String getItemSuperiorSelecionado() {
+
+        Object selecionado =
+            itemSuperior.getSelectedItem();
+
+        if (selecionado == null) {
+            return null;
+        }
+
+        return selecionado.toString();
     }
 
 

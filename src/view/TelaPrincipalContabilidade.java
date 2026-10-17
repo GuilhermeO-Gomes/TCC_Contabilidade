@@ -2,342 +2,874 @@ package view;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.function.Supplier;
+
 import javax.swing.*;
+
+import model.DadosContabeis;
+
+import view.TelaAuditoriaDigital;
+import view.TelaDashboard;
+import view.TelaLivroDiario;
+import view.TelaGeracaoECF;
 
 public class TelaPrincipalContabilidade extends JFrame {
 
-  private final JTabbedPane abas = new JTabbedPane();
+    private static final long serialVersionUID = 1L;
 
-  public TelaPrincipalContabilidade() {
-    super("ERP - Módulo Contabilidade");
-    montar();
-    setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-    setMinimumSize(new Dimension(920, 650));
-    setSize(1100, 760);
-    setLocationRelativeTo(null);
-    addWindowListener(
-      new WindowAdapter() {
-        public void windowClosing(WindowEvent e) {
-          sair();
-        }
-      }
-    );
-  }
+    private final JTabbedPane abas = new JTabbedPane();
 
-  private void montar() {
-    setJMenuBar(criarMenu());
-    JPanel inicio = new JPanel(new GridBagLayout());
-    JLabel texto = new JLabel("Selecione uma funcionalidade no menu acima.");
-    texto.setFont(texto.getFont().deriveFont(Font.BOLD, 18f));
-    inicio.add(texto);
-    abas.addTab("Inicio", inicio);
-    add(abas, BorderLayout.CENTER);
-    JPanel rodape = new JPanel(new BorderLayout());
-    rodape.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
-    rodape.add(
-      new JLabel("Sistema ERP - Java Desktop"),
-      BorderLayout.EAST
-    );
-    add(rodape, BorderLayout.SOUTH);
-  }
+   
+    private final DadosContabeis dados = new DadosContabeis();
 
-  private JMenuBar criarMenu() {
-    JMenuBar barra = new JMenuBar();
-    
-    JMenu cadastro = new JMenu("Cadastro"),
-      registro = new JMenu("Registro"),
-      controle = new JMenu("Controle"),
-      rotinaFechamento = new JMenu("Rotina de Fechamento"),
-      livro = new JMenu("Livros"),
-      demonstracao = new JMenu("Demonstração"),
-      visao = new JMenu("Visão"),
-      obrigacaoFiscal = new JMenu("Obrigação Fiscal"),
-      sistema = new JMenu("Sistema"),
-      menuProvisorio = new JMenu("Provisório");
-    
-    JMenuItem planoContas = item("Plano de Contas", 1),
-      centroCustos = item("Centro de Custo", 2),
-      historicoPadrao = item("Histórico Padrão", 3),
-      exerciciosSociais = item("Exercícios Sociais", 4),
-      regrasContabilizacao = item("Regras de Contabilização", 5),
-      aglutacao = item("Aglutação", 6),
-      lancamentos = item("Lançamentos Contábeis", 7),
-      lancamentosLote = item("Lançamentos em Lote", 8),
-      integracao = item("Integração", 9),
-      ajusteExercicio = item("Ajuste de Exercício", 10),
-      lotes = item("Lotes", 11),
-      conciliacaoContabil = item("Conciliação Contábil", 12),
-      zeramentoContas= item("Zeramento de Contas", 13),
-      reavaliacaoDepreciacao = item("Reavaliação e Depreciação", 14),
-      consolidacaoBalancos = item("Consolidação de Balanços", 15),
-      livroDiario = item("Livro Diário", 16),
-      livroRazao = item("Livro Razão", 17),
-      balanceteVerificacao = item("Balancete de Verificação", 18),
-      bp = item("Balanço Patrimonial", 19),
-      dre = item("DRE", 20),
-      dfc = item("DFC", 21),
-      dashboard = item("Dashboard", 22),
-      ecd = item("ECD", 23),
-      ecf = item("ECF", 24),
-      auditoriaDigital = item("Auditoria Digital", 25),
-      adicionarConta = item("Adicionar Conta - Plano de Contas", 26),
-      gerenciamentoLote = item("Gerenciamento Lote - Lancamento em Lote", 26);
-    
-    cadastro.add(planoContas);
-    cadastro.add(centroCustos);
-    cadastro.add(historicoPadrao);
-    cadastro.add(exerciciosSociais);
-    cadastro.add(regrasContabilizacao);
-    cadastro.add(aglutacao);
-    
-    registro.add(lancamentos);
-    registro.add(lancamentosLote);
-    registro.add(integracao);
-    registro.add(ajusteExercicio);
-    
-    controle.add(lotes);
-    
-    rotinaFechamento.add(conciliacaoContabil);
-    rotinaFechamento.add(zeramentoContas);
-    rotinaFechamento.add(reavaliacaoDepreciacao);
-    rotinaFechamento.add(consolidacaoBalancos);
-    
-    livro.add(livroDiario);
-    livro.add(livroRazao);
-    
-    demonstracao.add(balanceteVerificacao);
-    demonstracao.add(bp);
-    demonstracao.add(dre);
-    demonstracao.add(dfc);
-    
-    visao.add(dashboard);
-    
-    obrigacaoFiscal.add(ecd);
-    obrigacaoFiscal.add(ecf);
-    obrigacaoFiscal.add(auditoriaDigital);
-    
+    public TelaPrincipalContabilidade() {
 
-    JMenuItem sobre = new JMenuItem("Sobre"),
-      sair = new JMenuItem("Sair");
-    sobre.addActionListener(
-      new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-          JOptionPane.showMessageDialog(
-            TelaPrincipalContabilidade.this,
-            "Sistema didatico de ERP\nEduardo Andrade\nEric Aragão\nGuilherme Oliveira\nGustavo Andrade\nGustavo Mitsuo\nGustavo Lameiras\nMariana Oliveira\nNicollas Domingues\nJava SE 6 + Swing + JDBC + MySQL",
-            "Sobre",
-            JOptionPane.INFORMATION_MESSAGE
-          );
-        }
-      }
-    );
-    sair.addActionListener(
-      new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-          sair();
-        }
-      }
-    );
-    sistema.add(sobre);
-    sistema.addSeparator();
-    sistema.add(sair);
-    
-    menuProvisorio.add(adicionarConta);
-    menuProvisorio.add(gerenciamentoLote);
-    
-    barra.add(cadastro);
-    barra.add(registro);
-    barra.add(controle);
-    barra.add(rotinaFechamento);
-    barra.add(livro);
-    barra.add(demonstracao);
-    barra.add(visao);
-    barra.add(obrigacaoFiscal);
-    barra.add(sistema);
-    barra.add(menuProvisorio);
-    return barra;
-  }
+        super("ERP - Módulo Contabilidade");
 
-  private JMenuItem item(String titulo, final int modulo) {
-    JMenuItem item = new JMenuItem(titulo);
-    item.addActionListener(
-      new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-          abrirModulo(modulo);
-        }
-      }
-    );
-    return item;
-  }
+        montar();
 
-  private void abrirModulo(int modulo) {
-    String titulo;
-    JPanel painel;
-    if (modulo == 1) {
-      titulo = "Plano de Contas";
-      if (selecionar(titulo)) return;
-      painel = new TelaPlanoDeContas();
-    } else if (modulo == 2) {
-      titulo = "Centro de Custo";
-      if (selecionar(titulo)) return;
-      painel = new TelaCentroCustos();
-    } else if (modulo == 3) {
-      titulo = "Histórico Padrão";
-      if (selecionar(titulo)) return;
-      painel = new TelaHistoricoPadrao();
-    } else if (modulo == 4) {
-      titulo = "Exercícios Sociais";
-      if (selecionar(titulo)) return;
-      painel = new TelaExerciciosSociais();
-    } else if (modulo == 5) {
-      titulo = "Regras de Contabilização";
-      if (selecionar(titulo)) return;
-      painel = new TelaRegrasContabilizacao();
-    } else if (modulo == 6) {
-      titulo = "Aglutação";
-      if (selecionar(titulo)) return;
-      painel = new TelaAglutamento();
-    }else if (modulo == 7) {
-      titulo = "Lançamentos Contábeis";
-      if (selecionar(titulo)) return;
-      painel = new TelaPlanoDeContas();
-    } else if (modulo == 8) {
-      titulo = "Lançamentos em Lote";
-      if (selecionar(titulo)) return;
-      painel = new TelaLancamentoLote();
-    } else if (modulo == 9) {
-      titulo = "Integração";
-      if (selecionar(titulo)) return;
-      painel = new TelaIntegracao();
-    } else if (modulo == 10) {
-      titulo = "Ajuste de Exercício";
-      if (selecionar(titulo)) return;
-      painel = new TelaAjusteExercicio();
-    } else if (modulo == 11) {
-      titulo = "Lotes";
-      if (selecionar(titulo)) return;
-      painel = new TelaPlanoDeContas();
-    } else if (modulo == 12) {
-      titulo = "Conciliação Contábil";
-      if (selecionar(titulo)) return;
-      painel = new TelaPlanoDeContas();
-    } else if (modulo == 13) {
-      titulo = "Zeramento de Contas";
-      if (selecionar(titulo)) return;
-      painel = new TelaPlanoDeContas();
-    } else if (modulo == 14) {
-      titulo = "Reavaliação e Depreciação";
-      if (selecionar(titulo)) return;
-      painel = new TelaPlanoDeContas();
-    } else if (modulo == 15) {
-      titulo = "Consolidação de Balanços";
-      if (selecionar(titulo)) return;
-      painel = new TelaConsolidacaoBalanco();
-    } else if (modulo == 16) {
-      titulo = "Livro Diário";
-      if (selecionar(titulo)) return;
-      painel = new TelaPlanoDeContas();
-    } else if (modulo == 17) {
-      titulo = "Livro Razão";
-      if (selecionar(titulo)) return;
-      painel = new TelaPlanoDeContas();
-    } else if (modulo == 18) {
-      titulo = "Balancete de Verificação";
-      if (selecionar(titulo)) return;
-      painel = new TelaPlanoDeContas();
-    } else if (modulo == 19) {
-      titulo = "Balanço Patrimonial";
-      if (selecionar(titulo)) return;
-      painel = new TelaPlanoDeContas();
-    } else if (modulo == 20) {
-      titulo = "DRE";
-      if (selecionar(titulo)) return;
-      painel = new TelaPlanoDeContas();
-    } else if (modulo == 21) {
-      titulo = "DFC";
-      if (selecionar(titulo)) return;
-      painel = new TelaPlanoDeContas();
-    } else if (modulo == 22) {
-      titulo = "Dashboard";
-      if (selecionar(titulo)) return;
-      painel = new TelaPlanoDeContas();
-    } else if (modulo == 23) {
-      titulo = "ECD";
-      if (selecionar(titulo)) return;
-      painel = new TelaEcd();
-    } else if (modulo == 24) {
-      titulo = "ECF";
-      if (selecionar(titulo)) return;
-      painel = new TelaPlanoDeContas();
-    } else if (modulo == 25) {
-      titulo = "Auditoria Digital";
-      if (selecionar(titulo)) return;
-      painel = new TelaPlanoDeContas();
-    } else if (modulo == 26) {
-      titulo = "Adicionar Conta - Plano de Contas";
-      if (selecionar(titulo)) return;
-      painel = new TelaAdicionarConta();
-    } else {
-      titulo = "Gerenciamento Lote - Lancamento em Lote";
-      if (selecionar(titulo)) return;
-      painel = new TelaGerenciamentoLote();
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+        setMinimumSize(
+            new Dimension(920, 650)
+        );
+
+        setSize(
+            1100,
+            760
+        );
+
+        setLocationRelativeTo(null);
+
+        addWindowListener(
+            new WindowAdapter() {
+
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    sair();
+                }
+            }
+        );
     }
+
+
     
-    abrirAba(titulo, painel);
-  }
 
-  public void abrirAba(String titulo, JPanel painel) {
-    int i = abas.indexOfTab(titulo);
-    if (i >= 0) {
-      abas.setSelectedIndex(i);
-      return;
+    private void montar() {
+
+        setLayout(
+            new BorderLayout()
+        );
+
+        setJMenuBar(
+            criarMenu()
+        );
+
+
+        
+
+        JPanel inicio =
+            new JPanel(
+                new GridBagLayout()
+            );
+
+        JLabel texto =
+            new JLabel(
+                "Selecione uma funcionalidade no menu acima."
+            );
+
+        texto.setFont(
+            texto
+                .getFont()
+                .deriveFont(
+                    Font.BOLD,
+                    18f
+                )
+        );
+
+        inicio.add(texto);
+
+        abas.addTab(
+            "Início",
+            inicio
+        );
+
+
+        add(
+            abas,
+            BorderLayout.CENTER
+        );
+
+
+        
+
+        JPanel rodape =
+            new JPanel(
+                new BorderLayout()
+            );
+
+        rodape.setBorder(
+            BorderFactory.createEmptyBorder(
+                4,
+                8,
+                4,
+                8
+            )
+        );
+
+        rodape.add(
+            new JLabel(
+                "Sistema ERP - Módulo Contabilidade"
+            ),
+            BorderLayout.EAST
+        );
+
+        add(
+            rodape,
+            BorderLayout.SOUTH
+        );
     }
-    abas.addTab(titulo, painel);
-    abas.setTabComponentAt(
-      abas.indexOfComponent(painel),
-      cabecalhoFechavel(titulo, painel)
-    );
-    abas.setSelectedComponent(painel);
-  }
 
-  private boolean selecionar(String titulo) {
-    int i = abas.indexOfTab(titulo);
-    if (i >= 0) {
-      abas.setSelectedIndex(i);
-      return true;
+
+    
+
+    private JMenuBar criarMenu() {
+
+        JMenuBar barra =
+            new JMenuBar();
+
+
+        
+
+        JMenu cadastro =
+            new JMenu("Cadastro");
+
+        JMenu registro =
+            new JMenu("Registro");
+
+        JMenu controle =
+            new JMenu("Controle");
+
+        JMenu patrimonio =
+            new JMenu("Patrimônio");
+
+        JMenu rotinaFechamento =
+            new JMenu("Rotina de Fechamento");
+
+        JMenu livro =
+            new JMenu("Livros");
+
+        JMenu demonstracao =
+            new JMenu("Demonstração");
+
+        JMenu visao =
+            new JMenu("Visão");
+
+        JMenu obrigacaoFiscal =
+            new JMenu("Obrigação Fiscal");
+
+        JMenu sistema =
+            new JMenu("Sistema");
+
+
+       
+
+        cadastro.add(
+            item(
+                "Plano de Contas",
+                () -> abrirPainel(
+                    "Plano de Contas",
+                    TelaPlanoDeContas::new
+                )
+            )
+        );
+
+
+        cadastro.add(
+            item(
+                "Centro de Custo",
+                () -> abrirPainel(
+                    "Centro de Custo",
+                    TelaCentroCustos::new
+                )
+            )
+        );
+
+
+        cadastro.add(
+            item(
+                "Histórico Padrão",
+                () -> abrirPainel(
+                    "Histórico Padrão",
+                    TelaHistoricoPadrao::new
+                )
+            )
+        );
+
+
+        cadastro.add(
+            item(
+                "Exercícios Sociais",
+                () -> abrirPainel(
+                    "Exercícios Sociais",
+                    TelaExerciciosSociais::new
+                )
+            )
+        );
+
+
+        cadastro.add(
+            item(
+                "Regras de Contabilização",
+                () -> abrirPainel(
+                    "Regras de Contabilização",
+                    TelaRegrasContabilizacao::new
+                )
+            )
+        );
+
+
+        cadastro.add(
+            item(
+                "Aglutinação",
+                () -> abrirPainel(
+                    "Aglutinação",
+                    TelaAglutinacao::new
+                )
+            )
+        );
+
+
+        
+
+        registro.add(
+            item(
+                "Lançamentos Contábeis",
+                () -> abrirPainel(
+                    "Lançamentos Contábeis",
+                    TelaLancamentos::new
+                )
+            )
+        );
+
+
+        registro.add(
+            item(
+                "Integração Contábil",
+                () -> abrirPainel(
+                    "Integração Contábil",
+                    TelaIntegracao::new
+                )
+            )
+        );
+
+
+        registro.add(
+            item(
+                "Ajuste de Exercício",
+                () -> abrirPainel(
+                    "Ajuste de Exercício",
+                    TelaAjusteExercicio::new
+                )
+            )
+        );
+
+
+        
+
+        controle.add(
+            item(
+                "Gerenciamento de Lotes",
+                () -> abrirPainel(
+                    "Gerenciamento de Lotes",
+                    TelaGerenciamentoLote::new
+                )
+            )
+        );
+
+
+      
+
+        patrimonio.add(
+            item(
+                "Depreciação",
+                () -> abrirPainel(
+                    "Depreciação",
+                    TelaDepreciacao::new
+                )
+            )
+        );
+
+
+        patrimonio.add(
+            item(
+                "Reavaliação",
+                this::abrirReavaliacao
+            )
+        );
+
+
+       
+
+        rotinaFechamento.add(
+            item(
+                "Conciliação Contábil",
+                () -> abrirPainel(
+                    "Conciliação Contábil",
+                    TelaConciliacaoContabil::new
+                )
+            )
+        );
+
+
+        rotinaFechamento.add(
+            item(
+                "Zeramento de Contas",
+                () -> abrirPainel(
+                    "Zeramento de Contas",
+                    TelaZeramentoContas::new
+                )
+            )
+        );
+
+
+        rotinaFechamento.add(
+            item(
+                "Consolidação de Balanços",
+                () -> abrirPainel(
+                    "Consolidação de Balanços",
+                    TelaConsolidacaoBalanco::new
+                )
+            )
+        );
+
+
+        
+
+        livro.add(
+            item(
+                "Livro Diário",
+                () -> abrirPainel(
+                    "Livro Diário",
+                    () -> new TelaLivroDiario(
+                        dados,
+                        this::atualizarTelasDependentes
+                    )
+                )
+            )
+        );
+
+
+
+        livro.add(
+            item(
+                "Livro Razão",
+                this::abrirLivroRazao
+            )
+        );
+
+
+      
+
+        demonstracao.add(
+            item(
+                "Balancete de Verificação",
+                () -> abrirPainel(
+                    "Balancete de Verificação",
+                    TelaBalancete::new
+                )
+            )
+        );
+
+
+        demonstracao.add(
+            item(
+                "Balanço Patrimonial",
+                () -> abrirPainel(
+                    "Balanço Patrimonial",
+                    TelaBalancoPatrimonial::new
+                )
+            )
+        );
+
+
+        demonstracao.add(
+            item(
+                "DRE",
+                () -> abrirPainel(
+                    "DRE",
+                    TelaDRE::new
+                )
+            )
+        );
+
+
+        demonstracao.add(
+            item(
+                "DFC",
+                () -> abrirPainel(
+                    "DFC",
+                    TelaDFC::new
+                )
+            )
+        );
+
+
+     
+
+        visao.add(
+            item(
+                "Dashboard",
+                () -> abrirPainel(
+                    "Dashboard",
+                    () -> new TelaDashboard(dados)
+                )
+            )
+        );
+
+
+
+        obrigacaoFiscal.add(
+            item(
+                "ECD",
+                () -> abrirPainel(
+                    "ECD",
+                    TelaEcd::new
+                )
+            )
+        );
+
+
+        obrigacaoFiscal.add(
+            item(
+                "ECF",
+                () -> abrirPainel(
+                    "ECF",
+                    () -> new TelaGeracaoECF(dados)
+                )
+            )
+        );
+
+
+        obrigacaoFiscal.addSeparator();
+
+
+        obrigacaoFiscal.add(
+            item(
+                "Auditoria Digital",
+                () -> abrirPainel(
+                    "Auditoria Digital",
+                    () -> new TelaAuditoriaDigital(
+                        dados,
+                        this::atualizarTelasDependentes
+                    )
+                )
+            )
+        );
+
+
+      
+
+        JMenuItem sobre =
+            new JMenuItem("Sobre");
+
+        JMenuItem sair =
+            new JMenuItem("Sair");
+
+
+        sobre.addActionListener(
+            e -> mostrarSobre()
+        );
+
+
+        sair.addActionListener(
+            e -> sair()
+        );
+
+
+        sistema.add(sobre);
+
+        sistema.addSeparator();
+
+        sistema.add(sair);
+
+
+      
+
+        barra.add(cadastro);
+
+        barra.add(registro);
+
+        barra.add(controle);
+
+        barra.add(patrimonio);
+
+        barra.add(rotinaFechamento);
+
+        barra.add(livro);
+
+        barra.add(demonstracao);
+
+        barra.add(visao);
+
+        barra.add(obrigacaoFiscal);
+
+        barra.add(sistema);
+
+
+        return barra;
     }
-    return false;
-  }
 
-  private JPanel cabecalhoFechavel(String titulo, final Component painel) {
-    JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT, 3, 0));
-    p.setOpaque(false);
-    p.add(new JLabel(titulo));
-    JButton fechar = new JButton("x");
-    fechar.setMargin(new Insets(0, 4, 0, 4));
-    fechar.setToolTipText("Fechar aba");
-    fechar.addActionListener(
-      new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-          abas.remove(painel);
-        }
-      }
-    );
-    p.add(fechar);
-    return p;
-  }
 
-  private void sair() {
-    if (
-      JOptionPane.showConfirmDialog(
-        this,
-        "Deseja encerrar o sistema?",
-        "Sair",
-        JOptionPane.YES_NO_OPTION
-      ) == JOptionPane.YES_OPTION
+
+
+    private JMenuItem item(
+        String titulo,
+        Runnable acao
     ) {
-      dispose();
-      System.exit(0);
+
+        JMenuItem item =
+            new JMenuItem(titulo);
+
+        item.addActionListener(
+            e -> acao.run()
+        );
+
+        return item;
     }
-  }
+    
+    
+
+    private void abrirPainel(
+        String titulo,
+        Supplier<JPanel> fornecedor
+    ) {
+
+
+        int indice =
+            abas.indexOfTab(titulo);
+
+        if (indice >= 0) {
+
+            abas.setSelectedIndex(indice);
+
+            return;
+        }
+
+
+        try {
+
+            JPanel painel =
+                fornecedor.get();
+
+            abrirAba(
+                titulo,
+                painel
+            );
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            JOptionPane.showMessageDialog(
+                this,
+                "Não foi possível abrir a funcionalidade:\n"
+                    + titulo
+                    + "\n\n"
+                    + e.getMessage(),
+                "Erro",
+                JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+
+    public void abrirAba(
+        String titulo,
+        JPanel painel
+    ) {
+
+        int indice =
+            abas.indexOfTab(titulo);
+
+        if (indice >= 0) {
+
+            abas.setSelectedIndex(indice);
+
+            return;
+        }
+
+
+        abas.addTab(
+            titulo,
+            painel
+        );
+
+
+        abas.setTabComponentAt(
+            abas.indexOfComponent(painel),
+            cabecalhoFechavel(
+                titulo,
+                painel
+            )
+        );
+
+
+        abas.setSelectedComponent(
+            painel
+        );
+    }
+
+
+    private JPanel cabecalhoFechavel(
+        String titulo,
+        final Component painel
+    ) {
+
+        JPanel cabecalho =
+            new JPanel(
+                new FlowLayout(
+                    FlowLayout.LEFT,
+                    3,
+                    0
+                )
+            );
+
+        cabecalho.setOpaque(false);
+
+
+        JLabel label =
+            new JLabel(titulo);
+
+        cabecalho.add(label);
+
+
+        JButton fechar =
+            new JButton("x");
+
+        fechar.setMargin(
+            new Insets(
+                0,
+                4,
+                0,
+                4
+            )
+        );
+
+        fechar.setFocusable(false);
+
+        fechar.setToolTipText(
+            "Fechar aba"
+        );
+
+
+        fechar.addActionListener(
+            e -> abas.remove(painel)
+        );
+
+
+        cabecalho.add(fechar);
+
+
+        return cabecalho;
+    }
+
+
+    private void abrirLivroRazao() {
+
+        TelaLivroRazao dialogo =
+            new TelaLivroRazao(this);
+
+        dialogo.setVisible(true);
+    }
+
+
+    private void abrirReavaliacao() {
+
+        String valor =
+            JOptionPane.showInputDialog(
+                this,
+                "Informe o ID do bem patrimonial:",
+                "Reavaliação de Bem",
+                JOptionPane.QUESTION_MESSAGE
+            );
+
+
+
+        if (valor == null) {
+            return;
+        }
+
+
+        valor =
+            valor.trim();
+
+
+        if (valor.isEmpty()) {
+
+            JOptionPane.showMessageDialog(
+                this,
+                "Informe o ID do bem.",
+                "Reavaliação",
+                JOptionPane.WARNING_MESSAGE
+            );
+
+            return;
+        }
+
+
+        try {
+
+            int idBem =
+                Integer.parseInt(valor);
+
+
+            if (idBem <= 0) {
+
+                throw new NumberFormatException();
+            }
+
+
+            String titulo =
+                "Reavaliação - Bem " + idBem;
+
+
+            final int idSelecionado =
+                idBem;
+
+
+            abrirPainel(
+                titulo,
+                () -> new TelaReavaliacao(
+                    idSelecionado
+                )
+            );
+
+        } catch (NumberFormatException e) {
+
+            JOptionPane.showMessageDialog(
+                this,
+                "O ID do bem deve ser um número inteiro positivo.",
+                "Valor inválido",
+                JOptionPane.WARNING_MESSAGE
+            );
+        }
+    }
+
+
+
+    private void atualizarTelasDependentes() {
+
+        for (
+            int i = 0;
+            i < abas.getTabCount();
+            i++
+        ) {
+
+            Component componente =
+                abas.getComponentAt(i);
+
+
+
+            if (
+                componente
+                    instanceof TelaDashboard
+            ) {
+
+                TelaDashboard tela =
+                    (TelaDashboard) componente;
+
+                tela.atualizar_tela();
+            }
+
+
+            else if (
+                componente
+                    instanceof TelaLivroDiario
+            ) {
+
+                TelaLivroDiario tela =
+                    (TelaLivroDiario) componente;
+
+                tela.atualizar_tabela();
+            }
+
+
+
+            else if (
+                componente
+                    instanceof TelaGeracaoECF
+            ) {
+
+                TelaGeracaoECF tela =
+                    (TelaGeracaoECF) componente;
+
+                tela.atualizar_dados();
+            }
+
+
+  
+
+            else if (
+                componente
+                    instanceof TelaAuditoriaDigital
+            ) {
+
+                TelaAuditoriaDigital tela =
+                    (TelaAuditoriaDigital) componente;
+
+                tela.atualizar_tabela();
+            }
+        }
+    }
+
+
+
+    private void mostrarSobre() {
+
+        JOptionPane.showMessageDialog(
+            this,
+
+            "Sistema didático de ERP\n"
+                + "Módulo de Contabilidade\n\n"
+                + "Eduardo Andrade\n"
+                + "Eric Aragão\n"
+                + "Guilherme Oliveira\n"
+                + "Gustavo Andrade\n"
+                + "Gustavo Mitsuo\n"
+                + "Gustavo Lameiras\n"
+                + "Mariana Oliveira\n"
+                + "Nicollas Domingues\n\n"
+                + "Java 8+ + Swing + JDBC + MySQL",
+
+            "Sobre",
+
+            JOptionPane.INFORMATION_MESSAGE
+        );
+    }
+
+
+
+    private void sair() {
+
+        int resposta =
+            JOptionPane.showConfirmDialog(
+                this,
+                "Deseja encerrar o sistema?",
+                "Sair",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+            );
+
+
+        if (
+            resposta
+                == JOptionPane.YES_OPTION
+        ) {
+
+            dispose();
+
+            System.exit(0);
+        }
+    }
 }

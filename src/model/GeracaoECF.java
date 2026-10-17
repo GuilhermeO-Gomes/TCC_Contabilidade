@@ -3,268 +3,239 @@ package model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class GeracaoECF {
-    private int id;
-    private String empresa = "";
-    private int anoCalendario = LocalDate.now().getYear();
-    private LocalDate periodoInicial = LocalDate.now().withDayOfYear(1);
-    private LocalDate periodoFinal = LocalDate.now().withMonth(12).withDayOfMonth(31);
-    private String tipoEscrituracao = "Original";
-    private String regimeTributario = "Lucro Presumido";
-    private String formaTributacao = "Trimestral";
-    private String situacao = "Não validada";
-    private LocalDateTime dataGeracao;
-    private String responsavel = "";
+  private long id;
+  private long empresaId;
+  private String empresa = "";
+  private long exercicioSocialId;
+  private Long ecdGeracaoId;
+  private LocalDate periodoInicial = LocalDate.now().withDayOfYear(1);
+  private LocalDate periodoFinal = LocalDate.now().withMonth(12).withDayOfMonth(31);
+  private FinalidadeECF finalidade = FinalidadeECF.ORIGINAL;
+  private Long ecfRetificadaId;
+  private RegimeTributacao regimeTributacao = RegimeTributacao.LUCRO_PRESUMIDO;
+  private String versaoLayout = "";
+  private StatusECF status = StatusECF.EM_PREPARACAO;
+  private String nomeArquivo;
+  private String hashArquivo;
+  private String numeroRecibo;
+  private Long geradoPor;
+  private LocalDateTime geradoEm;
+  private LocalDateTime transmitidoEm;
+  private String observacao = "";
+  private LocalDateTime criadoEm;
+  private List<ValidacaoECF> validacoes = new ArrayList<>();
+  private List<EcfApuracao> apuracoes = new ArrayList<>();
+  private List<EcfSignatario> signatarios = new ArrayList<>();
 
-    public GeracaoECF() {
-    }
+  public long getId() {
+    return id;
+  }
 
-    private final List<ValidacaoECF> validacoes = new ArrayList<ValidacaoECF>();
+  public void setId(long id) {
+    this.id = id;
+  }
 
-    public GeracaoECF(int id, int anoCalendario, LocalDate periodoInicial, LocalDate periodoFinal,
-            String tipoEscrituracao, String regimeTributario, String responsavel) {
-        this.id = id;
-        this.anoCalendario = anoCalendario;
-        setPeriodoInicial(periodoInicial);
-        setPeriodoFinal(periodoFinal);
-        setTipoEscrituracao(tipoEscrituracao);
-        setRegimeTributario(regimeTributario);
-        setResponsavel(responsavel);
-    }
+  public long getEmpresaId() {
+    return empresaId;
+  }
 
-    public GeracaoECF(GeracaoECF original) {
-        this(original.id, original.anoCalendario, original.periodoInicial, original.periodoFinal,
-                original.tipoEscrituracao, original.regimeTributario, original.responsavel);
-        empresa = original.empresa;
-        formaTributacao = original.formaTributacao;
-        situacao = original.situacao;
-        dataGeracao = original.dataGeracao;
-        setValidacoes(original.validacoes);
-    }
+  public void setEmpresaId(long empresaId) {
+    this.empresaId = empresaId;
+  }
 
-    public int getId() {
-        return id;
-    }
+  public String getEmpresa() {
+    return empresa;
+  }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public void setEmpresa(String empresa) {
+    this.empresa = empresa;
+  }
 
-    public String getEmpresa() {
-        return empresa;
-    }
+  public long getExercicioSocialId() {
+    return exercicioSocialId;
+  }
 
-    public void setEmpresa(String empresa) {
-        this.empresa = empresa == null ? "" : empresa;
-    }
+  public void setExercicioSocialId(long exercicioSocialId) {
+    this.exercicioSocialId = exercicioSocialId;
+  }
 
-    public int getAnoCalendario() {
-        return anoCalendario;
-    }
+  public Long getEcdGeracaoId() {
+    return ecdGeracaoId;
+  }
 
-    public void setAnoCalendario(int anoCalendario) {
-        this.anoCalendario = anoCalendario;
-    }
+  public void setEcdGeracaoId(Long ecdGeracaoId) {
+    this.ecdGeracaoId = ecdGeracaoId;
+  }
 
-    public LocalDate getPeriodoInicial() {
-        return periodoInicial;
-    }
+  public LocalDate getPeriodoInicial() {
+    return periodoInicial;
+  }
 
-    public void setPeriodoInicial(LocalDate periodoInicial) {
-        this.periodoInicial = periodoInicial == null ? LocalDate.now().withDayOfYear(1) : periodoInicial;
-    }
+  public void setPeriodoInicial(LocalDate periodoInicial) {
+    this.periodoInicial = periodoInicial;
+  }
 
-    public LocalDate getPeriodoFinal() {
-        return periodoFinal;
-    }
+  public LocalDate getPeriodoFinal() {
+    return periodoFinal;
+  }
 
-    public void setPeriodoFinal(LocalDate periodoFinal) {
-        this.periodoFinal = periodoFinal == null ? LocalDate.now().withMonth(12).withDayOfMonth(31) : periodoFinal;
-    }
+  public void setPeriodoFinal(LocalDate periodoFinal) {
+    this.periodoFinal = periodoFinal;
+  }
 
-    public String getTipoEscrituracao() {
-        return tipoEscrituracao;
-    }
+  public FinalidadeECF getFinalidade() {
+    return finalidade;
+  }
 
-    public void setTipoEscrituracao(String tipoEscrituracao) {
-        this.tipoEscrituracao = tipoEscrituracao == null ? "Original" : tipoEscrituracao;
-    }
+  public void setFinalidade(FinalidadeECF finalidade) {
+    this.finalidade = finalidade;
+  }
 
-    public String getRegimeTributario() {
-        return regimeTributario;
-    }
+  public Long getEcfRetificadaId() {
+    return ecfRetificadaId;
+  }
 
-    public void setRegimeTributario(String regimeTributario) {
-        this.regimeTributario = regimeTributario == null ? "Lucro Presumido" : regimeTributario;
-    }
+  public void setEcfRetificadaId(Long ecfRetificadaId) {
+    this.ecfRetificadaId = ecfRetificadaId;
+  }
 
-    public String getFormaTributacao() {
-        return formaTributacao;
-    }
+  public RegimeTributacao getRegimeTributacao() {
+    return regimeTributacao;
+  }
 
-    public void setFormaTributacao(String formaTributacao) {
-        this.formaTributacao = formaTributacao == null ? "Trimestral" : formaTributacao;
-    }
+  public void setRegimeTributacao(RegimeTributacao regimeTributacao) {
+    this.regimeTributacao = regimeTributacao;
+  }
 
-    public String getSituacao() {
-        return situacao;
-    }
+  public String getVersaoLayout() {
+    return versaoLayout;
+  }
 
-    public void setSituacao(String situacao) {
-        this.situacao = situacao == null ? "Não validada" : situacao;
-    }
+  public void setVersaoLayout(String versaoLayout) {
+    this.versaoLayout = versaoLayout;
+  }
 
-    public LocalDateTime getDataGeracao() {
-        return dataGeracao;
-    }
+  public StatusECF getStatus() {
+    return status;
+  }
 
-    public void setDataGeracao(LocalDateTime dataGeracao) {
-        this.dataGeracao = dataGeracao;
-    }
+  public void setStatus(StatusECF status) {
+    this.status = status;
+  }
 
-    public String getResponsavel() {
-        return responsavel;
-    }
+  public String getNomeArquivo() {
+    return nomeArquivo;
+  }
 
-    public void setResponsavel(String responsavel) {
-        this.responsavel = responsavel == null ? "" : responsavel;
-    }
+  public void setNomeArquivo(String nomeArquivo) {
+    this.nomeArquivo = nomeArquivo;
+  }
 
-    public List<ValidacaoECF> getValidacoes() {
-        return Collections.unmodifiableList(validacoes);
-    }
+  public String getHashArquivo() {
+    return hashArquivo;
+  }
 
-    public void setValidacoes(List<ValidacaoECF> novasValidacoes) {
-        List<ValidacaoECF> copias = new ArrayList<ValidacaoECF>();
-        if (novasValidacoes != null) {
-            for (ValidacaoECF validacao : novasValidacoes) {
-                copias.add(new ValidacaoECF(validacao));
-            }
-        }
-        validacoes.clear();
-        validacoes.addAll(copias);
-    }
+  public void setHashArquivo(String hashArquivo) {
+    this.hashArquivo = hashArquivo;
+  }
 
-    public void adicionarValidacao(ValidacaoECF validacao) {
-        if (validacao == null) {
-            throw new IllegalArgumentException("A validação não pode ser nula.");
-        }
-        validacoes.add(validacao);
-    }
+  public String getNumeroRecibo() {
+    return numeroRecibo;
+  }
 
-    private int contarTipo(TipoValidacao tipo) {
-        int quantidade = 0;
-        for (ValidacaoECF validacao : validacoes) {
-            if (validacao.getTipo() == tipo) {
-                quantidade++;
-            }
-        }
-        return quantidade;
-    }
+  public void setNumeroRecibo(String numeroRecibo) {
+    this.numeroRecibo = numeroRecibo;
+  }
 
-    public int contarErros() {
-        return contarTipo(TipoValidacao.ERRO);
-    }
+  public Long getGeradoPor() {
+    return geradoPor;
+  }
 
-    public int contarAlertas() {
-        return contarTipo(TipoValidacao.ALERTA);
-    }
+  public void setGeradoPor(Long geradoPor) {
+    this.geradoPor = geradoPor;
+  }
 
-    public boolean possuiErros() {
-        return contarErros() > 0;
-    }
+  public LocalDateTime getGeradoEm() {
+    return geradoEm;
+  }
 
-    public String verificarConfiguracao() {
-        if (empresa.trim().isEmpty() || responsavel.trim().isEmpty()) {
-            return "Preencha empresa e responsável.";
-        }
-        if (anoCalendario < 1900 || anoCalendario > 9999) {
-            return "Informe um ano entre 1900 e 9999.";
-        }
-        if (periodoInicial.isAfter(periodoFinal)) {
-            return "O período inicial deve ser anterior ou igual ao final.";
-        }
-        if (periodoInicial.getYear() != anoCalendario || periodoFinal.getYear() != anoCalendario) {
-            return "As datas precisam pertencer ao ano-calendário informado.";
-        }
-        if (tipoEscrituracao.trim().isEmpty() || regimeTributario.trim().isEmpty() || formaTributacao.trim().isEmpty()) {
-            return "Preencha tipo, regime e forma de tributação.";
-        }
-        return "";
-    }
+  public void setGeradoEm(LocalDateTime geradoEm) {
+    this.geradoEm = geradoEm;
+  }
 
-    public void validarDados(List<LancamentoContabil> lancamentos) {
-        validacoes.clear();
-        String problema = verificarConfiguracao();
-        adicionarResultado("ECF001", "Configuração", "Preenchimento da configuração",
-                problema.isEmpty() ? "Configuração preenchida para a demonstração." : problema,
-                problema.isEmpty() ? TipoValidacao.SUCESSO : TipoValidacao.ERRO);
-        if (!problema.isEmpty()) {
-            situacao = "Com erros";
-            return;
-        }
-        List<LancamentoContabil> ativos = new ArrayList<LancamentoContabil>();
-        for (LancamentoContabil lancamento : lancamentos) {
-            if (lancamento.getStatus() != StatusLancamento.CANCELADO && lancamento.estaNoPeriodo(periodoInicial, periodoFinal)) {
-                ativos.add(lancamento);
-            }
-        }
-        boolean semPartidas = false, desequilibrado = false, contaInvalida = false;
-        boolean valorInvalido = false, centroVazio = false, documentoVazio = false;
-        for (LancamentoContabil lancamento : ativos) {
-            semPartidas |= lancamento.getItens().isEmpty();
-            desequilibrado |= !lancamento.estaBalanceado();
-            documentoVazio |= lancamento.getDocumento().trim().isEmpty() || lancamento.getHistorico().trim().isEmpty();
-            for (ItemLancamento item : lancamento.getItens()) {
-                contaInvalida |= item.getConta().trim().isEmpty();
-                valorInvalido |= item.getValor().signum() <= 0;
-                centroVazio |= item.getCentroCusto().trim().isEmpty();
-            }
-        }
-        adicionarResultado("ECF002", "Movimentação", "Lançamentos no período",
-                ativos.isEmpty() ? "Nenhum lançamento ativo no período." : ativos.size() + " lançamentos analisados.",
-                ativos.isEmpty() ? TipoValidacao.ERRO : TipoValidacao.SUCESSO);
-        adicionarResultado("ECF003", "Partidas", "Lançamentos com partidas",
-                semPartidas ? "Há lançamento sem partidas." : "Todos os lançamentos têm partidas.",
-                semPartidas ? TipoValidacao.ERRO : TipoValidacao.SUCESSO);
-        adicionarResultado("ECF004", "Lançamentos", "Balanceamento de débitos e créditos",
-                desequilibrado ? "Revise as partidas: existem lançamentos desequilibrados." : "Os totais estão balanceados.",
-                desequilibrado ? TipoValidacao.ERRO : TipoValidacao.SUCESSO);
-        adicionarResultado("ECF005", "Contas", "Preenchimento das contas",
-                contaInvalida ? "Há partida sem conta." : "As contas estão preenchidas.",
-                contaInvalida ? TipoValidacao.ERRO : TipoValidacao.SUCESSO);
-        adicionarResultado("ECF006", "Valores", "Valores positivos nas partidas",
-                valorInvalido ? "Há partida com valor menor ou igual a zero." : "Os valores são positivos.",
-                valorInvalido ? TipoValidacao.ERRO : TipoValidacao.SUCESSO);
-        adicionarResultado("ECF007", "Centros de custo", "Preenchimento dos centros de custo",
-                centroVazio ? "Há partida sem centro de custo; confira sua necessidade." : "Centros de custo preenchidos.",
-                centroVazio ? TipoValidacao.ALERTA : TipoValidacao.SUCESSO);
-        adicionarResultado("ECF008", "Documentação", "Documento e histórico",
-                documentoVazio ? "Há lançamento com documento ou histórico vazio." : "Documentação preenchida.",
-                documentoVazio ? TipoValidacao.ALERTA : TipoValidacao.SUCESSO);
-        situacao = possuiErros() ? "Com erros" : contarAlertas() > 0 ? "Validada com alertas" : "Validada";
-    }
+  public LocalDateTime getTransmitidoEm() {
+    return transmitidoEm;
+  }
 
-    private void adicionarResultado(String codigo, String categoria, String descricao, String mensagem, TipoValidacao tipo) {
-        adicionarValidacao(new ValidacaoECF(validacoes.size() + 1, codigo, categoria, descricao, mensagem, tipo));
-    }
+  public void setTransmitidoEm(LocalDateTime transmitidoEm) {
+    this.transmitidoEm = transmitidoEm;
+  }
 
-    // Sempre revalidar: uma validação anterior pode ter ficado desatualizada.
-    public void gerar(List<LancamentoContabil> lancamentos) {
-        validarDados(lancamentos);
-        if (possuiErros()) {
-            throw new IllegalStateException("Corrija os erros antes de gerar a ECF demonstrativa.");
-        }
-        dataGeracao = LocalDateTime.now();
-        situacao = "Gerada (demonstração)";
-    }
+  public String getObservacao() {
+    return observacao;
+  }
 
-    @Override
-    public String toString() {
-        return anoCalendario + " - " + empresa + " - " + situacao;
-    }
+  public void setObservacao(String observacao) {
+    this.observacao = observacao;
+  }
 
+  public LocalDateTime getCriadoEm() {
+    return criadoEm;
+  }
+
+  public void setCriadoEm(LocalDateTime criadoEm) {
+    this.criadoEm = criadoEm;
+  }
+
+  public List<ValidacaoECF> getValidacoes() {
+    return validacoes;
+  }
+
+  public void setValidacoes(List<ValidacaoECF> validacoes) {
+    this.validacoes = validacoes;
+  }
+
+  public List<EcfApuracao> getApuracoes() {
+    return apuracoes;
+  }
+
+  public void setApuracoes(List<EcfApuracao> apuracoes) {
+    this.apuracoes = apuracoes;
+  }
+
+  public List<EcfSignatario> getSignatarios() {
+    return signatarios;
+  }
+
+  public void setSignatarios(List<EcfSignatario> signatarios) {
+    this.signatarios = signatarios;
+  }
+
+  public long contarErros() {
+    return validacoes.stream()
+        .filter(v -> v.getTipo() == TipoValidacao.ERRO && !v.getResolvido())
+        .count();
+  }
+
+  public long contarAlertas() {
+    return validacoes.stream()
+        .filter(v -> v.getTipo() == TipoValidacao.AVISO && !v.getResolvido())
+        .count();
+  }
+
+  public boolean possuiErros() {
+    return contarErros() > 0;
+  }
+
+  public int getAnoCalendario() {
+    return periodoInicial.getYear();
+  }
+
+  @Override
+  public String toString() {
+    return id + " - " + getAnoCalendario() + " - " + finalidade;
+  }
 }

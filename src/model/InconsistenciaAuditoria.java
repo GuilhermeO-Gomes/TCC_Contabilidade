@@ -1,182 +1,137 @@
 package model;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
 public class InconsistenciaAuditoria {
-    private int id;
-    private String codigo = "";
-    private String descricao = "";
-    private String recomendacao = "";
-    private NivelSeveridade severidade = NivelSeveridade.INFORMACAO;
-    private LocalDate data = LocalDate.now();
-    private String conta = "";
-    private int lancamentoId;
-    private int itemId;
-    private StatusAuditoria status = StatusAuditoria.PENDENTE;
+  private long id;
+  private String codigo = "";
+  private String descricao = "";
+  private String recomendacao = "";
+  private NivelSeveridade severidade = NivelSeveridade.MEDIA;
+  private StatusAuditoria status = StatusAuditoria.PENDENTE;
+  private Long lancamentoId;
+  private Long partidaId;
+  private LocalDateTime detectadoEm;
+  private Long revisadoPor;
+  private LocalDateTime revisadoEm;
+  private String observacaoRevisao = "";
+  private LocalDate data;
+  private String conta = "";
 
-    public InconsistenciaAuditoria() {
-    }
+  public long getId() {
+    return id;
+  }
 
-    public InconsistenciaAuditoria(int id, String codigo, String descricao, String recomendacao,
-            NivelSeveridade severidade, LocalDate data, String conta, int lancamentoId) {
-        this.id = id;
-        setCodigo(codigo);
-        setDescricao(descricao);
-        setRecomendacao(recomendacao);
-        setSeveridade(severidade);
-        setData(data);
-        setConta(conta);
-        this.lancamentoId = lancamentoId;
-    }
+  public void setId(long id) {
+    this.id = id;
+  }
 
-    public int getId() {
-        return id;
-    }
+  public String getCodigo() {
+    return codigo;
+  }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public void setCodigo(String codigo) {
+    this.codigo = codigo;
+  }
 
-    public String getCodigo() {
-        return codigo;
-    }
+  public String getDescricao() {
+    return descricao;
+  }
 
-    public void setCodigo(String codigo) {
-        this.codigo = codigo == null ? "" : codigo;
-    }
+  public void setDescricao(String descricao) {
+    this.descricao = descricao;
+  }
 
-    public String getDescricao() {
-        return descricao;
-    }
+  public String getRecomendacao() {
+    return recomendacao;
+  }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao == null ? "" : descricao;
-    }
+  public void setRecomendacao(String recomendacao) {
+    this.recomendacao = recomendacao;
+  }
 
-    public String getRecomendacao() {
-        return recomendacao;
-    }
+  public NivelSeveridade getSeveridade() {
+    return severidade;
+  }
 
-    public void setRecomendacao(String recomendacao) {
-        this.recomendacao = recomendacao == null ? "" : recomendacao;
-    }
+  public void setSeveridade(NivelSeveridade severidade) {
+    this.severidade = severidade;
+  }
 
-    public NivelSeveridade getSeveridade() {
-        return severidade;
-    }
+  public StatusAuditoria getStatus() {
+    return status;
+  }
 
-    public void setSeveridade(NivelSeveridade severidade) {
-        this.severidade = severidade == null ? NivelSeveridade.INFORMACAO : severidade;
-    }
+  public void setStatus(StatusAuditoria status) {
+    this.status = status;
+  }
 
-    public LocalDate getData() {
-        return data;
-    }
+  public Long getLancamentoId() {
+    return lancamentoId;
+  }
 
-    public void setData(LocalDate data) {
-        this.data = data == null ? LocalDate.now() : data;
-    }
+  public void setLancamentoId(Long lancamentoId) {
+    this.lancamentoId = lancamentoId;
+  }
 
-    public String getConta() {
-        return conta;
-    }
+  public Long getPartidaId() {
+    return partidaId;
+  }
 
-    public void setConta(String conta) {
-        this.conta = conta == null ? "" : conta;
-    }
+  public void setPartidaId(Long partidaId) {
+    this.partidaId = partidaId;
+  }
 
-    public int getLancamentoId() {
-        return lancamentoId;
-    }
+  public LocalDateTime getDetectadoEm() {
+    return detectadoEm;
+  }
 
-    public void setLancamentoId(int lancamentoId) {
-        this.lancamentoId = lancamentoId;
-    }
+  public void setDetectadoEm(LocalDateTime detectadoEm) {
+    this.detectadoEm = detectadoEm;
+  }
 
-    public int getItemId() {
-        return itemId;
-    }
+  public Long getRevisadoPor() {
+    return revisadoPor;
+  }
 
-    public void setItemId(int itemId) {
-        this.itemId = itemId;
-    }
+  public void setRevisadoPor(Long revisadoPor) {
+    this.revisadoPor = revisadoPor;
+  }
 
-    public StatusAuditoria getStatus() {
-        return status;
-    }
+  public LocalDateTime getRevisadoEm() {
+    return revisadoEm;
+  }
 
-    public void setStatus(StatusAuditoria status) {
-        this.status = status == null ? StatusAuditoria.PENDENTE : status;
-    }
+  public void setRevisadoEm(LocalDateTime revisadoEm) {
+    this.revisadoEm = revisadoEm;
+  }
 
-    public void marcarRevisado() {
-        status = StatusAuditoria.REVISADO;
-    }
+  public String getObservacaoRevisao() {
+    return observacaoRevisao;
+  }
 
-    public void ignorar() {
-        status = StatusAuditoria.IGNORADO;
-    }
+  public void setObservacaoRevisao(String observacaoRevisao) {
+    this.observacaoRevisao = observacaoRevisao;
+  }
 
-    public String getChave() {
-        return lancamentoId + ":" + codigo + ":" + itemId;
-    }
+  public LocalDate getData() {
+    return data;
+  }
 
-    // Checagens acadêmicas de preenchimento e balanceamento, sem regras fiscais.
-    public static List<InconsistenciaAuditoria> analisarLancamentos(List<LancamentoContabil> lancamentos,
-            LocalDate inicio, LocalDate fim) {
-        if (inicio == null || fim == null || inicio.isAfter(fim)) {
-            throw new IllegalArgumentException("Informe um período válido para a auditoria.");
-        }
-        List<InconsistenciaAuditoria> resultado = new ArrayList<InconsistenciaAuditoria>();
-        for (LancamentoContabil lancamento : lancamentos) {
-            if (lancamento.getStatus() == StatusLancamento.CANCELADO || !lancamento.estaNoPeriodo(inicio, fim)) {
-                continue;
-            }
-            if (lancamento.getItens().isEmpty()) {
-                adicionarAchado(resultado, lancamento, null, "AUD001", "Lançamento sem partidas",
-                        "Adicione ao menos uma partida de débito e uma de crédito.", NivelSeveridade.CRITICO);
-            }
-            if (!lancamento.estaBalanceado()) {
-                adicionarAchado(resultado, lancamento, null, "AUD002", "Débito diferente de crédito",
-                        "Revise as partidas. Diferença: " + lancamento.calcularDiferenca().toPlainString(), NivelSeveridade.CRITICO);
-            }
-            if (lancamento.getHistorico().trim().isEmpty()) {
-                adicionarAchado(resultado, lancamento, null, "AUD003", "Histórico vazio",
-                        "Descreva o fato contábil.", NivelSeveridade.ALERTA);
-            }
-            if (lancamento.getDocumento().trim().isEmpty()) {
-                adicionarAchado(resultado, lancamento, null, "AUD004", "Documento vazio",
-                        "Informe o documento que originou o lançamento.", NivelSeveridade.INFORMACAO);
-            }
-            for (ItemLancamento item : lancamento.getItens()) {
-                if (item.getConta().trim().isEmpty()) {
-                    adicionarAchado(resultado, lancamento, item, "AUD005", "Item sem conta",
-                            "Preencha a conta da partida.", NivelSeveridade.CRITICO);
-                }
-                if (item.getValor().signum() <= 0) {
-                    adicionarAchado(resultado, lancamento, item, "AUD006", "Valor da partida menor ou igual a zero",
-                            "Informe um valor positivo.", NivelSeveridade.CRITICO);
-                }
-            }
-        }
-        return resultado;
-    }
+  public void setData(LocalDate data) {
+    this.data = data;
+  }
 
-    private static void adicionarAchado(List<InconsistenciaAuditoria> resultado, LancamentoContabil lancamento,
-            ItemLancamento item, String codigo, String descricao, String recomendacao, NivelSeveridade severidade) {
-        InconsistenciaAuditoria achado = new InconsistenciaAuditoria(resultado.size() + 1, codigo, descricao,
-                recomendacao, severidade, lancamento.getData(), item == null ? "" : item.getConta(), lancamento.getId());
-        if (item != null) {
-            achado.setItemId(item.getId());
-        }
-        resultado.add(achado);
-    }
+  public String getConta() {
+    return conta;
+  }
 
-    @Override
-    public String toString() {
-        return codigo + " - " + descricao;
-    }
+  public void setConta(String conta) {
+    this.conta = conta;
+  }
 
+  public String getChave() {
+    return lancamentoId + ":" + codigo + ":" + partidaId;
+  }
 }

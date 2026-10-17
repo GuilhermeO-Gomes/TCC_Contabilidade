@@ -1,80 +1,90 @@
 package model;
 
 public class PlanoContas {
-    private String conta;
-    private String descricao;
-    private int reduzida;
-    private String saldo;
-    private String tipo;
-    private String cc;
-    private String situacao;
+  private long id;
+  private long empresaId;
+  private String codigo = "";
+  private String descricao = "";
+  private TipoConta tipo = TipoConta.ANALITICA;
+  private NaturezaConta natureza = NaturezaConta.DEVEDORA;
+  private boolean ativo = true;
+  private Long contaPaiId;
+  private Long codigoAglutinacaoId;
 
-    public PlanoContas() {
-    }
+  public long getId() {
+    return id;
+  }
 
-    public PlanoContas(String conta, String descricao, int reduzida, String saldo, String tipo, String cc, String situacao) {
-        this.conta = conta;
-        this.descricao = descricao;
-        this.reduzida = reduzida;
-        this.saldo = saldo;
-        this.tipo = tipo;
-        this.cc = cc;
-        this.situacao = situacao;
-    }
+  public void setId(long id) {
+    this.id = id;
+  }
 
-    public String getConta() {
-        return conta;
-    }
+  public long getEmpresaId() {
+    return empresaId;
+  }
 
-    public void setConta(String conta) {
-        this.conta = conta;
-    }
+  public void setEmpresaId(long empresaId) {
+    this.empresaId = empresaId;
+  }
 
-    public String getDescricao() {
-        return descricao;
-    }
+  public String getCodigo() {
+    return codigo;
+  }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
+  public void setCodigo(String codigo) {
+    this.codigo = codigo;
+  }
 
-    public int getReduzida() {
-        return reduzida;
-    }
+  public String getDescricao() {
+    return descricao;
+  }
 
-    public void setReduzida(int reduzida) {
-        this.reduzida = reduzida;
-    }
+  public void setDescricao(String descricao) {
+    this.descricao = descricao;
+  }
 
-    public String getSaldo() {
-        return saldo;
-    }
+  public TipoConta getTipo() {
+    return tipo;
+  }
 
-    public void setSaldo(String saldo) {
-        this.saldo = saldo;
-    }
+  public void setTipo(TipoConta tipo) {
+    this.tipo = tipo;
+  }
 
-    public String getTipo() {
-        return tipo;
-    }
+  public NaturezaConta getNatureza() {
+    return natureza;
+  }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
+  public void setNatureza(NaturezaConta natureza) {
+    this.natureza = natureza;
+  }
 
-    public String getCc() {
-        return cc;
-    }
+  public boolean getAtivo() {
+    return ativo;
+  }
 
-    public void setCc(String cc) {
-        this.cc = cc;
-    }
+  public void setAtivo(boolean ativo) {
+    this.ativo = ativo;
+  }
 
-    public String getSituacao() {
-        return situacao;
-    }
+  public Long getContaPaiId() {
+    return contaPaiId;
+  }
 
-    public void setSituacao(String situacao) {
-        this.situacao = situacao;
-    }
+  public void setContaPaiId(Long contaPaiId) {
+    this.contaPaiId = contaPaiId;
+  }
+
+  public Long getCodigoAglutinacaoId() {
+    return codigoAglutinacaoId;
+  }
+
+  public void setCodigoAglutinacaoId(Long codigoAglutinacaoId) {
+    this.codigoAglutinacaoId = codigoAglutinacaoId;
+  }
+
+  @Override
+  public String toString() {
+    return codigo + " - " + descricao;
+  }
 }

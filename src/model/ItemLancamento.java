@@ -3,70 +3,99 @@ package model;
 import java.math.BigDecimal;
 
 public class ItemLancamento {
-    private int id;
-    private String conta = "";
-    private String centroCusto = "";
-    private TipoMovimento tipoMovimento = TipoMovimento.DEBITO;
-    private BigDecimal valor = BigDecimal.ZERO;
+  private long id;
+  private long lancamentoId;
+  private long contaId;
+  private Long centroCustoId;
+  private String conta = "";
+  private String centroCusto = "";
+  private String descricao = "";
+  private TipoMovimento tipoMovimento = TipoMovimento.DEBITO;
+  private BigDecimal valor = BigDecimal.ZERO;
 
-    public ItemLancamento() {
-    }
+  public long getId() {
+    return id;
+  }
 
-    public ItemLancamento(int id, String conta, String centroCusto, TipoMovimento tipoMovimento, BigDecimal valor) {
-        this.id = id;
-        setConta(conta);
-        setCentroCusto(centroCusto);
-        setTipoMovimento(tipoMovimento);
-        setValor(valor);
-    }
+  public void setId(long id) {
+    this.id = id;
+  }
 
-    public ItemLancamento(ItemLancamento original) {
-        this(original.id, original.conta, original.centroCusto, original.tipoMovimento, original.valor);
-    }
+  public long getLancamentoId() {
+    return lancamentoId;
+  }
 
-    public int getId() {
-        return id;
-    }
+  public void setLancamentoId(long lancamentoId) {
+    this.lancamentoId = lancamentoId;
+  }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public long getContaId() {
+    return contaId;
+  }
 
-    public String getConta() {
-        return conta;
-    }
+  public void setContaId(long contaId) {
+    this.contaId = contaId;
+  }
 
-    public void setConta(String conta) {
-        this.conta = conta == null ? "" : conta;
-    }
+  public Long getCentroCustoId() {
+    return centroCustoId;
+  }
 
-    public String getCentroCusto() {
-        return centroCusto;
-    }
+  public void setCentroCustoId(Long centroCustoId) {
+    this.centroCustoId = centroCustoId;
+  }
 
-    public void setCentroCusto(String centroCusto) {
-        this.centroCusto = centroCusto == null ? "" : centroCusto;
-    }
+  public String getConta() {
+    return conta;
+  }
 
-    public TipoMovimento getTipoMovimento() {
-        return tipoMovimento;
-    }
+  public void setConta(String conta) {
+    this.conta = conta;
+  }
 
-    public void setTipoMovimento(TipoMovimento tipoMovimento) {
-        this.tipoMovimento = tipoMovimento == null ? TipoMovimento.DEBITO : tipoMovimento;
-    }
+  public String getCentroCusto() {
+    return centroCusto;
+  }
 
-    public BigDecimal getValor() {
-        return valor;
-    }
+  public void setCentroCusto(String centroCusto) {
+    this.centroCusto = centroCusto;
+  }
 
-    public void setValor(BigDecimal valor) {
-        this.valor = valor == null ? BigDecimal.ZERO : valor;
-    }
+  public String getDescricao() {
+    return descricao;
+  }
 
-    @Override
-    public String toString() {
-        return conta + " - " + tipoMovimento + ": " + valor.toPlainString();
-    }
+  public void setDescricao(String descricao) {
+    this.descricao = descricao;
+  }
 
+  public TipoMovimento getTipoMovimento() {
+    return tipoMovimento;
+  }
+
+  public void setTipoMovimento(TipoMovimento tipoMovimento) {
+    this.tipoMovimento = tipoMovimento;
+  }
+
+  public BigDecimal getValor() {
+    return valor;
+  }
+
+  public void setValor(BigDecimal valor) {
+    this.valor = valor;
+  }
+
+  public ItemLancamento() {}
+
+  public ItemLancamento(ItemLancamento o) {
+    id = o.id;
+    lancamentoId = o.lancamentoId;
+    contaId = o.contaId;
+    centroCustoId = o.centroCustoId;
+    conta = o.conta;
+    centroCusto = o.centroCusto;
+    descricao = o.descricao;
+    tipoMovimento = o.tipoMovimento;
+    valor = o.valor;
+  }
 }

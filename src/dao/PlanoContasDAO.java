@@ -1,96 +1,83 @@
 package dao;
 
-import model.PlanoContas;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import util.Conexao;
+import java.sql.*;
+import java.util.*;
+import model.*;
 
 public class PlanoContasDAO {
+  public List<PlanoContas> listar(Connection c, long empresa, boolean somenteAnaliticas)
+      throws SQLException {
+    return Jdbc.listar(
+        c,
+        "SELECT * FROM plano_contas WHERE empresa_id=?"
+            + (somenteAnaliticas ? " AND tipo='ANALITICA' AND ativo=TRUE" : "")
+            + " ORDER BY codigo",
+        MapeamentoContabil::planoContas,
+        empresa);
+  }
 
-   
-    public void inserir(PlanoContas plano) {
-        String sql = "INSERT INTO plano_contas (conta, descricao, reduzida, saldo, tipo, cc, situacao) VALUES (?, ?, ?, ?, ?, ?, ?)";
+  public long salvar(Connection c, PlanoContas p) throws SQLException {
+    if (p.getId() == 0)
+      return Jdbc.inserir(
+          c,
+          "INSERT INTO plano_contas"
+              + " (empresa_id,codigo,descricao,tipo,natureza,ativo,conta_pai_id,codigo_aglutinacao_id)"
+              + " VALUES (?,?,?,?,?,?,?,?)",
+          p.getEmpresaId(),
+          p.getCodigo(),
+          p.getDescricao(),
+          p.getTipo(),
+          p.getNatureza(),
+          p.getAtivo(),
+          p.getContaPaiId(),
+          p.getCodigoAglutinacaoId());
+    if (Jdbc.executar(
+            c,
+            "UPDATE plano_contas SET"
+                + " codigo=?,descricao=?,tipo=?,natureza=?,ativo=?,conta_pai_id=?,codigo_aglutinacao_id=?"
+                + " WHERE id=? AND empresa_id=?",
+            p.getCodigo(),
+            p.getDescricao(),
+            p.getTipo(),
+            p.getNatureza(),
+            p.getAtivo(),
+            p.getContaPaiId(),
+            p.getCodigoAglutinacaoId(),
+            p.getId(),
+            p.getEmpresaId())
+        != 1) throw new IllegalArgumentException("Conta não encontrada.");
+    return p.getId();
+  }
 
-        try (Connection conexao = Conexao.conectar();
-             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+  public Long bloquearConta(Connection c, long id, long empresaId) throws SQLException {
+    return Jdbc.unico(
+        c,
+        "SELECT id FROM plano_contas WHERE id=? AND empresa_id=? FOR UPDATE",
+        rs -> rs.getLong(1),
+        id,
+        empresaId);
+  }
 
-            stmt.setString(1, plano.getConta());
-            stmt.setString(2, plano.getDescricao());
-            stmt.setInt(3, plano.getReduzida());
-            stmt.setString(4, plano.getSaldo());
-            stmt.setString(5, plano.getTipo());
-            stmt.setString(6, plano.getCc());
-            stmt.setString(7, plano.getSituacao());
+  public PlanoContas buscarBloqueada(Connection c, long empresaId, long id) throws SQLException {
+    return Jdbc.unico(
+        c,
+        "SELECT * FROM plano_contas WHERE empresa_id=? AND id=? FOR UPDATE",
+        MapeamentoContabil::planoContas,
+        empresaId,
+        id);
+  }
 
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+  public Long contarPartidas(Connection c, long id) throws SQLException {
+    return Jdbc.unico(
+        c, "SELECT COUNT(*) FROM partida_lancamento WHERE conta_id=?", rs -> rs.getLong(1), id);
+  }
 
-    public List<PlanoContas> listar() {
-        List<PlanoContas> lista = new ArrayList<>();
-        String sql = "SELECT * FROM plano_contas ORDER BY conta";
-
-        try (Connection conexao = Conexao.conectar();
-             PreparedStatement stmt = conexao.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-
-            while (rs.next()) {
-                PlanoContas plano = new PlanoContas(
-                        rs.getString("conta"),
-                        rs.getString("descricao"),
-                        rs.getInt("reduzida"),
-                        rs.getString("saldo"),
-                        rs.getString("tipo"),
-                        rs.getString("cc"),
-                        rs.getString("situacao")
-                );
-
-                lista.add(plano);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-        return lista;
-    }
-
-    public void atualizar(PlanoContas plano) {
-        String sql = "UPDATE plano_contas SET descricao = ?, reduzida = ?, saldo = ?, tipo = ?, cc = ?, situacao = ? WHERE conta = ?";
-
-        try (Connection conexao = Conexao.conectar();
-             PreparedStatement stmt = conexao.prepareStatement(sql)) {
-
-            stmt.setString(1, plano.getDescricao());
-            stmt.setInt(2, plano.getReduzida());
-            stmt.setString(3, plano.getSaldo());
-            stmt.setString(4, plano.getTipo());
-            stmt.setString(5, plano.getCc());
-            stmt.setString(6, plano.getSituacao());
-            stmt.setString(7, plano.getConta());
-
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void excluir(String conta) {
-        String sql = "DELETE FROM plano_contas WHERE conta = ?";
-
-        try (Connection conexao = Conexao.conectar();
-             PreparedStatement stmt = conexao.prepareStatement(sql)) {
-
-            stmt.setString(1, conta);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+  public Long contarSubcontas(Connection c, long id, long empresaId) throws SQLException {
+    return Jdbc.unico(
+        c,
+        "SELECT COUNT(*) FROM plano_contas WHERE conta_pai_id=? AND empresa_id=?",
+        rs -> rs.getLong(1),
+        id,
+        empresaId);
+  }
 }

@@ -1,54 +1,31 @@
 package model;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import service.ContabilidadeService;
 
-// Coleções da sessão, preenchidas pelo usuário. Nenhuma operação acessa banco ou arquivo.
 public class DadosContabeis {
-    private final List<LancamentoContabil> lancamentos = new ArrayList<LancamentoContabil>();
-    private final List<GeracaoECF> geracoes = new ArrayList<GeracaoECF>();
-    private final List<InconsistenciaAuditoria> inconsistencias = new ArrayList<InconsistenciaAuditoria>();
+  private final ContabilidadeService servico;
 
-    public List<LancamentoContabil> getLancamentos() {
-        return lancamentos;
-    }
+  public DadosContabeis() {
+    this(
+        idConfigurado("erp.empresaId", "ERP_EMPRESA_ID"),
+        idConfigurado("erp.usuarioId", "ERP_USUARIO_ID"));
+  }
 
-    public List<GeracaoECF> getGeracoes() {
-        return geracoes;
-    }
+  public DadosContabeis(long empresaId, long usuarioId) {
+    servico = new ContabilidadeService(empresaId, usuarioId);
+  }
 
-    public List<InconsistenciaAuditoria> getInconsistencias() {
-        return inconsistencias;
+  private static long idConfigurado(String propriedade, String variavel) {
+    String valor = System.getProperty(propriedade, System.getenv(variavel));
+    if (valor == null || valor.trim().isEmpty()) return 0;
+    try {
+      return Long.parseLong(valor);
+    } catch (NumberFormatException erro) {
+      throw new IllegalArgumentException("ID inválido: " + variavel);
     }
+  }
 
-    public int proximoIdLancamento() {
-        int maior = 0;
-        for (LancamentoContabil lancamento : lancamentos) {
-            maior = Math.max(maior, lancamento.getId());
-        }
-        return maior + 1;
-    }
-
-    public int proximoIdGeracao() {
-        int maior = 0;
-        for (GeracaoECF geracao : geracoes) {
-            maior = Math.max(maior, geracao.getId());
-        }
-        return maior + 1;
-    }
-
-    public void atualizarInconsistencias(LocalDate inicio, LocalDate fim) {
-        List<InconsistenciaAuditoria> novos = InconsistenciaAuditoria.analisarLancamentos(lancamentos, inicio, fim);
-        for (InconsistenciaAuditoria novo : novos) {
-            for (InconsistenciaAuditoria anterior : inconsistencias) {
-                if (novo.getChave().equals(anterior.getChave())) {
-                    novo.setStatus(anterior.getStatus());
-                    break;
-                }
-            }
-        }
-        inconsistencias.clear();
-        inconsistencias.addAll(novos);
-    }
+  public ContabilidadeService getServico() {
+    return servico;
+  }
 }

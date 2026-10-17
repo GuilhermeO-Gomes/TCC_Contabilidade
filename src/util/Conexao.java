@@ -5,14 +5,17 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Conexao {
-	// A primeira parte da URL é padrão do jdbc, a segunda trata-se do endereço do BD, e a terceira parte é o nome do banco
-	// A porta do localhost está como 3306 porque é padrão, mas caso por algum motivo o seu seja diferente, pode mudar para poder executar
-private static final String URL = "jdbc:mysql://localhost:3307/contabilidade";
-private static final String USUARIO = "root";
-private static final String SENHA = "";
+  private static String configurar(String propriedade, String ambiente, String padrao) {
+    return System.getProperty(propriedade, System.getenv().getOrDefault(ambiente, padrao));
+  }
 
-public static Connection conectar() throws SQLException {
+  public static Connection conectar() throws SQLException {
     return DriverManager.getConnection(
-            URL, USUARIO, SENHA
-    );
-}}
+        configurar(
+            "erp.db.url",
+            "ERP_DB_URL",
+            "jdbc:mysql://localhost:3306/erp_contabil?connectTimeout=5000&socketTimeout=15000"),
+        configurar("erp.db.usuario", "ERP_DB_USUARIO", "root"),
+        configurar("erp.db.senha", "ERP_DB_SENHA", ""));
+  }
+}

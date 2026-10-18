@@ -62,8 +62,8 @@ public class TelaRateio extends JDialog {
     	lbl_criterio = new JLabel("Critério:"), lbl_situacao = new JLabel("Situação:"), lbl_total_percentual = new JLabel("Total Percentual(%): 100%");
     
     	
-    	String[] obj_criterios= {"Critério 1", "Critério 2"};
-    	String[] obj_situacoes = {"Situação 1", "Situação 2"};
+    	String[] obj_criterios= {"Todos", "Percentual"};
+    	String[] obj_situacoes = {"Todos", "Ativo", "Inativo"};
 
     	JComboBox <String> criterio = new JComboBox<>(obj_criterios);
     	JComboBox <String> situacao = new JComboBox<>(obj_situacoes);

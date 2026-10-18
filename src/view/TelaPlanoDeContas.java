@@ -19,6 +19,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
+import controller.PlanoContasController;
+
 
 
 public class TelaPlanoDeContas extends JPanel {
@@ -32,12 +34,14 @@ public class TelaPlanoDeContas extends JPanel {
     );
 
     private JTable tabelaPlanoDeContas;
+    private PlanoContasController controller;
 
 
     public TelaPlanoDeContas() {    	
     	setLayout(new BorderLayout(8,8));
     	setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         montar_tela();
+        controller = new PlanoContasController();
     
     }
 
@@ -94,11 +98,10 @@ public class TelaPlanoDeContas extends JPanel {
         jp_inferior.add(botoes, BorderLayout.NORTH);
         jp_inferior.add(scrollPane, BorderLayout.CENTER);
         
-        //Pra criar o JDialog, talvez depois jogue essa actionListener para os controllers
         btn_criar_conta.addActionListener(e -> {
         	Window janela_pai = SwingUtilities.getWindowAncestor(this);
-        	TelaAdicionarConta dialog = new TelaAdicionarConta(janela_pai);
-            dialog.setVisible(true);
+        	controller.abrirAdicionarConta(janela_pai);
+        	
         });
         botoes.add(btn_criar_conta);
         botoes.add(btn_atualizar_conta);

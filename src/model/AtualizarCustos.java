@@ -1,14 +1,14 @@
 package model;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.time.LocalDate;
 
 
 
 public class AtualizarCustos {
-	private Date data;
+	private LocalDate data;
 	//Mês e Ano
-	private Date periodo;
+	private LocalDate periodo;
 	private BigDecimal custoAnterior;
 	private BigDecimal custoNovo;
 	//Variação = custoNovo - CustoAnterior
@@ -19,7 +19,7 @@ public class AtualizarCustos {
 	 public AtualizarCustos() {
 	    }
 
-	    public AtualizarCustos(Integer idCentroCustos, Date data, Date periodo, BigDecimal custoAnterior, BigDecimal custoNovo) {
+	    public AtualizarCustos(Integer idCentroCustos, LocalDate data, LocalDate periodo, BigDecimal custoAnterior, BigDecimal custoNovo) {
 	        this.idCentroCustos = idCentroCustos;
 	    	this.data = data;
 	        this.periodo = periodo;
@@ -27,7 +27,7 @@ public class AtualizarCustos {
 	        this.custoNovo = custoNovo;
 	        this.variacao = custoNovo.subtract(custoAnterior);
 	    }
-	    public AtualizarCustos(Integer idCentroCustos,Integer idAtualizacao, Date data, Date periodo, BigDecimal custoAnterior, BigDecimal custoNovo, BigDecimal variacao) {
+	    public AtualizarCustos(Integer idCentroCustos,Integer idAtualizacao, LocalDate data, LocalDate periodo, BigDecimal custoAnterior, BigDecimal custoNovo, BigDecimal variacao) {
 	        this.idCentroCustos = idCentroCustos;
 	        this.idAtualizacao = idAtualizacao;
 	    	this.data = data;
@@ -52,16 +52,16 @@ public class AtualizarCustos {
 			this.idAtualizacao = idAtualizacao;
 		}
 
-	public Date getData() {
+	public LocalDate getData() {
 		return data;
 	}
-	public void setData(Date data) {
+	public void setData(LocalDate data) {
 		this.data = data;
 	}
-	public Date getPeriodo() {
+	public LocalDate getPeriodo() {
 		return periodo;
 	}
-	public void setPeriodo(Date periodo) {
+	public void setPeriodo(LocalDate periodo) {
 		this.periodo = periodo;
 	}
 	public BigDecimal getCustoAnterior() {

@@ -1,10 +1,10 @@
 package model;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.time.LocalDate;
 
 public class LivroRazao {
-	private Date data;
+	private LocalDate data;
 	private String documento;
 	private String historico;
 	private BigDecimal debito;
@@ -20,7 +20,7 @@ public class LivroRazao {
 	 public LivroRazao() {
 	    }
 
-	    public LivroRazao(Integer idLancamento, Date data, String documento, String historico, BigDecimal debito, BigDecimal credito, BigDecimal saldo, 
+	    public LivroRazao(Integer idLancamento, LocalDate data, String documento, String historico, BigDecimal debito, BigDecimal credito, BigDecimal saldo, 
 	    		NaturezaSaldo naturezaDoSaldo) {
 	        this.idLancamento = idLancamento;
 	    	this.data = data;
@@ -39,10 +39,10 @@ public class LivroRazao {
 			this.idLancamento = idLancamento;
 		}
 
-	public Date getData() {
+	public LocalDate getData() {
 		return data;
 	}
-	public void setData(Date data) {
+	public void setData(LocalDate data) {
 		this.data = data;
 	}
 	public String getDocumento() {

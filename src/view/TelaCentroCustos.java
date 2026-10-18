@@ -25,7 +25,7 @@ public class TelaCentroCustos extends JPanel {
 	    private static final long serialVersionUID = 1L;
 	    private final JTextField txt_codigo = new JTextField(5), txt_descricao = new JTextField(15);
 	    private final DefaultTableModel modeloTabela = new DefaultTableModel(
-	            new Object[] {"Código", "Descrição", "Centro Superior", "Nível", "Situação"},
+	            new Object[] {"Código", "Descrição", "Nome", "Responsável", "Centro Superior", "Nível", "Situação"},
 	            0
 	    );
 

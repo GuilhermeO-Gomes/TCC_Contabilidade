@@ -3,8 +3,6 @@ package model;
 import java.math.BigDecimal;
 
 public class ItemRateio {
-	
-
 	    private Integer idItemRateio;
 	    private Integer idRateio;
 	    private Integer idCentroCustos;

@@ -1,13 +1,13 @@
 package controller;
 
-import java.util.List;
-import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
-import dao.CentroCustosDAO;
-import model.PlanoContas;
-import view.TelaCentroCustos;
+import java.awt.Window;
 
+
+import view.TelaBuscarCentro;
 
 public class CentroCustosController {
-	
+	public void abrirBuscaCentro(Window janela_pai) {
+		TelaBuscarCentro dialog = new TelaBuscarCentro(janela_pai);
+	    dialog.setVisible(true);
+	};
 }

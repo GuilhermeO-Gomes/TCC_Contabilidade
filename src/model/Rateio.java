@@ -4,33 +4,70 @@ package model;
 
 
 public class Rateio {
-	private Integer idRateio;
+	private Long idRateio;
 	private String nome;
-	private Integer idConta;
+	private Long idConta; //
 	private CriterioRateio criterio;
 	private Situacao situacao;
+	private Long empresaID;
+	private boolean ativo;
 	
 	public enum Situacao{ATIVO, INATIVO};
 	public enum CriterioRateio{PERCENTUAL};
 	
 	
 	public Rateio() {};
-	public Rateio(Integer idRateio, String nome, CriterioRateio criterio, Situacao situacao) {
+	public Rateio(Long idRateio, String nome, CriterioRateio criterio, Situacao situacao, Long empresaID, boolean ativo) {
 		this.idRateio = idRateio;
 		this.nome = nome;
 		this.criterio = criterio;
 		this.situacao = situacao;
+		this.empresaID = empresaID;
+		this.ativo = ativo;
 	}
 	
-	public Rateio(String nome, CriterioRateio criterio, Situacao situacao) {
+	public Rateio(String nome, CriterioRateio criterio, Situacao situacao, Long empresaID, boolean ativo) {
 		this.nome = nome;
 		this.criterio = criterio;
 		this.situacao = situacao;
+		this.empresaID = empresaID;
+		this.ativo = ativo;
 	}
-	public Integer getIdRateio() {
+	
+	public Rateio(Long idRateio, String nome, CriterioRateio criterio, Situacao situacao, Long empresaID, boolean ativo, Long idConta) {
+		this.idRateio = idRateio;
+		this.nome = nome;
+		this.criterio = criterio;
+		this.situacao = situacao;
+		this.empresaID = empresaID;
+		this.ativo = ativo;
+		this.idConta = idConta;
+	}
+	
+	public Rateio(String nome, CriterioRateio criterio, Situacao situacao, Long empresaID, boolean ativo, Long idConta) {
+		this.nome = nome;
+		this.criterio = criterio;
+		this.situacao = situacao;
+		this.empresaID = empresaID;
+		this.ativo = ativo;
+		this.idConta = idConta;
+	}
+	public Long getIdRateio() {
 		return idRateio;
 	}
-	public void setIdRateio(Integer idRateio) {
+	public Long getEmpresaID() {
+		return empresaID;
+	}
+	public void setEmpresaID(Long empresaID) {
+		this.empresaID = empresaID;
+	}
+	public boolean isAtivo() {
+		return ativo;
+	}
+	public void setAtivo(boolean ativo) {
+		this.ativo = ativo;
+	}
+	public void setIdRateio(Long idRateio) {
 		this.idRateio = idRateio;
 	}
 	public String getNome() {
@@ -39,10 +76,10 @@ public class Rateio {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	public Integer getIdConta() {
+	public Long getIdConta() {
 		return idConta;
 	}
-	public void setIdConta(Integer idConta) {
+	public void setIdConta(Long idConta) {
 		this.idConta = idConta;
 	}
 	public CriterioRateio getCriterio() {

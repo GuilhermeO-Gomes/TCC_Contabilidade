@@ -3,39 +3,39 @@ package model;
 import java.math.BigDecimal;
 
 public class ItemRateio {
-	    private Integer idItemRateio;
-	    private Integer idRateio;
-	    private Integer idCentroCustos;
+	    private Long idItemRateio;
+	    private Long idRateio;
+	    private Long idCentroCustos;
 	    private BigDecimal percentual;
 	    
 	    public ItemRateio() {};
-	    public ItemRateio(Integer idItemRateio, Integer idRateio, Integer idCentroCustos, BigDecimal percentual) {
+	    public ItemRateio(Long idItemRateio, Long idRateio, Long idCentroCustos, BigDecimal percentual) {
 	    	this.idItemRateio = idItemRateio;
 	    	this.idRateio = idRateio;
 	    	this.idCentroCustos = idCentroCustos;
 	    	this.percentual = percentual;
 	    };
-	    public ItemRateio(Integer idRateio, Integer idCentroCustos, BigDecimal percentual) {
+	    public ItemRateio(Long idRateio, Long idCentroCustos, BigDecimal percentual) {
 	    	this.idRateio = idRateio;
 	    	this.idCentroCustos = idCentroCustos;
 	    	this.percentual = percentual;
 	    }
-		public Integer getIdItemRateio() {
+		public Long getIdItemRateio() {
 			return idItemRateio;
 		}
-		public void setIdItemRateio(Integer idItemRateio) {
+		public void setIdItemRateio(Long idItemRateio) {
 			this.idItemRateio = idItemRateio;
 		}
-		public Integer getIdRateio() {
+		public Long getIdRateio() {
 			return idRateio;
 		}
-		public void setIdRateio(Integer idRateio) {
+		public void setIdRateio(Long idRateio) {
 			this.idRateio = idRateio;
 		}
-		public Integer getIdCentroCustos() {
+		public Long getIdCentroCustos() {
 			return idCentroCustos;
 		}
-		public void setIdCentroCustos(Integer idCentroCustos) {
+		public void setIdCentroCustos(Long idCentroCustos) {
 			this.idCentroCustos = idCentroCustos;
 		}
 		public BigDecimal getPercentual() {

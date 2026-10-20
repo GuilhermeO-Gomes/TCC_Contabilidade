@@ -5,45 +5,52 @@ import java.math.BigDecimal;
 
 
 public class Balancete {
-	private Integer idConta;
-	private String conta;
+	private Long idConta;
+	private String codigoConta;
 	private String descricao;
 	private BigDecimal debito;
 	private BigDecimal credito;
 	private BigDecimal saldo;
+	private BigDecimal saldoInicial;
 	private NaturezaSaldo naturezaDoSaldo;
-	//D para Devedor, C para Credor. A ideia é juntar o Saldo com uma letra que 
-	// represente a natureza do saldo, mas juntar SOMENTE na hora de mostrar os dados na JTable
-	//No BD, é separado
 	public enum NaturezaSaldo {DEVEDOR, CREDOR, ZERO}
 	
 	public Balancete() {}
 	
-	public Balancete(Integer idConta, String conta, String descricao, BigDecimal debito, BigDecimal credito, BigDecimal saldo, 
-			NaturezaSaldo naturezaDoSaldo) {
+	public Balancete(Long idConta, String codigoConta, String descricao, BigDecimal debito, BigDecimal credito, BigDecimal saldo, 
+			BigDecimal saldoInicial, NaturezaSaldo naturezaDoSaldo) {
 		this.idConta = idConta;
-		this.conta = conta;
+		this.codigoConta = codigoConta;
 		this.descricao = descricao;
 		this.debito = debito;
 		this.credito = credito;
 		this.saldo = saldo;
+		this.saldoInicial = saldoInicial;
 		this.naturezaDoSaldo = naturezaDoSaldo;
 	}
 
-	public Integer getIdConta() {
+	public Long getIdConta() {
 		return idConta;
 	}
 
-	public void setIdConta(Integer idConta) {
+	public BigDecimal getSaldoInicial() {
+		return saldoInicial;
+	}
+
+	public void setSaldoInicial(BigDecimal saldoInicial) {
+		this.saldoInicial = saldoInicial;
+	}
+
+	public void setIdConta(Long idConta) {
 		this.idConta = idConta;
 	}
 
-	public String getConta() {
-		return conta;
+	public String getCodigoConta() {
+		return codigoConta;
 	}
 
-	public void setConta(String conta) {
-		this.conta = conta;
+	public void setCodigoConta(String codigoConta) {
+		this.codigoConta = codigoConta;
 	}
 
 	public String getDescricao() {

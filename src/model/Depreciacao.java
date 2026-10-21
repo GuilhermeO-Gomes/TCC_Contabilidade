@@ -3,7 +3,7 @@ package model;
 public class Depreciacao {
     
     private int id;
-    private String taxa;
+    private double taxa;
     private String tempo;
     private String dataDepreciacao;
     
@@ -15,11 +15,11 @@ public class Depreciacao {
         this.id = id;
     }
 
-    public String getTaxa() {
+    public double getTaxa() {
         return taxa;
     }
 
-    public void setTaxa(String taxa) {
+    public void setTaxa(double taxa) {
         this.taxa = taxa;
     }
 

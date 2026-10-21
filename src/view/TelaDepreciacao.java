@@ -135,7 +135,7 @@ public class TelaDepreciacao extends JPanel{
 
     public void mostrar(Depreciacao u) {
         id.setText(String.valueOf(u.getId()));
-        taxa.setText(u.getTaxa());
+        taxa.setText(String.valueOf(u.getTaxa()));
         tempo.setText(u.getTempo());
     }
 

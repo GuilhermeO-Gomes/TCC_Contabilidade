@@ -1,7 +1,6 @@
 package view;
 
 import model.Reavaliacao;
-import model.Depreciacao;
 //import controller.ReavaliacaoController
 import java.awt.*;
 import java.awt.event.*;
@@ -11,9 +10,10 @@ import javax.swing.table.DefaultTableModel;
 
 public class TelaReavaliacao extends JPanel{
 
-    
+ 
+	private static final long serialVersionUID = 1L;
 
-    private final JTextField idBem = new JTextField(7),
+	private final JTextField idBem = new JTextField(7),
       situacaoAntes = new JTextField(21),
       situacaoLaudo = new JTextField(21),
       valorHistorico = new JTextField(21),
@@ -24,7 +24,7 @@ public class TelaReavaliacao extends JPanel{
       valorReavaliado = new JTextField(21);
 
       private final DefaultTableModel modelo = new DefaultTableModel(
-         new Object[] {"Id bem","Valor da nova avaliação", "Valor contábil", "Resultado da Reavaliação"},
+         new Object[] {"ID","Valor da nova avaliação", "Valor contábil", "Resultado da Reavaliação"},
         0
       ) {
         public boolean isCellEditable(int l, int c) {
@@ -46,7 +46,8 @@ public class TelaReavaliacao extends JPanel{
          
       }
 
-      private void montar() {
+
+	  private void montar() {
         JPanel f = new JPanel(new GridBagLayout());
         f.setBorder(BorderFactory.createTitledBorder(""));
         GridBagConstraints g = new GridBagConstraints();
@@ -112,11 +113,11 @@ public class TelaReavaliacao extends JPanel{
         idBem.setText(String.valueOf(u.getId()));
         situacaoAntes.setText(u.getSituacaoAntes());
         situacaoLaudo.setText(u.getSituacaoLaudo());
-        valorHistorico.setText(u.getValorHistorico());
-        novoValor.setText(u.getNovoValor());
-        depreAcumulada.setText(u.getDepreAcumulada());
-        tempoRemanescente.setText(u.getTempoRemanescente());
-        valorContabil.setText(u.getValorContabil());
+        valorHistorico.setText(String.valueOf(u.getValorHistorico()));
+        novoValor.setText(String.valueOf(u.getNovoValor()));
+        //depreAcumulada.setText(u.getDepreAcumulada());
+        //tempoRemanescente.setText(u.getTempoRemanescente());
+        //valorContabil.setText(u.getValorContabil());
       }
 
       public void preencher(List<Reavaliacao>l) {
@@ -127,7 +128,7 @@ public class TelaReavaliacao extends JPanel{
             modelo.addRow(new Object[]{
                 Integer.valueOf(u.getId()),
                 u.getNovoValor(),
-                u.getValorContabil(),
+                //u.getValorContabil(),
                 u.getValorReavaliado(),
             });
         }

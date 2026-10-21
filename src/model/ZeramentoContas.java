@@ -9,7 +9,8 @@ public class ZeramentoContas {
     private String contaReduzida;
     private String dataZeramento;
     private String destinoDebito;
-    private String complemento;
+    private String complementoD;
+    private String complementoC;
     private String destinoCredito;
     private String prejuizoDebito;
     private String prejuizoCredito;
@@ -66,12 +67,20 @@ public class ZeramentoContas {
         this.destinoCredito = destinoCredito;
     }
 
-    public String getComplemento() {
-        return complemento;
+    public String getComplementoD() {
+        return complementoD;
     }
 
-    public void setComplemento(String complemento) {
-        this.complemento = complemento;
+    public void setComplementoD(String complementoD) {
+        this.complementoD = complementoD;
+    }
+    
+    public String getComplementoC() {
+        return complementoC;
+    }
+
+    public void setComplementoC(String complementoC) {
+        this.complementoC = complementoC;
     }
 
     public String getPrejuizoDebito() {

@@ -9,6 +9,8 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+import model.ZeramentoContas;
+
 import javax.swing.BoxLayout;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -28,16 +30,14 @@ import javax.swing.JComboBox;
 
 public class TelaZeramentoContas extends JPanel {
     
-  /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
   private final JTextField id = new JTextField(7),
    contaReduzida = new JTextField(15),
    dataZeramento = new JTextField(8),
    destinoDebito = new JTextField (32),
    destinoCredito = new JTextField(32),
-   complemento = new JTextField (32),
+   complementoD = new JTextField (32),
+   complementoC = new JTextField (32),
    prejuizoDebito = new JTextField (15),
    prejuizoCredito = new JTextField (15),
    saldoDebito = new JTextField (15),
@@ -45,9 +45,11 @@ public class TelaZeramentoContas extends JPanel {
    resultado = new JTextField (15);
   private final JCheckBox zerarSemSaldo = new JCheckBox("Zerar saldo para conta sem saldo", true);
   private final JCheckBox transferencia = new JCheckBox("Tranferência de saldo para conta do Patrimônio Líquido", true);
-  private final JComboBox historicoPadrao = new JComboBox();
+  @SuppressWarnings("rawtypes")
+private final JComboBox historicoPadrao = new JComboBox();
 
-  private final JComboBox opcao = new JComboBox(new String[] {
+  @SuppressWarnings({ "rawtypes", "unchecked" })
+private final JComboBox opcao = new JComboBox(new String[] {
     "Totalizado",
     "Individual",
   });
@@ -91,25 +93,28 @@ public class TelaZeramentoContas extends JPanel {
     f3.setLayout(new BoxLayout(f3, BoxLayout.Y_AXIS));
 
     JPanel destinos = new JPanel(new FlowLayout(FlowLayout.LEFT,0,0));
-    destinos.add(new JLabel("Destino (Débito): "));
-    destinos.add(destinoDebito);
+    
+    JLabel lblDebito = new JLabel("Destino (Débito): ");
+    
+    destinos.add(lblDebito);
+
     destinos.add(new JLabel("Destino (Crédito): "));
-    destinos.add(destinoCredito);
+
     f3.add(destinos);
   
 
     JPanel historicos = new JPanel(new FlowLayout(FlowLayout.LEFT, 1, 1));
     historicos.add(new JLabel("Historico Padrão:"));
-    historicos.add(historicoPadrao);
+
     historicos.add(new JLabel("Historico Padrão:"));
-    historicos.add(historicoPadrao);
+
     f3.add(historicos);
 
     JPanel complementos = new JPanel(new FlowLayout(FlowLayout.LEFT, 2,2));  
     complementos.add(new JLabel("Complemento:"));
-    complementos.add(complemento);
+
     complementos.add(new JLabel("Complemento:"));
-    complementos.add(complemento);
+
     f3.add(complementos);
 
     JPanel fs = new JPanel(new GridLayout(1,2,8,8));
@@ -126,9 +131,9 @@ public class TelaZeramentoContas extends JPanel {
 
     JPanel prejuizos = new JPanel(new FlowLayout(FlowLayout.LEFT));
      prejuizos.add(new JLabel("Prejuízo (Débito):"));
-     prejuizos.add(prejuizoDebito);
+
      prejuizos.add(new JLabel("Prejuízo (Crédito):"));
-     prejuizos.add(prejuizoCredito);
+
      f.add(prejuizos);
 
     JPanel c = new JPanel(new BorderLayout());
@@ -139,11 +144,11 @@ public class TelaZeramentoContas extends JPanel {
 
     JPanel saldo = new JPanel(new FlowLayout(FlowLayout.LEFT));
      saldo.add(new JLabel("Saldo (Débito):"));
-     saldo.add(saldoDebito);
+
      saldo.add(new JLabel("Saldo (Crédito)"));
-     saldo.add(saldoCredito);
+
      saldo.add(new JLabel("Resultado:"));
-     saldo.add(resultado);
+
      f.add(saldo);
 
     JPanel b2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -230,7 +235,8 @@ public class TelaZeramentoContas extends JPanel {
       dataZeramento.setText(u.getDataZeramento());
       destinoDebito.setText(u.getDestinoDebito());
       destinoCredito.setText(u.getDestinoCredito());
-      complemento.setText(u.getComplemento());
+      complementoD.setText(u.getComplementoD());
+      complementoC.setText(u.getComplementoC());
       prejuizoDebito.setText(u.getPrejuizoDebito());
       prejuizoCredito.setText(u.getPrejuizoCredito());
       saldoDebito.setText(u.getSaldoDebito());
@@ -239,7 +245,7 @@ public class TelaZeramentoContas extends JPanel {
       zerarSemSaldo.setSelected(u.isZerarSemSaldo());
       transferencia.setSelected(u.isTransferencia());
       opcao.setSelectedItem(u.getOpcao());
-      selecionarCombo(historicoPadrao, u.getHistoricoPadrao().getId());
+      //selecionarCombo(historicoPadrao, u.getHistoricoPadrao().getId());
     }
 
     public void preencher(List<ZeramentoContas> l) {
@@ -261,7 +267,7 @@ public class TelaZeramentoContas extends JPanel {
 
 
 
-    private void selecionarCombo(JComboBox combo, int codigo) {
+    /*private void selecionarCombo(JComboBox combo, int codigo) {
       int i;
       for (i = 0; i<combo.getItemCount(); i++) {
         Object o = combo.getItemAt(i);
@@ -271,7 +277,8 @@ public class TelaZeramentoContas extends JPanel {
         }
       }
     }
-
+    */
+    
  public int getId() {
     try {
       return Integer.parseInt(id.getText());
@@ -296,10 +303,14 @@ public class TelaZeramentoContas extends JPanel {
     return destinoCredito;
   }
 
-  public JTextField getTxtComplemento() {
-    return complemento;
+  public JTextField getTxtComplementoD() {
+    return complementoD;
   }
 
+  public JTextField getTxtComplementoC() {
+	    return complementoC;
+	  }
+  
   public JTextField getTxtPrejuizoDebito() {
     return prejuizoDebito;
   }
@@ -320,11 +331,13 @@ public class TelaZeramentoContas extends JPanel {
     return resultado;
   }
 
-  public JComboBox getCmbHistoricoPadrao() {
+  @SuppressWarnings("rawtypes")
+public JComboBox getCmbHistoricoPadrao() {
     return historicoPadrao;
   }
 
-  public JComboBox getCmbOpcao() {
+  @SuppressWarnings("rawtypes")
+public JComboBox getCmbOpcao() {
     return opcao;
   }
 

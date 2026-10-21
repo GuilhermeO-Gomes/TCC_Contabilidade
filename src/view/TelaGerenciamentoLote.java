@@ -18,7 +18,9 @@ import javax.swing.table.DefaultTableModel;
 public class TelaGerenciamentoLote extends JPanel {
 
 
-    private final DefaultTableModel modelo = new DefaultTableModel(
+	private static final long serialVersionUID = 1L;
+
+	private final DefaultTableModel modelo = new DefaultTableModel(
         new Object[] {"ID", "Nome", "Descrição", "Data abertura", "Data inicial", "Data final", "Débito", "Crédito", "Diferença", "Bloqueado"},
         0
     ) {

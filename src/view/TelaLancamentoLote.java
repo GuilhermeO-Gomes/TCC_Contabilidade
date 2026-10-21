@@ -15,9 +15,10 @@ import javax.swing.*;
 
 
 
-public class TelaLancamentoLote extends JDialog {
+public class TelaLancamentoLote extends JPanel{
     
-    private final JTextField id = new JTextField(10),
+	private static final long serialVersionUID = 1L;
+	private final JTextField id = new JTextField(10),
     nomeLote = new JTextField(30),
     descriLote = new JTextField(60),
     dataAbertura = new JTextField(12),
@@ -32,7 +33,8 @@ public class TelaLancamentoLote extends JDialog {
     public TelaLancamentoLote() {
         setLayout(new BorderLayout(8,8));
 
-        ((JPanel) getContentPane()).setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        //((JPanel) getContentPane()).
+        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         //controller = new LancamentoLoteController(this);
         montar();
         

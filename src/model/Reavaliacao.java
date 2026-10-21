@@ -5,9 +5,9 @@ public class Reavaliacao {
     public int id;
     public String situacaoAntes;
     public String situacaoLaudo;
-    public String valorHistorico;
-    public String novoValor;
-    public String valorReavaliado;
+    public double valorHistorico;
+    public double novoValor;
+    public double valorReavaliado;
     
 
     public int getId() {
@@ -34,27 +34,27 @@ public class Reavaliacao {
         this.situacaoLaudo = situacaoLaudo;
     }
 
-    public String getValorHistorico() {
+    public double getValorHistorico() {
         return valorHistorico;
     }
 
-    public void setValorHistorico(String valorHistorico) {
+    public void setValorHistorico(double valorHistorico) {
         this.valorHistorico = valorHistorico;
     }
 
-    public String getNovoValor() {
+    public double getNovoValor() {
         return novoValor;
     }
 
-    public void setNovoValor(String novoValor) {
+    public void setNovoValor(double novoValor) {
         this.novoValor = novoValor;
     }
 
-    public String getValorReavaliado() {
+    public double getValorReavaliado() {
         return valorReavaliado;
     }
 
-    public void setValorReavaliado(String valorReavaliado) {
+    public void setValorReavaliado(double valorReavaliado) {
         this.valorReavaliado = valorReavaliado;
     }
 }

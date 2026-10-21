@@ -58,8 +58,8 @@ public class TelaCentroCustos extends JPanel {
 	      	String[] obj_situacoes = {"Todas", "Ativo", "Inativo"};
 	    	JComboBox <String> cmbBox_situacao = new JComboBox<>(obj_situacoes);
 	    	JButton btn_pesquisar = new JButton("Pesquisar centro de custo"), btn_mostrar_todos = new JButton("Mostrar todos"),
-	    	btn_criar_conta = new JButton("Adicionar centro de custo"), btn_atualizar_conta = new JButton("Atualizar centro de custo"),
-	    	btn_inativar_conta = new JButton("Inativar centro"), btn_rateio = new JButton("Configurar Rateio"), 
+	    	btn_criar_centro = new JButton("Adicionar centro de custo"), btn_atualizar_centro = new JButton("Atualizar centro de custo"),
+	    	btn_inativar_centro = new JButton("Inativar centro"), btn_rateio = new JButton("Configurar Rateio"), 
 	    	btn_razao = new JButton("Consultar razão"), btn_busca_centro = new JButton("Buscar Centro");
 	    	
 	    	adicionar_componente(1, jp_form, gbc_form, lbl_codigo, txt_codigo);
@@ -70,12 +70,14 @@ public class TelaCentroCustos extends JPanel {
 	    	gbc_form.weightx = 0;
 	    	gbc_form.fill = GridBagConstraints.NONE;
 	    	gbc_form.anchor = GridBagConstraints.WEST;
-	    	jp_form.add(btn_busca_centro, gbc_form);
 	    	
 	    	btn_busca_centro.addActionListener(e -> {
 	    		Window janela_pai = SwingUtilities.getWindowAncestor(this);
 	    		controller.abrirBuscaCentro(janela_pai);
 	    	});
+	    	
+	    	jp_form.add(btn_busca_centro, gbc_form);
+	    	
 	    	adicionar_componente(4, jp_form, gbc_form, lbl_situacao, cmbBox_situacao);
 	    	
 	    	botoes_filtro.add(btn_pesquisar);
@@ -88,7 +90,7 @@ public class TelaCentroCustos extends JPanel {
 	    	gbc_form.anchor = GridBagConstraints.WEST;
 	    	jp_form.add(botoes_filtro, gbc_form);
 	    	
-	    	//Fazer JPanel para todo o container de filtro/pesquisa
+	    	
 	        tabelaCentroCustos = new JTable(modeloTabela);
 	        JScrollPane scrollPane =
 	                new JScrollPane(tabelaCentroCustos);
@@ -96,35 +98,30 @@ public class TelaCentroCustos extends JPanel {
 	        scrollPane.setBorder(
 	                BorderFactory.createTitledBorder("Lista de centro de custo")
 	        );
-	        	   
-	        botoes.add(btn_criar_conta);
-	        botoes.add(btn_atualizar_conta);
-	        btn_atualizar_conta.addActionListener(e -> {
+	        btn_criar_centro.addActionListener(e -> {
 	        	Window janela_pai = SwingUtilities.getWindowAncestor(this);
-	        	TelaAtualizarCustos dialog = new TelaAtualizarCustos(janela_pai);
-	            dialog.setVisible(true);});
-	        botoes.add(btn_inativar_conta);
-	        
-	      //Pra criar o JDialog, talvez depois jogue essa actionListener para os controllers
-	        btn_criar_conta.addActionListener(e -> {
-	        	Window janela_pai = SwingUtilities.getWindowAncestor(this);
-	        	TelaAdicionarCustos dialog = new TelaAdicionarCustos(janela_pai);
-	            dialog.setVisible(true);
+	        	controller.abrirAdicionarCustos(janela_pai);
 	        });
 	        
+	        btn_atualizar_centro.addActionListener(e -> {
+	        	Window janela_pai = SwingUtilities.getWindowAncestor(this);
+	        	controller.abrirAtualizarCustos(janela_pai);
+	        	});
 	        btn_rateio.addActionListener(e -> {
 	        	Window janela_pai = SwingUtilities.getWindowAncestor(this);
-	        	TelaRateio dialog = new TelaRateio(janela_pai);
-	            dialog.setVisible(true);
+	        	controller.abrirRateio(janela_pai);
 	        });
-	        botoes.add(btn_rateio);
-	        
-	        
-	        botoes.add(btn_razao);
 	        btn_razao.addActionListener(e -> {
 	        	Window janela_pai = SwingUtilities.getWindowAncestor(this);
-	        	TelaLivroRazao dialog = new TelaLivroRazao(janela_pai);
-	            dialog.setVisible(true);});
+	        	controller.abrirLivroRazao(janela_pai);
+	        	});
+	        
+	        botoes.add(btn_criar_centro);
+	        botoes.add(btn_atualizar_centro);
+	        botoes.add(btn_inativar_centro);
+	        botoes.add(btn_rateio);
+	        botoes.add(btn_razao);
+	        
 
 	        jp_inferior.add(scrollPane, BorderLayout.CENTER);
 	        jp_inferior.add(botoes, BorderLayout.NORTH);

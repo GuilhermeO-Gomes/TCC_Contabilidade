@@ -87,7 +87,7 @@ public class TelaLivroRazao extends JDialog {
     	JPanel botoes_pesquisa = new JPanel(new FlowLayout(FlowLayout.LEFT));
     	JPanel botao_lancamento = new JPanel(new FlowLayout(FlowLayout.LEFT));
     	//Function para JLabels
-    	JLabel lbl_conta = new JLabel("Conta:"), lbl_conta1 = new JLabel("Conta:"), lbl_periodo = new JLabel("Período:"),
+    	JLabel lbl_conta = new JLabel("Conta(Campo Obrigatório, o resto é opcional):"), lbl_conta1 = new JLabel("Conta:"), lbl_periodo = new JLabel("Período:"),
     	lbl_ate = new JLabel("até"), lbl_historico = new JLabel("Histórico"),
     	lbl_centro_custo = new JLabel("Centro de Custo:"), lbl_descricao = new JLabel("Descrição:"),
     	lbl_natureza = new JLabel("Natureza:"), lbl_saldo_ini = new JLabel("Saldo inicial:"),

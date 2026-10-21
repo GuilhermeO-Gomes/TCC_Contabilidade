@@ -46,7 +46,6 @@ public class TelaPlanoDeContas extends JPanel {
     }
 
     private void montar_tela() {
-    	//Painel que agrupa os conteúdos inferiores para ser utilizado o Borderlayout
     	JPanel jp_inferior = new JPanel(new BorderLayout(0,5));
     	JPanel jp_form = new JPanel(new GridBagLayout());
     	jp_form.setBorder(BorderFactory.createTitledBorder("Filtros e Pesquisa"));
@@ -86,7 +85,7 @@ public class TelaPlanoDeContas extends JPanel {
     	gbc_form.anchor = GridBagConstraints.WEST;
     	jp_form.add(botoes_filtro, gbc_form);
     	
-    	//Fazer JPanel para todo o container de filtro/pesquisa
+
         tabelaPlanoDeContas = new JTable(modeloTabela);
         JScrollPane scrollPane =
                 new JScrollPane(tabelaPlanoDeContas);
@@ -100,25 +99,22 @@ public class TelaPlanoDeContas extends JPanel {
         
         btn_criar_conta.addActionListener(e -> {
         	Window janela_pai = SwingUtilities.getWindowAncestor(this);
-        	controller.abrirAdicionarConta(janela_pai);
-        	
-        });
-        botoes.add(btn_criar_conta);
-        botoes.add(btn_atualizar_conta);
-        //Pra criar o JDialog, talvez depois jogue essa actionListener para os controllers
+        	controller.abrirAdicionarConta(janela_pai); });
+        
         btn_atualizar_conta.addActionListener(e -> {
         	Window janela_pai = SwingUtilities.getWindowAncestor(this);
-        	TelaAtualizarConta dialog = new TelaAtualizarConta(janela_pai);
-            dialog.setVisible(true);}
-            );
-        botoes.add(btn_inativar_conta);
+        	controller.abrirAtualizarConta(janela_pai); });
         
-        //Pra criar o JDialog, talvez depois jogue essa actionListener para os controllers
         btn_razao.addActionListener(e -> {
         	Window janela_pai = SwingUtilities.getWindowAncestor(this);
-        	TelaLivroRazao dialog = new TelaLivroRazao(janela_pai);
-            dialog.setVisible(true);}
-            );
+        	controller.abrirLivroRazao(janela_pai); });
+        
+        botoes.add(btn_criar_conta);
+        botoes.add(btn_atualizar_conta);
+        botoes.add(btn_inativar_conta);
+        
+
+   
         botoes.add(btn_razao);        
         add(jp_form, BorderLayout.NORTH);
         add(jp_inferior, BorderLayout.CENTER);

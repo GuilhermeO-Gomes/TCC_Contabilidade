@@ -21,6 +21,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
+import controller.RateioController;
+
 public class TelaRateio extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private final JTextField txt_nome_rateio = new JTextField(15);
@@ -28,6 +30,7 @@ public class TelaRateio extends JDialog {
 	private final DefaultTableModel modeloTabela = new DefaultTableModel(
     new Object[] {"Centro de Custo", "Percentual(%)" }, 0);
 	private JTable TabelaRateio;
+	private RateioController controller;
             
     public TelaRateio(Window janela_pai) {
     	super(janela_pai, "Rateio", ModalityType.APPLICATION_MODAL);
@@ -38,6 +41,7 @@ public class TelaRateio extends JDialog {
         setMinimumSize(new Dimension(700, 500)); 
         pack();
         setLocationRelativeTo(janela_pai);
+        controller = new RateioController();
     }
 
     private void montar_tela() {
@@ -69,7 +73,7 @@ public class TelaRateio extends JDialog {
     	JComboBox <String> situacao = new JComboBox<>(obj_situacoes);
     	JButton btn_adicionar_centro = new JButton("Adicionar Centro"), btn_atualizar = new JButton("Atualizar"), 
     	btn_remover = new JButton("Remover"), btn_salvar = new JButton("Salvar"), btn_limpar = new JButton("Limpar"), 
-    	btn_cancelar = new JButton("Cancelar"), btn_buscar_conta1 = new JButton ("Buscar Conta");
+    	btn_cancelar = new JButton("Cancelar"), btn_buscar_conta = new JButton ("Buscar Conta");
     	adicionar_componente(0, jp_config, gbc_config, lbl_nome_rateio, txt_nome_rateio);
     	adicionar_componente(1, jp_config, gbc_config, lbl_conta_contabil, txt_conta_contabil);
     	
@@ -77,13 +81,12 @@ public class TelaRateio extends JDialog {
     	gbc_config.gridy = 1;
     	gbc_config.weightx = 0;
     	gbc_config.fill = GridBagConstraints.NONE;
-    	jp_config.add(btn_buscar_conta1, gbc_config);
-    	
-    	btn_buscar_conta1.addActionListener(e -> {
+    	btn_buscar_conta.addActionListener(e -> {
         	Window janela_pai = SwingUtilities.getWindowAncestor(this);
-        	TelaBuscarConta dialog = new TelaBuscarConta(janela_pai);
-            dialog.setVisible(true);});
+        	controller.abrirBuscaConta(janela_pai);
+            });
     	
+    	jp_config.add(btn_buscar_conta, gbc_config);
     	adicionar_componente(2, jp_config, gbc_config, lbl_criterio, criterio);
     	adicionar_componente(3, jp_config, gbc_config, lbl_situacao, situacao);
     	
@@ -94,8 +97,8 @@ public class TelaRateio extends JDialog {
     	
     	btn_adicionar_centro.addActionListener(e -> {
         	Window janela_pai = SwingUtilities.getWindowAncestor(this);
-        	TelaAdicionarCentro dialog = new TelaAdicionarCentro(janela_pai);
-            dialog.setVisible(true);});
+        	controller.abrirAdicionarCentro(janela_pai);
+        	});
   
     	TabelaRateio = new JTable(modeloTabela);
         JScrollPane scrollPane =new JScrollPane(TabelaRateio);

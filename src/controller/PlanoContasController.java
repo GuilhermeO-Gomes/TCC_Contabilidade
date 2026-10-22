@@ -7,7 +7,7 @@ import javax.swing.table.DefaultTableModel;
 
 import dao.PlanoContasDAO;
 import model.PlanoContas;
-import view.TelaPlanoDeContas;
+import view.DevGuilherme.TelaPlanoDeContas;
 
 public class PlanoContasController {
 

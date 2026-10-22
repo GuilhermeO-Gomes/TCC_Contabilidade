@@ -11,6 +11,10 @@ import model.DadosContabeis;
 import view.TelaAuditoriaDigital;
 import view.TelaDashboard;
 import view.TelaLivroDiario;
+import view.DevGuilherme.TelaBalancete;
+import view.DevGuilherme.TelaCentroCustos;
+import view.DevGuilherme.TelaLivroRazao;
+import view.DevGuilherme.TelaPlanoDeContas;
 import view.TelaGeracaoECF;
 
 public class TelaPrincipalContabilidade extends JFrame {

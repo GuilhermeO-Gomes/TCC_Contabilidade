@@ -2,7 +2,7 @@ package app;
 
 import javax.swing.SwingUtilities;
 
-import view.TelaPlanoDeContas;
+import view.DevGuilherme.TelaPlanoDeContas;
 
 public class Main {
 	

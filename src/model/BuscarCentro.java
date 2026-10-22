@@ -1,23 +1,23 @@
 package model;
 
 public class BuscarCentro {
-	private Integer idCentroCustos;
+	private Long idCentroCustos;
 	private String codigo;
 	private String descricao;
 	
 	public BuscarCentro() {}
 	
-	public BuscarCentro(Integer idCentroCustos, String codigo, String descricao) {
+	public BuscarCentro(Long idCentroCustos, String codigo, String descricao) {
 		this.idCentroCustos = idCentroCustos;
 		this.codigo = codigo;
 		this.descricao = descricao;
 	}
 
-	public Integer getIdCentroCustos() {
+	public Long getIdCentroCustos() {
 		return idCentroCustos;
 	}
 
-	public void setIdCentroCustos(Integer idCentroCustos) {
+	public void setIdCentroCustos(Long idCentroCustos) {
 		this.idCentroCustos = idCentroCustos;
 	}
 

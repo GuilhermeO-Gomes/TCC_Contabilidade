@@ -11,7 +11,7 @@ public class LivroRazao {
 	private BigDecimal credito;
 	private BigDecimal saldo;
 	private NaturezaSaldo naturezaDoSaldo;
-	private Integer idLancamento;
+	private Long idLancamento;
 	//D para Devedor, C para Credor. A ideia é juntar o Saldo com uma letra que 
 	// represente a natureza do saldo, mas juntar SOMENTE na hora de mostrar os dados na JTable
 	//No BD, é separado
@@ -20,7 +20,7 @@ public class LivroRazao {
 	 public LivroRazao() {
 	    }
 
-	    public LivroRazao(Integer idLancamento, LocalDate data, String documento, String historico, BigDecimal debito, BigDecimal credito, BigDecimal saldo, 
+	    public LivroRazao(Long idLancamento, LocalDate data, String documento, String historico, BigDecimal debito, BigDecimal credito, BigDecimal saldo, 
 	    		NaturezaSaldo naturezaDoSaldo) {
 	        this.idLancamento = idLancamento;
 	    	this.data = data;
@@ -31,11 +31,11 @@ public class LivroRazao {
 	        this.saldo = saldo;
 	        this.naturezaDoSaldo = naturezaDoSaldo;
 	    }
-	public Integer getIdLancamento() {
+	public Long getIdLancamento() {
 			return idLancamento;
 		}
 
-		public void setIdLancamento(Integer idLancamento) {
+		public void setIdLancamento(Long idLancamento) {
 			this.idLancamento = idLancamento;
 		}
 

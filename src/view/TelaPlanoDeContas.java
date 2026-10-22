@@ -28,7 +28,7 @@ public class TelaPlanoDeContas extends JPanel {
     private static final long serialVersionUID = 1L;
     private final JTextField txt_codigo = new JTextField(5), txt_descricao = new JTextField(15);
     private final DefaultTableModel modeloTabela = new DefaultTableModel(
-            new Object[] {"Código", "Descrição", "Conta Superior", "Nível", "Grupo", "Natureza", "Tipo da Conta", "Situação"
+            new Object[] {"Código", "Descrição", "Conta Superior", "Nível", "Grupo", "Natureza", "Tipo da Conta", "Situação", "Conta Aglutinação"
             },
             0
     );

@@ -73,7 +73,8 @@ public class TelaBalancete extends JPanel {
     	lbl_ate = new JLabel("até"), lbl_grupo = new JLabel("Grupo:"), lbl_nivel = new JLabel("Nível:"),
     	lbl_total_debito = new JLabel("TOTAL DÉBITO:"), lbl_total_credito = new JLabel("TOTAL CRÉDITO:"), 
     	lbl_placeholder = new JLabel("R$Placholder"), lbl_placeholder2 = new JLabel("R$Placholder"),
-    	lbl_situacao = new JLabel("SITUAÇÃO:"), lbl_placeholder3 = new JLabel("Placholders conferidos");
+    	lbl_situacao = new JLabel("SITUAÇÃO:"), lbl_placeholder3 = new JLabel("Placholders conferidos"),
+    	lbl_saldo_inicial = new JLabel("SALDO INICIAL: "), lbl_placeholder4 = new JLabel("R$Placeholder");
     	
     	
     	
@@ -144,6 +145,8 @@ public class TelaBalancete extends JPanel {
         jp_dados.add(lbl_placeholder);
         jp_dados.add(lbl_total_credito);       
         jp_dados.add(lbl_placeholder2);
+        jp_dados.add(lbl_saldo_inicial);
+        jp_dados.add(lbl_placeholder4);
         jp_dados.add(lbl_situacao);
         jp_dados.add(lbl_placeholder3);
         

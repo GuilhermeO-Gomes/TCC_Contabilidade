@@ -3,9 +3,9 @@ package model;
 public class PlanoContas {
     private String codigo;
     private String descricao;
-    private Integer idContaSuperior; //Hierarquia de contas
-    private Integer nivel; //
-    private Integer idConta;
+    private Long idContaSuperior; //Hierarquia de contas
+    private int nivel; //
+    private Long idConta;
     public enum Grupo{ATIVO, PASSIVO, PATRIMONIO_LIQUIDO, RECEITA, CUSTO, DESPESA};
     public enum Natureza{DEVEDORA, CREDORA};
     public enum TipoConta{SINTETICA, ANALITICA};
@@ -15,12 +15,13 @@ public class PlanoContas {
     private Natureza natureza;
     private TipoConta tipoConta;
     private Situacao situacao;
+    private Long contaAglutinacaoID;
 
     public PlanoContas() {
     }
 
-    public PlanoContas(String codigo, String descricao, Integer idContaSuperior,Integer nivel, Grupo grupo, 
-    		Natureza natureza, TipoConta tipoConta, Situacao situacao) {
+    public PlanoContas(String codigo, String descricao, Long idContaSuperior, int nivel, Grupo grupo, 
+    		Natureza natureza, TipoConta tipoConta, Situacao situacao, Long contaAglutinacaoID) {
         this.codigo = codigo;
         this.descricao = descricao;
         this.idContaSuperior = idContaSuperior;
@@ -29,9 +30,10 @@ public class PlanoContas {
         this.tipoConta = tipoConta;
         this.natureza = natureza;
         this.situacao = situacao;
+        this.contaAglutinacaoID = contaAglutinacaoID;
     }
-    public PlanoContas(String codigo, String descricao, Integer idContaSuperior,Integer nivel, Integer idConta, Grupo grupo, 
-    		Natureza natureza, TipoConta tipoConta, Situacao situacao) {
+    public PlanoContas(String codigo, String descricao, Long idContaSuperior, int nivel, Long idConta, Grupo grupo, 
+    		Natureza natureza, TipoConta tipoConta, Situacao situacao, Long contaAglutinacaoID) {
         this.codigo = codigo;
         this.descricao = descricao;
         this.idContaSuperior = idContaSuperior;
@@ -41,13 +43,22 @@ public class PlanoContas {
         this.tipoConta = tipoConta;
         this.natureza = natureza;
         this.situacao = situacao;
+        this.contaAglutinacaoID = contaAglutinacaoID;
     }
 
-	public Integer getIdConta() {
+	public Long getContaAglutinacaoID() {
+		return contaAglutinacaoID;
+	}
+
+	public void setContaAglutinacaoID(Long contaAglutinacaoID) {
+		this.contaAglutinacaoID = contaAglutinacaoID;
+	}
+
+	public Long getIdConta() {
 		return idConta;
 	}
 
-	public void setIdConta(Integer idConta) {
+	public void setIdConta(Long idConta) {
 		this.idConta = idConta;
 	}
 
@@ -67,19 +78,19 @@ public class PlanoContas {
 		this.descricao = descricao;
 	}
 
-	public Integer getIdContaSuperior() {
+	public Long getIdContaSuperior() {
 		return idContaSuperior;
 	}
 
-	public void setIdContaSuperior(Integer idContaSuperior) {
+	public void setIdContaSuperior(Long idContaSuperior) {
 		this.idContaSuperior = idContaSuperior;
 	}
 
-	public Integer getNivel() {
+	public int getNivel() {
 		return nivel;
 	}
 
-	public void setNivel(Integer nivel) {
+	public void setNivel(int nivel) {
 		this.nivel = nivel;
 	}
 

@@ -3,21 +3,21 @@ package model;
 public class BuscarConta {
 	private String codigo;
 	private String descricao;
-	private Integer idConta;
+	private Long idConta;
 	
 	public BuscarConta() {}
 	
-	public BuscarConta(Integer idConta, String codigo, String descricao) {
+	public BuscarConta(Long idConta, String codigo, String descricao) {
 		this.idConta = idConta;
 		this.codigo = codigo;
 		this.descricao = descricao;
 	}
 
-	public Integer getIdConta() {
+	public Long getIdConta() {
 		return idConta;
 	}
 
-	public void setIdConta(Integer idConta) {
+	public void setIdConta(Long idConta) {
 		this.idConta = idConta;
 	}
 

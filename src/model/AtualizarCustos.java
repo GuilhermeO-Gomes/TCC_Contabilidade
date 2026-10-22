@@ -13,13 +13,13 @@ public class AtualizarCustos {
 	private BigDecimal custoNovo;
 	//Variação = custoNovo - CustoAnterior
 	private BigDecimal variacao;
-	private Integer idCentroCustos;
-	private Integer idAtualizacao;
+	private Long idCentroCustos;
+	private Long idAtualizacao;
 	
 	 public AtualizarCustos() {
 	    }
 
-	    public AtualizarCustos(Integer idCentroCustos, LocalDate data, LocalDate periodo, BigDecimal custoAnterior, BigDecimal custoNovo) {
+	    public AtualizarCustos(Long idCentroCustos, LocalDate data, LocalDate periodo, BigDecimal custoAnterior, BigDecimal custoNovo) {
 	        this.idCentroCustos = idCentroCustos;
 	    	this.data = data;
 	        this.periodo = periodo;
@@ -27,7 +27,7 @@ public class AtualizarCustos {
 	        this.custoNovo = custoNovo;
 	        this.variacao = custoNovo.subtract(custoAnterior);
 	    }
-	    public AtualizarCustos(Integer idCentroCustos,Integer idAtualizacao, LocalDate data, LocalDate periodo, BigDecimal custoAnterior, BigDecimal custoNovo, BigDecimal variacao) {
+	    public AtualizarCustos(Long idCentroCustos, Long idAtualizacao, LocalDate data, LocalDate periodo, BigDecimal custoAnterior, BigDecimal custoNovo, BigDecimal variacao) {
 	        this.idCentroCustos = idCentroCustos;
 	        this.idAtualizacao = idAtualizacao;
 	    	this.data = data;
@@ -36,19 +36,19 @@ public class AtualizarCustos {
 	        this.custoNovo = custoNovo;
 	        this.variacao = variacao;
 	    }
-	public Integer getIdCentroCusto() {
+	public Long getIdCentroCusto() {
 			return idCentroCustos;
 		}
 
-		public void setIdCentroCusto(Integer idCentroCusto) {
+		public void setIdCentroCusto(Long idCentroCusto) {
 			this.idCentroCustos = idCentroCusto;
 		}
 
-		public Integer getIdAtualizacao() {
+		public Long getIdAtualizacao() {
 			return idAtualizacao;
 		}
 
-		public void setIdAtualizacao(Integer idAtualizacao) {
+		public void setIdAtualizacao(Long idAtualizacao) {
 			this.idAtualizacao = idAtualizacao;
 		}
 

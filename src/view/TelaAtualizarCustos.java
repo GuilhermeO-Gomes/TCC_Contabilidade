@@ -30,6 +30,7 @@ public class TelaAtualizarCustos extends JDialog {
 	{periodo_1.setEditor(editor_1);}
     private final JTextField txt_centro_custo = new JTextField(15), txt_custo_atual = new JTextField(15),
     txt_novo_custo = new JTextField(15), txt_variacao = new JTextField(15);
+    
     private final DefaultTableModel modeloTabela = new DefaultTableModel(
     	    new Object[] {"Data", "Período", "Custo Anterior", "Novo Custo", "Variação"}, 0);
     		private JTable TabelaHistorico;
@@ -50,15 +51,18 @@ public class TelaAtualizarCustos extends JDialog {
     	gbc_form.anchor = GridBagConstraints.WEST;
     	gbc_form.weightx = 0;
     	JPanel botoes = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    	JLabel lbl_centro_custo = new JLabel("Centro de Custo:"), lbl_periodo = new JLabel("Período:"), 
-    	lbl_custo_atual = new JLabel("Custo Atual:"),lbl_novo_custo = new JLabel("Novo Custo:"), 
-    	lbl_variacao = new JLabel("Variação"); 
+    	JLabel lbl_centro_custo = new JLabel("Centro de Custo:"), lbl_periodo = new JLabel("Período*:"), 
+    	lbl_custo_atual = new JLabel("Custo Atual:"),lbl_novo_custo = new JLabel("Novo Custo*:"), 
+    	lbl_variacao = new JLabel("Variação:"); 
     
     	
     	JButton btn_atualizar = new JButton("Atualizar"), btn_cancelar = new JButton("Cancelar"), 
     			btn_limpar = new JButton("Limpar");
     	
     	btn_cancelar.addActionListener(e -> dispose());
+    	txt_centro_custo.setEnabled(false);
+    	txt_custo_atual.setEnabled(false);
+    	txt_variacao.setEnabled(false);
     	
     	adicionar_componente(0, jp_form, gbc_form, lbl_centro_custo, txt_centro_custo);
     	adicionar_componente(1, jp_form, gbc_form, lbl_periodo, periodo_1);

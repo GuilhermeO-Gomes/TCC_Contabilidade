@@ -10,7 +10,6 @@ import java.awt.Window;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -18,7 +17,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 import javax.swing.table.DefaultTableModel;
 
@@ -27,21 +25,20 @@ public class TelaLivroRazao extends JDialog {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private final JTextField historico = new JTextField(15);
 	private final DefaultTableModel modeloTabela = new DefaultTableModel(
-    new Object[] {"Data", "Documento", "Histórico", "Débito", "Crédito", "Saldo"}, 0);
+    new Object[] {"Data", "Documento", "Histórico", "Débito", "Crédito", "Saldo", "Natureza do Saldo(D/C)"}, 0);
 	private JTable TabelaLivroRazao;
             
 	//JSpinner serve para ser um campo de formulário de data sem precisar converter
 	SpinnerDateModel modelo_data_1= new SpinnerDateModel();
 	SpinnerDateModel modelo_data_2= new SpinnerDateModel();
-	JSpinner periodo_1 = new JSpinner(modelo_data_1);
-	JSpinner periodo_2 = new JSpinner(modelo_data_2);
-	JSpinner.DateEditor editor_1 = new JSpinner.DateEditor(periodo_1, "dd/MM/yyyy");
-	JSpinner.DateEditor editor_2 = new JSpinner.DateEditor(periodo_2, "dd/MM/yyyy");
+	JSpinner data_ini = new JSpinner(modelo_data_1);
+	JSpinner data_fim = new JSpinner(modelo_data_2);
+	JSpinner.DateEditor editor_1 = new JSpinner.DateEditor(data_ini, "dd/MM/yyyy");
+	JSpinner.DateEditor editor_2 = new JSpinner.DateEditor(data_fim, "dd/MM/yyyy");
 	//Para pegar valores desses campos: periodo_1.getValue(); 
-	{periodo_1.setEditor(editor_1);
-	periodo_2.setEditor(editor_2);}
+	{data_ini.setEditor(editor_1);
+	data_fim.setEditor(editor_2);}
 	
 	
 	
@@ -87,9 +84,8 @@ public class TelaLivroRazao extends JDialog {
     	JPanel botoes_pesquisa = new JPanel(new FlowLayout(FlowLayout.LEFT));
     	JPanel botao_lancamento = new JPanel(new FlowLayout(FlowLayout.LEFT));
     	//Function para JLabels
-    	JLabel lbl_conta = new JLabel("Conta(Campo Obrigatório, o resto é opcional):"), lbl_conta1 = new JLabel("Conta:"), lbl_periodo = new JLabel("Período:"),
-    	lbl_ate = new JLabel("até"), lbl_historico = new JLabel("Histórico"),
-    	lbl_centro_custo = new JLabel("Centro de Custo:"), lbl_descricao = new JLabel("Descrição:"),
+    	JLabel  lbl_codigo = new JLabel("Código:"), lbl_data_ini = new JLabel("Data inicial:"),
+    	lbl_data_fim = new JLabel("Data Final:"), lbl_descricao = new JLabel("Descrição:"),
     	lbl_natureza = new JLabel("Natureza:"), lbl_saldo_ini = new JLabel("Saldo inicial:"),
     	lbl_debito = new JLabel("Total Débitos:"), lbl_credito = new JLabel("Total Créditos:"),
     	lbl_saldo_final = new JLabel("Saldo Final:"), lbl_placeholder1 = new JLabel("Placholder"),
@@ -98,39 +94,18 @@ public class TelaLivroRazao extends JDialog {
     	lbl_placeholder6 = new JLabel("Placholder"), lbl_placeholder7 = new JLabel("Placholder");
     	
     	
-    
-    	String[] contas= {"1.1.01 - Caixa"};
-    	String[] centro_custo = {"Todos"};
-
-    	JComboBox <String> conta = new JComboBox<>(contas);
-    	JComboBox <String> centro = new JComboBox<>(centro_custo);
-
     	JButton pesquisar = new JButton("Pesquisar"), limpar = new JButton("Limpar"), 
     	exportar = new JButton("Exportar"), imprimir = new JButton("Imprimir"), 
     	lancamento = new JButton("Visualizar lançamento selecionado");
     	
-    	adicionar_componente(0, painel_pesquisa, organizador_pesquisa, lbl_conta, conta);
-    	adicionar_componente(1, painel_pesquisa, organizador_pesquisa, lbl_periodo, periodo_1);
-    	organizador_pesquisa.gridx = 2;
-    	organizador_pesquisa.gridy = 1;
-    	organizador_pesquisa.weightx = 0;
-    	organizador_pesquisa.fill = GridBagConstraints.NONE;
-    	painel_pesquisa.add(lbl_ate, organizador_pesquisa);
-
-    	organizador_pesquisa.gridx = 3;
-    	organizador_pesquisa.gridy = 1;
-    	organizador_pesquisa.weightx = 1;
-    	organizador_pesquisa.fill = GridBagConstraints.HORIZONTAL;
-    	painel_pesquisa.add(periodo_2, organizador_pesquisa);
-    	adicionar_componente(2, painel_pesquisa, organizador_pesquisa, lbl_historico, historico);
-    	adicionar_componente(3, painel_pesquisa, organizador_pesquisa, lbl_centro_custo, centro);
-    	
+    	adicionar_componente(0, painel_pesquisa, organizador_pesquisa, lbl_data_ini, data_ini);
+    	adicionar_componente(1, painel_pesquisa, organizador_pesquisa, lbl_data_fim, data_fim);
     	botoes_pesquisa.add(pesquisar);
     	botoes_pesquisa.add(limpar);
     	botoes_pesquisa.add(exportar);
     	botoes_pesquisa.add(imprimir);
     	
-    	organizador_pesquisa.gridy = 4;
+    	organizador_pesquisa.gridy = 2;
     	organizador_pesquisa.gridx = 0;
     	organizador_pesquisa.gridwidth = 2;
     	organizador_pesquisa.weightx = 1;
@@ -145,7 +120,7 @@ public class TelaLivroRazao extends JDialog {
     	organizador_principal.fill = GridBagConstraints.HORIZONTAL;
     	painel_principal.add(painel_pesquisa, organizador_principal);
     	
-    	adicionar_componente(0, painel_conta, organizador_conta, lbl_conta1, lbl_placeholder1);
+    	adicionar_componente(0, painel_conta, organizador_conta, lbl_codigo, lbl_placeholder1);
     	adicionar_componente(1, painel_conta, organizador_conta, lbl_descricao, lbl_placeholder2);
     	adicionar_componente(2, painel_conta, organizador_conta, lbl_natureza, lbl_placeholder3);
     	adicionar_componente(3, painel_conta, organizador_conta, lbl_saldo_ini, lbl_placeholder4);

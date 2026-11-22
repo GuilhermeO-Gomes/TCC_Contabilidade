@@ -5,6 +5,7 @@ import java.awt.Window;
 import view.TelaAdicionarCustos;
 import view.TelaAtualizarCustos;
 import view.TelaBuscarCentro;
+import view.TelaLivroRazao;
 import view.TelaRateio;
 
 public class CentroCustosController {
@@ -29,7 +30,7 @@ public class CentroCustosController {
 	};
 	
 	public void abrirLivroRazao(Window janela_pai) {
-		TelaBuscarCentro dialog = new TelaBuscarCentro(janela_pai);
+		TelaLivroRazao dialog = new TelaLivroRazao(janela_pai);
 	    dialog.setVisible(true);
 	};
 }

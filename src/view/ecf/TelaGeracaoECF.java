@@ -18,15 +18,17 @@ public class TelaGeracaoECF extends JPanel {
         ComponentesContabeis.botaoInativo("ecf.atualizar", "Atualizar")), BorderLayout.NORTH);
 
     JTable tabela = ComponentesContabeis.tabela("ecf.historico", ComponentesContabeis.modeloTabela(
-        "ID", "Início", "Fim", "Finalidade", "Regime", "Status", "Erros", "Avisos", "Arquivo"));
-    add(ComponentesContabeis.lista("Histórico da ECF", tabela), BorderLayout.CENTER);
+        "Data", "Horário", "Usuário", "Exercício", "Tipo de escrituração", "Arquivo"));
+    add(ComponentesContabeis.lista("Histórico de gerações", tabela), BorderLayout.CENTER);
 
-    add(ComponentesContabeis.botoes(
-        ComponentesContabeis.botao("ecf.estrutura", "Apurações / ajustes / signatários", () ->
+    JPanel rodape = new JPanel(new BorderLayout());
+    rodape.add(new JLabel("Geração disponível após a aprovação das validações."), BorderLayout.NORTH);
+    rodape.add(ComponentesContabeis.botoes(
+        ComponentesContabeis.botao("ecf.estrutura", "Estrutura da ECF", () ->
             ComponentesContabeis.abrirDialogo(this, "Estrutura da ECF", new PainelEstruturaECF())),
-        ComponentesContabeis.botaoInativo("ecf.validar", "Validar"),
-        ComponentesContabeis.botao("ecf.detalhes", "Detalhes da validação", () ->
+        ComponentesContabeis.botao("ecf.detalhes", "Ver validações", () ->
             ComponentesContabeis.abrirDialogo(this, "Validações da ECF", new PainelValidacaoECF())),
-        ComponentesContabeis.botaoInativo("ecf.arquivo", "Registrar arquivo")), BorderLayout.SOUTH);
+        ComponentesContabeis.botaoInativo("ecf.arquivo", "Gerar arquivo ECF (.txt)")), BorderLayout.SOUTH);
+    add(rodape, BorderLayout.SOUTH);
   }
 }

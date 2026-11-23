@@ -16,22 +16,26 @@ public class PainelConfiguracaoECF extends JPanel {
 
     LocalDate hoje = LocalDate.now();
     JComboBox<String> finalidade = new JComboBox<>(new String[] {"Original", "Retificadora"});
-    JComboBox<String> retificada = new JComboBox<>();
-    retificada.setEnabled(false);
-    finalidade.addActionListener(e -> retificada.setEnabled(finalidade.getSelectedIndex() == 1));
-    JComboBox<String> regime = new JComboBox<>(new String[] {
-        "Lucro real", "Lucro presumido", "Lucro arbitrado", "Imune / isenta", "Outro"
+    JTextField recibo = new JTextField(24);
+    recibo.setEnabled(false);
+    finalidade.addActionListener(e -> {
+      boolean retificadora = finalidade.getSelectedIndex() == 1;
+      recibo.setEnabled(retificadora);
+      if (!retificadora) {
+        recibo.setText("");
+      }
     });
 
     add(ComponentesContabeis.campos(
-        "Empresa", new JLabel("—"),
+        "CNPJ", new JLabel("—"),
+        "Razão social", new JLabel("—"),
+        "Regime tributário", new JLabel("—"),
         "Exercício social", new JComboBox<String>(),
-        "Início", ComponentesContabeis.criarData("ecf.config.inicio", hoje.withDayOfYear(1)),
-        "Fim", ComponentesContabeis.criarData("ecf.config.fim", hoje.withMonth(12).withDayOfMonth(31)),
-        "Finalidade", finalidade,
-        "ECF retificada", retificada,
-        "Regime tributário", regime,
-        "Versão do layout (opcional)", new JTextField(20),
+        "Data inicial", ComponentesContabeis.criarData("ecf.config.inicio", hoje.withDayOfYear(1)),
+        "Data final", ComponentesContabeis.criarData("ecf.config.fim", hoje.withMonth(12).withDayOfMonth(31)),
+        "Tipo de escrituração", finalidade,
+        "Recibo anterior (obrigatório para retificadora)", recibo,
+        "Versão do layout", new JTextField(20),
         "ID da ECD (opcional)", new JTextField(20),
         "Observação", new JTextField(30)), BorderLayout.CENTER);
 

@@ -1,100 +1,80 @@
 package view.dashboard;
 
 import java.awt.BorderLayout;
-import java.awt.Font;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.time.LocalDate;
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.SwingConstants;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.*;
 import view.ComponentesContabeis;
 
 public class TelaDashboard extends JPanel {
   private static final long serialVersionUID = 1L;
-  private final JSpinner periodo_1 =
-      ComponentesContabeis.criarData("dashboard.inicio", LocalDate.now().withDayOfYear(1));
-  private final JSpinner periodo_2 =
-      ComponentesContabeis.criarData(
-          "dashboard.fim", LocalDate.now().withMonth(12).withDayOfMonth(31));
-  private final JLabel lbl_debitos = new JLabel("R$ 0,00");
-  private final JLabel lbl_creditos = new JLabel("R$ 0,00");
-  private final JLabel lbl_lancamentos = new JLabel("0");
-  private final JLabel lbl_inconsistencias = new JLabel("0");
-  private final JLabel lbl_situacao = new JLabel("Sem movimentação");
-  private final JLabel lbl_diferenca = new JLabel("R$ 0,00");
-  private final JTextArea txt_pendencias = new JTextArea(5, 40);
-  private final DefaultTableModel modeloTabela =
-      ComponentesContabeis.modeloTabela(
-          "ID", "Data", "Documento", "Histórico", "Débitos", "Créditos");
 
   public TelaDashboard() {
-    setLayout(new BorderLayout(8, 8));
+    super(new BorderLayout(8, 8));
     setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-    montar_tela();
-    txt_pendencias.setText("Nenhuma pendência registrada.");
+
+    LocalDate hoje = LocalDate.now();
+    JComboBox<String> filtro = new JComboBox<>(new String[] {"Intervalo de datas", "Mês", "Exercício social"});
+    JComboBox<String> mes = new JComboBox<>(new String[] {
+        "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+        "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+    });
+    mes.setSelectedIndex(hoje.getMonthValue() - 1);
+    JComboBox<String> exercicio = new JComboBox<>();
+    JSpinner inicio = ComponentesContabeis.criarData("dashboard.inicio", hoje.withDayOfYear(1));
+    JSpinner fim = ComponentesContabeis.criarData("dashboard.fim", hoje.withMonth(12).withDayOfMonth(31));
+    mes.setEnabled(false);
+    exercicio.setEnabled(false);
+    filtro.addActionListener(e -> {
+      int modo = filtro.getSelectedIndex();
+      inicio.setEnabled(modo == 0);
+      fim.setEnabled(modo == 0);
+      mes.setEnabled(modo == 1);
+      exercicio.setEnabled(modo != 0);
+    });
+
+    JPanel filtros = ComponentesContabeis.campos(
+        "Filtrar por", filtro, "Mês", mes, "Exercício social", exercicio,
+        "Data inicial", inicio, "Data final", fim);
+    filtros.setBorder(BorderFactory.createTitledBorder("Período"));
+    JPanel topo = new JPanel(new BorderLayout());
+    topo.add(filtros);
+    topo.add(ComponentesContabeis.botoes(
+        ComponentesContabeis.botaoInativo("dashboard.atualizar", "Atualizar")), BorderLayout.SOUTH);
+    add(topo, BorderLayout.NORTH);
+
+    JPanel indicadores = new JPanel(new GridLayout(1, 3, 8, 8));
+    indicadores.add(indicador("Resultado do período", "Receitas", "Despesas", "Lucro ou prejuízo"));
+    indicadores.add(indicador("Posição patrimonial", "Ativo", "Passivo", "Patrimônio líquido"));
+    indicadores.add(indicador("Saldo de caixa", "Caixa e equivalentes"));
+
+    JPanel graficos = new JPanel(new GridLayout(1, 2, 8, 8));
+    graficos.add(grafico("Receitas e despesas"));
+    graficos.add(grafico("Evolução do saldo de caixa"));
+
+    JPanel centro = new JPanel(new BorderLayout(8, 8));
+    centro.add(indicadores, BorderLayout.NORTH);
+    centro.add(graficos, BorderLayout.CENTER);
+    add(centro, BorderLayout.CENTER);
+
+    JLabel pendencias = new JLabel("Pendências abertas na Auditoria Digital: —");
+    pendencias.setName("dashboard.inconsistencias");
+    add(pendencias, BorderLayout.SOUTH);
   }
 
-  private void montar_tela() {
-    JPanel painelFiltros = new JPanel(new GridBagLayout());
-    painelFiltros.setBorder(BorderFactory.createTitledBorder("Visão Contábil"));
-    ComponentesContabeis.adicionar_componente(0, painelFiltros, "Período inicial:", periodo_1);
-    ComponentesContabeis.adicionar_componente(1, painelFiltros, "Período final:", periodo_2);
-    JPanel jp_superior = new JPanel(new BorderLayout());
-    jp_superior.add(painelFiltros, BorderLayout.CENTER);
-    jp_superior.add(
-        ComponentesContabeis.botoes(
-            ComponentesContabeis.botaoInativo(
-                "dashboard.atualizar", "Atualizar")),
-        BorderLayout.SOUTH);
-    add(jp_superior, BorderLayout.NORTH);
-
-    JPanel painelIndicadores = new JPanel(new GridLayout(1, 4, 8, 8));
-    painelIndicadores.add(indicador("Débitos", "dashboard.debitos", lbl_debitos));
-    painelIndicadores.add(indicador("Créditos", "dashboard.creditos", lbl_creditos));
-    painelIndicadores.add(indicador("Lançamentos", "dashboard.lancamentos", lbl_lancamentos));
-    painelIndicadores.add(
-        indicador(
-            "Pendências", "dashboard.inconsistencias", lbl_inconsistencias));
-    JPanel jp_centro = new JPanel(new BorderLayout(8, 8));
-    jp_centro.add(painelIndicadores, BorderLayout.NORTH);
-    JPanel jp_movimentos = new JPanel(new BorderLayout(8, 8));
-    JTable tabela = ComponentesContabeis.tabela("dashboard.movimentacoes", modeloTabela);
-    jp_movimentos.add(
-        ComponentesContabeis.lista("Movimentações recentes", tabela), BorderLayout.CENTER);
-    JPanel painelSituacao = new JPanel(new GridBagLayout());
-    painelSituacao.setBorder(BorderFactory.createTitledBorder("Situação contábil"));
-    lbl_situacao.setName("dashboard.situacao");
-    ComponentesContabeis.adicionar_componente(0, painelSituacao, "Balanceamento:", lbl_situacao);
-    ComponentesContabeis.adicionar_componente(1, painelSituacao, "Diferença total:", lbl_diferenca);
-    jp_movimentos.add(painelSituacao, BorderLayout.SOUTH);
-    jp_centro.add(jp_movimentos, BorderLayout.CENTER);
-    add(jp_centro, BorderLayout.CENTER);
-    txt_pendencias.setName("dashboard.pendencias");
-    txt_pendencias.setEditable(false);
-    txt_pendencias.setLineWrap(true);
-    txt_pendencias.setWrapStyleWord(true);
-    txt_pendencias.setBackground(javax.swing.UIManager.getColor("Panel.background"));
-    JScrollPane painelPendencias = new JScrollPane(txt_pendencias);
-    painelPendencias.setBorder(
-        BorderFactory.createTitledBorder("Pendências — consulte o Livro Diário e a Auditoria"));
-    add(painelPendencias, BorderLayout.SOUTH);
+  private JPanel indicador(String titulo, String... rotulos) {
+    JPanel painel = new JPanel(new GridLayout(0, 1, 0, 4));
+    painel.setBorder(BorderFactory.createTitledBorder(titulo));
+    for (String rotulo : rotulos) {
+      painel.add(new JLabel(rotulo + ": —"));
+    }
+    return painel;
   }
 
-  private JPanel indicador(String titulo, String nome, JLabel valor) {
+  private JPanel grafico(String titulo) {
     JPanel painel = new JPanel(new BorderLayout());
     painel.setBorder(BorderFactory.createTitledBorder(titulo));
-    valor.setName(nome);
-    valor.setHorizontalAlignment(SwingConstants.CENTER);
-    valor.setFont(valor.getFont().deriveFont(Font.BOLD, 16f));
-    valor.setBorder(BorderFactory.createEmptyBorder(12, 8, 12, 8));
-    painel.add(valor);
+    painel.add(new JLabel("Sem dados para exibir", SwingConstants.CENTER));
     return painel;
   }
 }

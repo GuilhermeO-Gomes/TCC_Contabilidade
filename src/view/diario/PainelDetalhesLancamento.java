@@ -14,15 +14,19 @@ public class PainelDetalhesLancamento extends JPanel {
     setPreferredSize(new Dimension(780, 500));
 
     JPanel campos = ComponentesContabeis.campos(
-        "ID", new JLabel("—"), "Data", new JLabel("—"), "Documento", new JLabel("—"),
-        "Histórico", ComponentesContabeis.texto(""), "Status", new JLabel("—"));
+        "Nº do lançamento", new JLabel("—"), "Data", new JLabel("—"),
+        "Número do documento", new JLabel("—"), "Origem", new JLabel("—"),
+        "Histórico", new JLabel("—"), "Cadastrado por", new JLabel("—"),
+        "Data do registro", new JLabel("—"), "Estorno ou ajuste vinculado", new JLabel("—"));
     campos.setBorder(BorderFactory.createTitledBorder("Dados do lançamento"));
     add(campos, BorderLayout.NORTH);
+
     JTable tabela = ComponentesContabeis.tabela("detalhes.partidas", ComponentesContabeis.modeloTabela(
-        "Conta", "Centro de custo", "Movimento", "Valor"));
+        "Conta", "Centro de custos", "Movimento", "Valor", "Descrição"));
     add(ComponentesContabeis.lista("Partidas", tabela), BorderLayout.CENTER);
+
     JPanel rodape = new JPanel(new BorderLayout());
-    rodape.add(new JLabel("Débitos: R$ 0,00   Créditos: R$ 0,00   Diferença: R$ 0,00"), BorderLayout.NORTH);
+    rodape.add(new JLabel("Débitos: —   Créditos: —   Diferença: —"), BorderLayout.NORTH);
     rodape.add(ComponentesContabeis.botoes(
         ComponentesContabeis.botao("detalhes.fechar", "Fechar", () -> ComponentesContabeis.fechar(this))),
         BorderLayout.SOUTH);

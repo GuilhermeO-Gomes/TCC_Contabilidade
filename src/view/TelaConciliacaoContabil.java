@@ -1,15 +1,11 @@
 package view;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,15 +16,9 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import model.ConciliacaoContabil;
@@ -49,8 +39,6 @@ public class TelaConciliacaoContabil extends JPanel {
     private long empresaId;
     private ConciliacaoContabil selecionada;
     private final ArrayList<ConciliacaoItem> itens = new ArrayList<>();
-    private final ArrayList<MovimentoConciliacao> movimentosSistema = new ArrayList<>();
-    private final ArrayList<MovimentoConciliacao> movimentosExtrato = new ArrayList<>();
     private final JTextField txtObservacaoItem = new JTextField(25);
     private final JTextField txtEmpresa = new JTextField(25),
             txtObservacao = new JTextField(30);
@@ -99,21 +87,7 @@ public class TelaConciliacaoContabil extends JPanel {
         setLayout(new BorderLayout(8, 8));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         montar();
-        DocumentListener periodo = new DocumentListener() {
-            public void insertUpdate(DocumentEvent e) {
-                limparMovimentos();
-            }
-
-            public void removeUpdate(DocumentEvent e) {
-                limparMovimentos();
-            }
-
-            public void changedUpdate(DocumentEvent e) {
-                limparMovimentos();
-            }
-        };
-        txtInicio.getDocument().addDocumentListener(periodo);
-        txtFim.getDocument().addDocumentListener(periodo);
+        Componentes.aoAlterar(this::limparMovimentos, txtInicio, txtFim);
         txtEmpresa.setEditable(false);
         txtStatus.setEditable(false);
         setStatus("PENDENTE");
@@ -130,13 +104,13 @@ public class TelaConciliacaoContabil extends JPanel {
         periodo.add(txtInicio);
         periodo.add(new JLabel("  até  "));
         periodo.add(txtFim);
-        componente(f, g, 0, "Período (dd/mm/aaaa):", periodo);
-        componente(f, g, 1, "Conta bancária:", cbConta);
-        componente(f, g, 2, "Situação do item:", cbSit);
-        componente(f, g, 3, "Arquivo do extrato:", txtArq);
-        componente(f, g, 4, "Empresa:", txtEmpresa);
-        componente(f, g, 5, "Status da conciliação:", txtStatus);
-        componente(f, g, 6, "Observação:", txtObservacao);
+        Componentes.componente(f, g, 0, "Período (dd/mm/aaaa):", periodo);
+        Componentes.componente(f, g, 1, "Conta bancária:", cbConta);
+        Componentes.componente(f, g, 2, "Situação do item:", cbSit);
+        Componentes.componente(f, g, 3, "Arquivo do extrato:", txtArq);
+        Componentes.componente(f, g, 4, "Empresa:", txtEmpresa);
+        Componentes.componente(f, g, 5, "Status da conciliação:", txtStatus);
+        Componentes.componente(f, g, 6, "Observação:", txtObservacao);
         txtArq.setEditable(false);
 
         JPanel b = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
@@ -157,14 +131,12 @@ public class TelaConciliacaoContabil extends JPanel {
 
         JPanel totais = new JPanel(new GridLayout(1, 3, 8, 0));
         totais.setBorder(BorderFactory.createTitledBorder("Totais dos movimentos selecionados"));
-        totais.add(montarTotal("Sistema (R$)", txtTotalSis));
-        totais.add(montarTotal("Extrato (R$)", txtTotalExt));
-        totais.add(montarTotal("Diferença (R$)", txtDif));
+        totais.add(Componentes.montarTotal("Sistema (R$)", txtTotalSis));
+        totais.add(Componentes.montarTotal("Extrato (R$)", txtTotalExt));
+        totais.add(Componentes.montarTotal("Diferença (R$)", txtDif));
 
         JPanel acoes = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
         acoes.add(btRevisar);
-        acoes.add(new JLabel("Status do par:"));
-        acoes.add(cbStatusItem);
         acoes.add(new JLabel("Selecione um movimento em cada aba."));
 
         JPanel rodape = new JPanel(new BorderLayout(4, 4));
@@ -176,28 +148,7 @@ public class TelaConciliacaoContabil extends JPanel {
         tabelaSis.getSelectionModel().addListSelectionListener(e -> atualizarSelecao());
         tabelaExt.getSelectionModel().addListSelectionListener(e -> atualizarSelecao());
 
-        btLimpar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                limpar();
-            }
-        });
-    }
-
-    private JPanel montarAba(JTable tabela, String titulo) {
-        JPanel painel = new JPanel(new BorderLayout(8, 8));
-        painel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
-        painel.add(montarTabela(tabela, titulo), BorderLayout.CENTER);
-        return painel;
-    }
-
-    private JPanel montarTotal(String titulo, JTextField campo) {
-        JPanel painel = new JPanel(new BorderLayout(4, 4));
-        painel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-        painel.add(new JLabel(titulo), BorderLayout.NORTH);
-        painel.add(campo, BorderLayout.CENTER);
-        campo.setEditable(false);
-        campo.setHorizontalAlignment(JTextField.RIGHT);
-        return painel;
+        btLimpar.addActionListener(e -> limpar());
     }
 
     private void conferir() {
@@ -205,107 +156,20 @@ public class TelaConciliacaoContabil extends JPanel {
             JOptionPane.showMessageDialog(this, "Selecione os movimentos do sistema e do extrato.");
             return;
         }
-        dialogo = new JDialog(SwingUtilities.getWindowAncestor(this),
-                "Conferir conciliação", JDialog.ModalityType.APPLICATION_MODAL);
-        dialogo.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        JPanel painel = new JPanel(new BorderLayout(8, 8));
-        painel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-        JPanel dados = new JPanel(new GridLayout(2, 1, 4, 4));
-        dados.add(new JLabel("Conta: " + cbConta.getSelectedItem()));
-        dados.add(new JLabel("Período: " + txtInicio.getText() + " até " + txtFim.getText()));
-        painel.add(dados, BorderLayout.NORTH);
-
-        JPanel movimentos = new JPanel(new GridLayout(2, 1, 0, 8));
-        movimentos.add(montarTabela(copiarSelecionados(tabelaSis), "Movimentos selecionados do sistema"));
-        movimentos.add(montarTabela(copiarSelecionados(tabelaExt), "Movimentos selecionados do extrato"));
-        painel.add(movimentos, BorderLayout.CENTER);
-
-        JPanel resumo = new JPanel(new GridLayout(1, 3, 8, 0));
-        resumo.setBorder(BorderFactory.createTitledBorder("Totais dos movimentos selecionados"));
-        resumo.add(montarTotal("Sistema (R$)", new JTextField(txtTotalSis.getText(), 12)));
-        resumo.add(montarTotal("Extrato (R$)", new JTextField(txtTotalExt.getText(), 12)));
-        resumo.add(montarTotal("Diferença (R$)", new JTextField(txtDif.getText(), 12)));
-
-        JButton btVoltar = new JButton("Voltar");
-        btVoltar.addActionListener(e -> dialogo.dispose());
-        JPanel botoes = new JPanel(new FlowLayout(FlowLayout.RIGHT, 4, 4));
-        botoes.add(new JLabel("Observação do par:"));
-        botoes.add(txtObservacaoItem);
-        botoes.add(btConciliar);
-        botoes.add(btVoltar);
-        JPanel rodape = new JPanel(new BorderLayout(4, 4));
-        rodape.add(resumo, BorderLayout.CENTER);
-        rodape.add(botoes, BorderLayout.SOUTH);
-        painel.add(rodape, BorderLayout.SOUTH);
-        dialogo.add(painel);
-        dialogo.setSize(900, 620);
-        dialogo.setMinimumSize(new Dimension(760, 500));
-        dialogo.setLocationRelativeTo(this);
+        dialogo = new DialogoConferenciaConciliacao(this);
         dialogo.setVisible(true);
     }
 
-    private JTable copiarSelecionados(JTable origem) {
-        DefaultTableModel copia = new DefaultTableModel(
-                new Object[] {"Código", "Data", "Documento", origem.getColumnName(3),
-                        "Natureza", "Valor (R$)", "Situação"}, 0) {
-            private static final long serialVersionUID = 1L;
-
-            public boolean isCellEditable(int l, int c) {
-                return false;
-            }
-        };
-        for (int linha : origem.getSelectedRows()) {
-            Object[] dados = new Object[origem.getColumnCount()];
-            for (int coluna = 0; coluna < dados.length; coluna++) {
-                dados[coluna] = origem.getValueAt(linha, coluna);
-            }
-            copia.addRow(dados);
-        }
-        return new JTable(copia);
-    }
-
-    private JScrollPane montarTabela(JTable tab, String titulo) {
-        tab.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        tab.setRowHeight(24);
-        tab.setFillsViewportHeight(true);
-        tab.getTableHeader().setReorderingAllowed(false);
-        tab.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        tab.getColumnModel().getColumn(1).setPreferredWidth(90);
-        tab.getColumnModel().getColumn(2).setPreferredWidth(100);
-        tab.getColumnModel().getColumn(3).setPreferredWidth(220);
-        tab.getColumnModel().getColumn(4).setPreferredWidth(90);
-        tab.getColumnModel().getColumn(5).setPreferredWidth(100);
-        DefaultTableCellRenderer moeda = new DefaultTableCellRenderer();
-        moeda.setHorizontalAlignment(JLabel.RIGHT);
-        tab.getColumnModel().getColumn(5).setCellRenderer(moeda);
-        tab.getColumnModel().getColumn(6).setPreferredWidth(100);
-
-        JScrollPane sp = new JScrollPane(tab);
-        sp.setBorder(BorderFactory.createTitledBorder(titulo));
-        return sp;
-    }
-
-    private void componente(JPanel painel, GridBagConstraints organizador,
-            int linha, String texto, Component campo) {
-        organizador.gridx = 0;
-        organizador.gridy = linha;
-        organizador.gridwidth = 1;
-        organizador.weightx = 0;
-        organizador.fill = GridBagConstraints.NONE;
-        painel.add(new JLabel(texto), organizador);
-
-        organizador.gridx = 1;
-        organizador.weightx = 1;
-        organizador.fill = GridBagConstraints.HORIZONTAL;
-        painel.add(campo, organizador);
+    private JPanel montarAba(JTable tabela, String titulo) {
+        JPanel painel = new JPanel(new BorderLayout(8, 8));
+        painel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
+        painel.add(DialogoConferenciaConciliacao.montarTabela(tabela, titulo), BorderLayout.CENTER);
+        return painel;
     }
 
     public void limpar() {
         selecionada = null;
         itens.clear();
-        movimentosSistema.clear();
-        movimentosExtrato.clear();
         txtObservacaoItem.setText("");
         txtInicio.setText("");
         txtFim.setText("");
@@ -394,9 +258,6 @@ public class TelaConciliacaoContabil extends JPanel {
     }
 
     private void limparMovimentos() {
-        itens.clear();
-        movimentosSistema.clear();
-        movimentosExtrato.clear();
         txtArq.setText("");
         modeloSis.setRowCount(0);
         modeloExt.setRowCount(0);
@@ -490,22 +351,7 @@ public class TelaConciliacaoContabil extends JPanel {
     }
 
     public void carregarCombo(JComboBox<Long> combo, java.util.Map<Long, String> opcoes) {
-        final java.util.Map<Long, String> descricoes = new java.util.LinkedHashMap<>(opcoes);
-        combo.removeAllItems();
-        combo.setRenderer(new javax.swing.DefaultListCellRenderer() {
-            private static final long serialVersionUID = 1L;
-
-            public Component getListCellRendererComponent(javax.swing.JList<?> lista, Object valor,
-                    int indice, boolean selecionado, boolean foco) {
-                super.getListCellRendererComponent(lista, valor, indice, selecionado, foco);
-                setText(valor == null ? "" : descricoes.get(valor));
-                return this;
-            }
-        });
-        for (Long id : descricoes.keySet()) {
-            combo.addItem(id);
-        }
-        combo.setSelectedIndex(-1);
+        Componentes.carregarCombo(combo, opcoes);
     }
 
     private java.time.LocalDate lerData(JTextField campo) {
@@ -532,6 +378,12 @@ public class TelaConciliacaoContabil extends JPanel {
         conciliacao.setObservacao(txtObservacao.getText().trim());
         conciliacao.setItens(new ArrayList<>(itens));
         if (selecionada != null) {
+            if (!itens.isEmpty() && (conta != selecionada.getContaBancariaRefId()
+                    || conciliacao.getDataInicio().isAfter(selecionada.getDataInicio())
+                    || conciliacao.getDataFim().isBefore(selecionada.getDataFim()))) {
+                throw new IllegalArgumentException(
+                        "Uma conciliação com pares exige a mesma conta e o período original ou ampliado.");
+            }
             conciliacao.setId(selecionada.getId());
             conciliacao.setCriadoPor(selecionada.getCriadoPor());
             conciliacao.setCriadoEm(selecionada.getCriadoEm());
@@ -571,16 +423,14 @@ public class TelaConciliacaoContabil extends JPanel {
 
     public void carregarMovimentos(List<MovimentoConciliacao> sistema, List<MovimentoConciliacao> extrato) {
         ConciliacaoContabil conciliacao = lerConciliacao();
-        movimentosSistema.clear();
-        movimentosExtrato.clear();
         modeloSis.setRowCount(0);
         modeloExt.setRowCount(0);
-        carregarLista(sistema, movimentosSistema, modeloSis, conciliacao);
-        carregarLista(extrato, movimentosExtrato, modeloExt, conciliacao);
+        carregarLista(sistema, modeloSis, conciliacao);
+        carregarLista(extrato, modeloExt, conciliacao);
         atualizarSelecao();
     }
 
-    private void carregarLista(List<MovimentoConciliacao> origem, ArrayList<MovimentoConciliacao> destino,
+    private void carregarLista(List<MovimentoConciliacao> origem,
             DefaultTableModel modelo, ConciliacaoContabil conciliacao) {
         for (MovimentoConciliacao movimento : origem) {
             if (movimento.getEmpresaId() == empresaId
@@ -588,7 +438,6 @@ public class TelaConciliacaoContabil extends JPanel {
                     && movimento.getDataMovimentacao() != null
                     && !movimento.getDataMovimentacao().isBefore(conciliacao.getDataInicio())
                     && !movimento.getDataMovimentacao().isAfter(conciliacao.getDataFim())) {
-                destino.add(movimento);
                 modelo.addRow(new Object[] {movimento.getId(), movimento.getDataMovimentacao(),
                         movimento.getDocumento(), movimento.getDescricao(), movimento.getNatureza(),
                         movimento.getValor(), movimento.getStatus()});

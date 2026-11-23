@@ -1,13 +1,11 @@
 package view;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +14,6 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -41,28 +38,10 @@ public class TelaRegrasContabilizacao extends JPanel {
     private long empresaId;
     private RegraContabilizacao selecionada;
     private final ArrayList<RegraContabilizacao> regras = new ArrayList<>();
-    private final ArrayList<RegraContabilizacaoItem> itens = new ArrayList<>();
     private final JTextField txtEmpresa = new JTextField(25),
             txtModulo = new JTextField(20),
-            txtEvento = new JTextField(25),
-            txtOrdem = new JTextField(5),
-            txtPercentual = new JTextField("100,0000", 10),
-            txtDescricaoItem = new JTextField(25);
-    private final JComboBox<Long> cbConta = new JComboBox<>();
-    private final JComboBox<TipoMovimento> cbMovimento = new JComboBox<>(TipoMovimento.values());
+            txtEvento = new JTextField(25);
     private final JComboBox<String> cbSit = new JComboBox<>(new String[] {"Todas", "Ativas", "Inativas"});
-    private final JButton btAdicionarItem = new JButton("Adicionar item"),
-            btAlterarItem = new JButton("Alterar item"),
-            btRemoverItem = new JButton("Remover item");
-    private final DefaultTableModel modeloItens = new DefaultTableModel(
-            new Object[] {"Ordem", "Conta", "Movimento", "Percentual", "Descrição"}, 0) {
-        private static final long serialVersionUID = 1L;
-
-        public boolean isCellEditable(int linha, int coluna) {
-            return false;
-        }
-    };
-    private final JTable tabelaItens = new JTable(modeloItens);
 
     private final JCheckBox chkAtiva = new JCheckBox("Regra ativa", true);
 
@@ -89,6 +68,7 @@ public class TelaRegrasContabilizacao extends JPanel {
     private final JButton btEditar = new JButton("Editar regra");
     private final JPanel cadastro = new JPanel(new BorderLayout(8, 8));
     private JDialog dialogo;
+    private final PainelItensRegra editorItens = new PainelItensRegra(txtCod);
 
     public TelaRegrasContabilizacao() {
         setLayout(new BorderLayout(8, 8));
@@ -105,11 +85,11 @@ public class TelaRegrasContabilizacao extends JPanel {
         g.insets = new Insets(4, 4, 4, 4);
         g.anchor = GridBagConstraints.WEST;
 
-        componente(f, g, 0, "Código:", txtCod);
-        componente(f, g, 1, "Descrição do evento:", txtDesc);
-        componente(f, g, 2, "Empresa:", txtEmpresa);
-        componente(f, g, 3, "Módulo de origem:", txtModulo);
-        componente(f, g, 4, "Evento de origem:", txtEvento);
+        Componentes.componente(f, g, 0, "Código:", txtCod);
+        Componentes.componente(f, g, 1, "Descrição do evento:", txtDesc);
+        Componentes.componente(f, g, 2, "Empresa:", txtEmpresa);
+        Componentes.componente(f, g, 3, "Módulo de origem:", txtModulo);
+        Componentes.componente(f, g, 4, "Evento de origem:", txtEvento);
         txtEmpresa.setEditable(false);
         txtCod.setEditable(false);
 
@@ -126,35 +106,13 @@ public class TelaRegrasContabilizacao extends JPanel {
         b.add(btFechar);
         cadastro.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         cadastro.add(f, BorderLayout.NORTH);
-        JPanel painelItens = new JPanel(new BorderLayout(6, 6));
-        painelItens.setBorder(BorderFactory.createTitledBorder("Itens da regra"));
-        JPanel campos = new JPanel(new GridBagLayout());
-        componente(campos, g, 0, "Ordem:", txtOrdem);
-        componente(campos, g, 1, "Conta:", cbConta);
-        componente(campos, g, 2, "Movimento:", cbMovimento);
-        componente(campos, g, 3, "Percentual:", txtPercentual);
-        componente(campos, g, 4, "Descrição:", txtDescricaoItem);
-        JPanel acoesItens = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
-        acoesItens.add(btAdicionarItem);
-        acoesItens.add(btAlterarItem);
-        acoesItens.add(btRemoverItem);
-        JPanel editor = new JPanel(new BorderLayout(4, 4));
-        editor.add(campos, BorderLayout.CENTER);
-        editor.add(acoesItens, BorderLayout.SOUTH);
-        painelItens.add(editor, BorderLayout.NORTH);
-        painelItens.add(new JScrollPane(tabelaItens), BorderLayout.CENTER);
-        painelItens.add(new JLabel("Para ativar: débitos 100% e créditos 100%."), BorderLayout.SOUTH);
-        tabelaItens.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        tabelaItens.setRowHeight(24);
-        tabelaItens.getTableHeader().setReorderingAllowed(false);
-        tabelaItens.getSelectionModel().addListSelectionListener(e -> selecionarItem());
-        cadastro.add(painelItens, BorderLayout.CENTER);
+        cadastro.add(editorItens, BorderLayout.CENTER);
         cadastro.add(b, BorderLayout.SOUTH);
 
         JPanel p = new JPanel(new GridBagLayout());
         p.setBorder(BorderFactory.createTitledBorder("Filtros e pesquisa"));
-        componente(p, g, 0, "Evento:", txtPesq);
-        componente(p, g, 1, "Situação:", cbSit);
+        Componentes.componente(p, g, 0, "Evento:", txtPesq);
+        Componentes.componente(p, g, 1, "Situação:", cbSit);
         JPanel busca = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
         busca.add(btBuscar);
         busca.add(btTodos);
@@ -166,9 +124,7 @@ public class TelaRegrasContabilizacao extends JPanel {
         JScrollPane sp = new JScrollPane(tabela);
         sp.setBorder(BorderFactory.createTitledBorder("Regras Cadastradas"));
 
-        JPanel c = new JPanel(new BorderLayout(5, 5));
-        c.add(sp, BorderLayout.CENTER);
-        add(c, BorderLayout.CENTER);
+        add(sp, BorderLayout.CENTER);
         tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tabela.setRowHeight(24);
         tabela.setFillsViewportHeight(true);
@@ -180,9 +136,14 @@ public class TelaRegrasContabilizacao extends JPanel {
         acoes.add(btEditar);
         acoes.add(btSit);
         acoes.add(btExcluir);
+        btEditar.setEnabled(false);
+        btSit.setEnabled(false);
         btExcluir.setEnabled(false);
         tabela.getSelectionModel().addListSelectionListener(e -> {
-            btExcluir.setEnabled(tabela.getSelectedRow() != -1);
+            boolean selecionou = tabela.getSelectedRow() != -1;
+            btEditar.setEnabled(selecionou);
+            btSit.setEnabled(selecionou);
+            btExcluir.setEnabled(selecionou);
         });
         add(acoes, BorderLayout.SOUTH);
 
@@ -192,16 +153,6 @@ public class TelaRegrasContabilizacao extends JPanel {
         });
 
         btEditar.addActionListener(e -> editarRegra());
-        btAdicionarItem.addActionListener(e -> gravarItem(false));
-        btAlterarItem.addActionListener(e -> gravarItem(true));
-        btRemoverItem.addActionListener(e -> {
-            int linha = tabelaItens.getSelectedRow();
-            if (linha != -1) {
-                itens.remove(linha);
-                modeloItens.removeRow(linha);
-                limparItem();
-            }
-        });
         btLimpar.addActionListener(e -> limpar());
         btFechar.addActionListener(e -> dialogo.dispose());
     }
@@ -261,127 +212,19 @@ public class TelaRegrasContabilizacao extends JPanel {
         txtDesc.setText(regra.getDescricaoEvento());
         chkAtiva.setSelected(regra.isAtivo());
         for (RegraContabilizacaoItem item : regra.getItens()) {
-            RegraContabilizacaoItem copia = new RegraContabilizacaoItem();
-            copia.setId(item.getId());
-            copia.setRegraId(item.getRegraId());
-            copia.setOrdem(item.getOrdem());
-            copia.setContaId(item.getContaId());
-            copia.setTipoMovimento(item.getTipoMovimento());
-            copia.setPercentual(item.getPercentual());
-            copia.setDescricao(item.getDescricao());
-            itens.add(copia);
-            adicionarLinha(copia);
+            RegraContabilizacaoItem copia = new RegraContabilizacaoItem(item.getId(), item.getRegraId(),
+                    item.getOrdem(), item.getContaId(), item.getTipoMovimento(),
+                    item.getPercentual(), item.getDescricao());
+            editorItens.itens.add(copia);
+            editorItens.adicionarLinha(copia);
         }
         btSalvar.setEnabled(false);
         btAtual.setEnabled(true);
-        limparItem();
-    }
-
-    private Object[] dadosItem(RegraContabilizacaoItem item) {
-        return new Object[] {item.getOrdem(), item.getContaId(), item.getTipoMovimento(),
-                item.getPercentual(), item.getDescricao()};
-    }
-
-    private void adicionarLinha(RegraContabilizacaoItem item) {
-        modeloItens.addRow(dadosItem(item));
-    }
-
-    private void gravarItem(boolean alterar) {
-        int linha = tabelaItens.getSelectedRow();
-        if (alterar && linha == -1) {
-            return;
-        }
-        Long conta = (Long) cbConta.getSelectedItem();
-        if (conta == null) {
-            JOptionPane.showMessageDialog(this, "Selecione uma conta.");
-            return;
-        }
-        try {
-            RegraContabilizacaoItem item = new RegraContabilizacaoItem();
-            item.setOrdem(Integer.parseInt(txtOrdem.getText().trim()));
-            for (int i = 0; i < itens.size(); i++) {
-                if ((!alterar || i != linha) && itens.get(i).getOrdem() == item.getOrdem()) {
-                    JOptionPane.showMessageDialog(this, "Já existe um item com essa ordem.");
-                    return;
-                }
-            }
-            if (item.getOrdem() < 0) {
-                JOptionPane.showMessageDialog(this, "A ordem não pode ser negativa.");
-                return;
-            }
-            item.setContaId(conta);
-            item.setTipoMovimento((TipoMovimento) cbMovimento.getSelectedItem());
-            item.setPercentual(new BigDecimal(txtPercentual.getText().trim().replace(',', '.')));
-            if (item.getPercentual().signum() <= 0
-                    || item.getPercentual().compareTo(new BigDecimal("100")) > 0
-                    || item.getPercentual().stripTrailingZeros().scale() > 4) {
-                JOptionPane.showMessageDialog(this, "Informe um percentual maior que zero e até 100, com até quatro casas decimais.");
-                return;
-            }
-            item.setDescricao(txtDescricaoItem.getText().trim());
-            if (item.getDescricao().length() > 255) {
-                JOptionPane.showMessageDialog(this, "A descrição do item aceita até 255 caracteres.");
-                return;
-            }
-            if (!txtCod.getText().isEmpty()) {
-                item.setRegraId(Long.parseLong(txtCod.getText()));
-            }
-            if (alterar) {
-                item.setId(itens.get(linha).getId());
-                itens.set(linha, item);
-                Object[] dados = dadosItem(item);
-                for (int coluna = 0; coluna < dados.length; coluna++) {
-                    modeloItens.setValueAt(dados[coluna], linha, coluna);
-                }
-            } else {
-                itens.add(item);
-                adicionarLinha(item);
-            }
-            limparItem();
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Informe uma ordem inteira e um percentual numérico.");
-        }
+        editorItens.limparItem();
     }
 
     public ArrayList<RegraContabilizacaoItem> getItens() {
-        return new ArrayList<>(itens);
-    }
-
-    private void selecionarItem() {
-        int linha = tabelaItens.getSelectedRow();
-        btAlterarItem.setEnabled(linha != -1);
-        btRemoverItem.setEnabled(linha != -1);
-        if (linha == -1) {
-            return;
-        }
-        txtOrdem.setText(String.valueOf(tabelaItens.getValueAt(linha, 0)));
-        Long conta = ((Number) tabelaItens.getValueAt(linha, 1)).longValue();
-        cbConta.setSelectedIndex(-1);
-        for (int i = 0; i < cbConta.getItemCount(); i++) {
-            if (cbConta.getItemAt(i).equals(conta)) {
-                cbConta.setSelectedIndex(i);
-                break;
-            }
-        }
-        cbMovimento.setSelectedItem(tabelaItens.getValueAt(linha, 2));
-        txtPercentual.setText(String.valueOf(tabelaItens.getValueAt(linha, 3)));
-        Object descricao = tabelaItens.getValueAt(linha, 4);
-        txtDescricaoItem.setText(descricao == null ? "" : descricao.toString());
-    }
-
-    private void componente(JPanel painel, GridBagConstraints organizador,
-            int linha, String texto, Component campo) {
-        organizador.gridx = 0;
-        organizador.gridy = linha;
-        organizador.gridwidth = 1;
-        organizador.weightx = 0;
-        organizador.fill = GridBagConstraints.NONE;
-        painel.add(new JLabel(texto), organizador);
-
-        organizador.gridx = 1;
-        organizador.weightx = 1;
-        organizador.fill = GridBagConstraints.HORIZONTAL;
-        painel.add(campo, organizador);
+        return new ArrayList<>(editorItens.itens);
     }
 
     public void limpar() {
@@ -390,9 +233,9 @@ public class TelaRegrasContabilizacao extends JPanel {
         txtDesc.setText("");
         txtModulo.setText("");
         txtEvento.setText("");
-        itens.clear();
-        modeloItens.setRowCount(0);
-        limparItem();
+        editorItens.itens.clear();
+        editorItens.modeloItens.setRowCount(0);
+        editorItens.limparItem();
         chkAtiva.setSelected(true);
         tabela.clearSelection();
         btSalvar.setEnabled(true);
@@ -466,30 +309,17 @@ public class TelaRegrasContabilizacao extends JPanel {
         return dialogo;
     }
 
-    public void limparItem() {
-        tabelaItens.clearSelection();
-        int proximaOrdem = 1;
-        for (RegraContabilizacaoItem item : itens) {
-            if (item.getOrdem() >= proximaOrdem) {
-                proximaOrdem = item.getOrdem() + 1;
-            }
-        }
-        txtOrdem.setText(String.valueOf(proximaOrdem));
-        cbConta.setSelectedIndex(-1);
-        cbMovimento.setSelectedIndex(0);
-        txtPercentual.setText("100,0000");
-        txtDescricaoItem.setText("");
-        btAlterarItem.setEnabled(false);
-        btRemoverItem.setEnabled(false);
-    }
-
     public void setContexto(long empresaId, String empresa) {
         this.empresaId = empresaId;
         txtEmpresa.setText(empresa);
         regras.clear();
         modelo.setRowCount(0);
-        cbConta.removeAllItems();
+        editorItens.cbConta.removeAllItems();
         limpar();
+    }
+
+    public void limparItem() {
+        editorItens.limparItem();
     }
 
     public long getEmpresaId() {
@@ -505,58 +335,43 @@ public class TelaRegrasContabilizacao extends JPanel {
     }
 
     public JTextField getTxtOrdem() {
-        return txtOrdem;
+        return editorItens.txtOrdem;
     }
 
     public JTextField getTxtPercentual() {
-        return txtPercentual;
+        return editorItens.txtPercentual;
     }
 
     public JTextField getTxtDescricaoItem() {
-        return txtDescricaoItem;
+        return editorItens.txtDescricaoItem;
     }
 
     public JComboBox<Long> getCbConta() {
-        return cbConta;
+        return editorItens.cbConta;
     }
 
     public JComboBox<TipoMovimento> getCbMovimento() {
-        return cbMovimento;
+        return editorItens.cbMovimento;
     }
 
     public JTable getTabItens() {
-        return tabelaItens;
+        return editorItens.tabelaItens;
     }
 
     public JButton getBtAdicionarItem() {
-        return btAdicionarItem;
+        return editorItens.btAdicionarItem;
     }
 
     public JButton getBtAlterarItem() {
-        return btAlterarItem;
+        return editorItens.btAlterarItem;
     }
 
     public JButton getBtRemoverItem() {
-        return btRemoverItem;
+        return editorItens.btRemoverItem;
     }
 
     public void carregarCombo(JComboBox<Long> combo, java.util.Map<Long, String> opcoes) {
-        final java.util.Map<Long, String> descricoes = new java.util.LinkedHashMap<>(opcoes);
-        combo.removeAllItems();
-        combo.setRenderer(new javax.swing.DefaultListCellRenderer() {
-            private static final long serialVersionUID = 1L;
-
-            public Component getListCellRendererComponent(javax.swing.JList<?> lista, Object valor,
-                    int indice, boolean selecionado, boolean foco) {
-                super.getListCellRendererComponent(lista, valor, indice, selecionado, foco);
-                setText(valor == null ? "" : descricoes.get(valor));
-                return this;
-            }
-        });
-        for (Long id : descricoes.keySet()) {
-            combo.addItem(id);
-        }
-        combo.setSelectedIndex(-1);
+        Componentes.carregarCombo(combo, opcoes);
     }
 
     public RegraContabilizacao lerRegra() {

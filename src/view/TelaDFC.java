@@ -1,15 +1,12 @@
 package view;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -24,8 +21,6 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -70,21 +65,7 @@ public class TelaDFC extends JPanel {
         setLayout(new BorderLayout(8, 8));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         montar();
-        DocumentListener periodo = new DocumentListener() {
-            public void insertUpdate(DocumentEvent e) {
-                limparResultado();
-            }
-
-            public void removeUpdate(DocumentEvent e) {
-                limparResultado();
-            }
-
-            public void changedUpdate(DocumentEvent e) {
-                limparResultado();
-            }
-        };
-        txtInicio.getDocument().addDocumentListener(periodo);
-        txtFim.getDocument().addDocumentListener(periodo);
+        Componentes.aoAlterar(this::limparResultado, txtInicio, txtFim);
         txtEmpresa.setEditable(false);
         txtMetodo.setEditable(false);
         limparResultado();
@@ -108,11 +89,11 @@ public class TelaDFC extends JPanel {
         periodo.add(txtInicio);
         periodo.add(new JLabel("  até  "));
         periodo.add(txtFim);
-        componente(f, g, 0, "Período (dd/mm/aaaa):", periodo);
+        Componentes.componente(f, g, 0, "Período (dd/mm/aaaa):", periodo);
 
-        componente(f, g, 1, "Empresa:", txtEmpresa);
-        componente(f, g, 2, "Configuração DFC:", cbDFC);
-        componente(f, g, 3, "Método:", txtMetodo);
+        Componentes.componente(f, g, 1, "Empresa:", txtEmpresa);
+        Componentes.componente(f, g, 2, "Configuração DFC:", cbDFC);
+        Componentes.componente(f, g, 3, "Método:", txtMetodo);
 
         JPanel b = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
         b.add(btGerar);
@@ -128,9 +109,9 @@ public class TelaDFC extends JPanel {
 
         JPanel totais = new JPanel(new GridLayout(1, 3, 8, 0));
         totais.setBorder(BorderFactory.createTitledBorder("Caixa e equivalentes de caixa"));
-        totais.add(montarTotal("Saldo inicial (R$)", txtSaldoIni));
-        totais.add(montarTotal("Variação do período (R$)", txtVar));
-        totais.add(montarTotal("Saldo final (R$)", txtSaldoFim));
+        totais.add(Componentes.montarTotal("Saldo inicial (R$)", txtSaldoIni));
+        totais.add(Componentes.montarTotal("Variação do período (R$)", txtVar));
+        totais.add(Componentes.montarTotal("Saldo final (R$)", txtSaldoFim));
         JPanel acoes = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
         acoes.add(btVisualizar);
         acoes.add(btPDF);
@@ -141,11 +122,7 @@ public class TelaDFC extends JPanel {
         add(rodape, BorderLayout.SOUTH);
         btVisualizar.addActionListener(e -> visualizar());
 
-        btLimpar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                limpar();
-            }
-        });
+        btLimpar.addActionListener(e -> limpar());
     }
 
     private JScrollPane montarTabela(JTable tab, String titulo) {
@@ -163,16 +140,6 @@ public class TelaDFC extends JPanel {
         JScrollPane sp = new JScrollPane(tab);
         sp.setBorder(BorderFactory.createTitledBorder(titulo));
         return sp;
-    }
-
-    private JPanel montarTotal(String titulo, JTextField campo) {
-        JPanel painel = new JPanel(new BorderLayout(4, 4));
-        painel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-        painel.add(new JLabel(titulo), BorderLayout.NORTH);
-        painel.add(campo, BorderLayout.CENTER);
-        campo.setEditable(false);
-        campo.setHorizontalAlignment(JTextField.RIGHT);
-        return painel;
     }
 
     private void visualizar() {
@@ -193,9 +160,9 @@ public class TelaDFC extends JPanel {
 
         JPanel resumo = new JPanel(new GridLayout(1, 3, 8, 0));
         resumo.setBorder(BorderFactory.createTitledBorder("Caixa e equivalentes de caixa"));
-        resumo.add(montarTotal("Saldo inicial (R$)", new JTextField(txtSaldoIni.getText(), 12)));
-        resumo.add(montarTotal("Variação do período (R$)", new JTextField(txtVar.getText(), 12)));
-        resumo.add(montarTotal("Saldo final (R$)", new JTextField(txtSaldoFim.getText(), 12)));
+        resumo.add(Componentes.montarTotal("Saldo inicial (R$)", new JTextField(txtSaldoIni.getText(), 12)));
+        resumo.add(Componentes.montarTotal("Variação do período (R$)", new JTextField(txtVar.getText(), 12)));
+        resumo.add(Componentes.montarTotal("Saldo final (R$)", new JTextField(txtSaldoFim.getText(), 12)));
 
         JButton btFechar = new JButton("Fechar");
         btFechar.addActionListener(e -> dialogo.dispose());
@@ -210,21 +177,6 @@ public class TelaDFC extends JPanel {
         dialogo.setMinimumSize(new Dimension(700, 420));
         dialogo.setLocationRelativeTo(this);
         dialogo.setVisible(true);
-    }
-
-    private void componente(JPanel painel, GridBagConstraints organizador,
-            int linha, String texto, Component campo) {
-        organizador.gridx = 0;
-        organizador.gridy = linha;
-        organizador.gridwidth = 1;
-        organizador.weightx = 0;
-        organizador.fill = GridBagConstraints.NONE;
-        painel.add(new JLabel(texto), organizador);
-
-        organizador.gridx = 1;
-        organizador.weightx = 1;
-        organizador.fill = GridBagConstraints.HORIZONTAL;
-        painel.add(campo, organizador);
     }
 
     public void limpar() {

@@ -5,7 +5,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import model.DadosContabeis;
 import view.auditoria.TelaAuditoriaDigital;
 import view.dashboard.TelaDashboard;
 import view.diario.TelaLivroDiario;
@@ -13,51 +12,19 @@ import view.ecf.TelaGeracaoECF;
 
 public class TelaPrincipal extends JPanel {
   private static final long serialVersionUID = 1L;
-  private final DadosContabeis dados;
-  private final TelaDashboard dashboard;
-  private final TelaLivroDiario diario;
-  private final TelaAuditoriaDigital auditoria;
-  private final TelaGeracaoECF ecf;
-  private final JTabbedPane paginas = new JTabbedPane();
 
   public TelaPrincipal() {
-    this(new DadosContabeis());
-  }
+    super(new BorderLayout(8, 8));
+    JLabel titulo = new JLabel("Contabilidade | Protótipo de telas");
+    titulo.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
+    add(titulo, BorderLayout.NORTH);
 
-  public TelaPrincipal(DadosContabeis dados) {
-    this.dados = dados;
-    setLayout(new BorderLayout(8, 8));
-    JLabel lbl_titulo = new JLabel("Contabilidade — empresa #" + dados.getServico().getEmpresaId());
-    lbl_titulo.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
-    add(lbl_titulo, BorderLayout.NORTH);
-    dashboard = new TelaDashboard(dados);
-    ecf = new TelaGeracaoECF(dados);
-    auditoria = new TelaAuditoriaDigital(dados, () -> dashboard.atualizar_tela());
-    diario = new TelaLivroDiario(dados, () -> atualizar_modulo());
+    JTabbedPane paginas = new JTabbedPane();
     paginas.setName("principal.paginas");
-    paginas.addTab("Visão Contábil", dashboard);
-    paginas.addTab("Livro Diário", diario);
-    paginas.addTab("Auditoria Digital", auditoria);
-    paginas.addTab("Geração da ECF", ecf);
-    paginas.addTab("Plano de Contas", new view.planocontas.TelaPlanoDeContas(dados));
-    paginas.addChangeListener(
-        e -> {
-          if (paginas.getSelectedComponent() == dashboard) {
-            dashboard.atualizar_tela();
-          } else if (paginas.getSelectedComponent() == diario) {
-            diario.atualizar_tabela();
-          } else if (paginas.getSelectedComponent() == auditoria) {
-            auditoria.atualizar_tabela();
-          } else if (paginas.getSelectedComponent() == ecf) {
-            ecf.atualizar_dados();
-          }
-        });
+    paginas.addTab("Visão Contábil", new TelaDashboard());
+    paginas.addTab("Livro Diário", new TelaLivroDiario());
+    paginas.addTab("Auditoria Digital", new TelaAuditoriaDigital());
+    paginas.addTab("Geração da ECF", new TelaGeracaoECF());
     add(paginas, BorderLayout.CENTER);
-  }
-
-  private void atualizar_modulo() {
-    dashboard.atualizar_tela();
-    auditoria.atualizar_tabela();
-    ecf.atualizar_dados();
   }
 }

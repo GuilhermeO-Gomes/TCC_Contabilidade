@@ -14,59 +14,44 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
-import model.DadosContabeis;
-import model.InconsistenciaAuditoria;
-import model.LancamentoContabil;
 import view.ComponentesContabeis;
 
 public class TelaDashboard extends JPanel {
   private static final long serialVersionUID = 1L;
-  private final DadosContabeis dados;
-  private LocalDate inicioAplicado = LocalDate.now().withDayOfYear(1);
-  private LocalDate fimAplicado = LocalDate.now().withMonth(12).withDayOfMonth(31);
   private final JSpinner periodo_1 =
       ComponentesContabeis.criarData("dashboard.inicio", LocalDate.now().withDayOfYear(1));
   private final JSpinner periodo_2 =
       ComponentesContabeis.criarData(
           "dashboard.fim", LocalDate.now().withMonth(12).withDayOfMonth(31));
-  private final JLabel lbl_debitos = new JLabel();
-  private final JLabel lbl_creditos = new JLabel();
-  private final JLabel lbl_lancamentos = new JLabel();
-  private final JLabel lbl_inconsistencias = new JLabel();
-  private final JLabel lbl_situacao = new JLabel();
-  private final JLabel lbl_diferenca = new JLabel();
+  private final JLabel lbl_debitos = new JLabel("R$ 0,00");
+  private final JLabel lbl_creditos = new JLabel("R$ 0,00");
+  private final JLabel lbl_lancamentos = new JLabel("0");
+  private final JLabel lbl_inconsistencias = new JLabel("0");
+  private final JLabel lbl_situacao = new JLabel("Sem movimentação");
+  private final JLabel lbl_diferenca = new JLabel("R$ 0,00");
   private final JTextArea txt_pendencias = new JTextArea(5, 40);
   private final DefaultTableModel modeloTabela =
       ComponentesContabeis.modeloTabela(
           "ID", "Data", "Documento", "Histórico", "Débitos", "Créditos");
 
   public TelaDashboard() {
-    this(new DadosContabeis());
-  }
-
-  public TelaDashboard(DadosContabeis dados) {
-    this.dados = dados;
     setLayout(new BorderLayout(8, 8));
     setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     montar_tela();
-    atualizar_tela();
+    txt_pendencias.setText("Nenhuma pendência registrada.");
   }
 
   private void montar_tela() {
     JPanel painelFiltros = new JPanel(new GridBagLayout());
-    painelFiltros.setBorder(
-        BorderFactory.createTitledBorder(
-            "Empresa #"
-                + dados.getServico().getEmpresaId()
-                + " — contabilizados e estornados (sem rascunhos)"));
+    painelFiltros.setBorder(BorderFactory.createTitledBorder("Visão Contábil"));
     ComponentesContabeis.adicionar_componente(0, painelFiltros, "Período inicial:", periodo_1);
     ComponentesContabeis.adicionar_componente(1, painelFiltros, "Período final:", periodo_2);
     JPanel jp_superior = new JPanel(new BorderLayout());
     jp_superior.add(painelFiltros, BorderLayout.CENTER);
     jp_superior.add(
         ComponentesContabeis.botoes(
-            ComponentesContabeis.botao(
-                "dashboard.atualizar", "Atualizar", () -> aplicar_periodo())),
+            ComponentesContabeis.botaoInativo(
+                "dashboard.atualizar", "Atualizar")),
         BorderLayout.SOUTH);
     add(jp_superior, BorderLayout.NORTH);
 
@@ -76,7 +61,7 @@ public class TelaDashboard extends JPanel {
     painelIndicadores.add(indicador("Lançamentos", "dashboard.lancamentos", lbl_lancamentos));
     painelIndicadores.add(
         indicador(
-            "Pendências (inclui rascunhos)", "dashboard.inconsistencias", lbl_inconsistencias));
+            "Pendências", "dashboard.inconsistencias", lbl_inconsistencias));
     JPanel jp_centro = new JPanel(new BorderLayout(8, 8));
     jp_centro.add(painelIndicadores, BorderLayout.NORTH);
     JPanel jp_movimentos = new JPanel(new BorderLayout(8, 8));
@@ -111,58 +96,5 @@ public class TelaDashboard extends JPanel {
     valor.setBorder(BorderFactory.createEmptyBorder(12, 8, 12, 8));
     painel.add(valor);
     return painel;
-  }
-
-  private void aplicar_periodo() {
-    LocalDate inicio = ComponentesContabeis.data(periodo_1);
-    LocalDate fim = ComponentesContabeis.data(periodo_2);
-    ComponentesContabeis.verificarPeriodo(inicio, fim);
-    inicioAplicado = inicio;
-    fimAplicado = fim;
-    atualizar_tela();
-  }
-
-  public void atualizar_tela() {
-    LocalDate inicio = inicioAplicado, fim = fimAplicado;
-    ComponentesContabeis.carregar(
-        this,
-        () -> dados.getServico().dashboard(inicio, fim),
-        resumo -> {
-          lbl_debitos.setText(ComponentesContabeis.moeda(resumo.getDebitos()));
-          lbl_creditos.setText(ComponentesContabeis.moeda(resumo.getCreditos()));
-          lbl_lancamentos.setText(String.valueOf(resumo.getQuantidade()));
-          lbl_inconsistencias.setText(String.valueOf(resumo.getPendencias().size()));
-          lbl_diferenca.setText(
-              ComponentesContabeis.moeda(resumo.getDebitos().subtract(resumo.getCreditos())));
-          lbl_situacao.setText(
-              resumo.getQuantidade() == 0
-                  ? "Sem movimentação"
-                  : resumo.getDebitos().compareTo(resumo.getCreditos()) == 0
-                      ? "Balanceado"
-                      : "Requer revisão");
-          StringBuilder texto = new StringBuilder();
-          for (InconsistenciaAuditoria a : resumo.getPendencias())
-            texto
-                .append(a.getCodigo())
-                .append(" | Lançamento ")
-                .append(a.getLancamentoId())
-                .append(" | ")
-                .append(a.getDescricao())
-                .append('\n');
-          txt_pendencias.setText(
-              texto.length() == 0 ? "Nenhuma pendência registrada no período." : texto.toString());
-          txt_pendencias.setCaretPosition(0);
-          modeloTabela.setRowCount(0);
-          for (LancamentoContabil l : resumo.getRecentes())
-            modeloTabela.addRow(
-                new Object[] {
-                  l.getId(),
-                  l.getData(),
-                  l.getDocumento(),
-                  l.getHistorico(),
-                  l.calcularTotalDebitos(),
-                  l.calcularTotalCreditos()
-                });
-        });
   }
 }

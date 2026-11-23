@@ -10,29 +10,65 @@ public class TelaDRE extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
-    private final JTextField pesquisa = new JTextField(22);
+  
 
-    private final DefaultTableModel modelo =
-        new DefaultTableModel(
-            new Object[] {
-                "ID",
-                "Descrição",
-                "Favorito"
-            },
-            0
-        ) {
-            @Override
-            public boolean isCellEditable(int linha, int coluna) {
-                return false;
-            }
-        };
+
+private final DefaultTableModel modelo =
+    new DefaultTableModel(
+        new Object[] {
+            "Descrição",
+            "Total geral"
+        },
+        0
+    ) {
+
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public boolean isCellEditable(
+                int linha,
+                int coluna) {
+
+            return false;
+        }
+    };
+
 
     private final JTable tabela = new JTable(modelo);
+    
+    private final JComboBox<String> dre =
+    	    new JComboBox<>(
+    	        new String[] {
+    	            "DRE"
+    	        }
+    	    );
 
-    private final JButton novo = new JButton("Novo");
-    private final JButton editar = new JButton("Editar");
-    private final JButton itens = new JButton("Configurar Itens");
-    private final JButton buscar = new JButton("Buscar");
+    	private final JComboBox<String> tipoAgrupamento =
+    	    new JComboBox<>(
+    	        new String[] {
+    	            "Sem agrupamento"
+    	        }
+    	    );
+
+    	private final JTextField dataInicial =
+    	    new JTextField(10);
+
+    	private final JTextField dataFinal =
+    	    new JTextField(10);
+
+    	private final JComboBox<String> empresa =
+    	    new JComboBox<>(
+    	        new String[] {
+    	            "Filial 01"
+    	        }
+    	    );
+
+    	private final JCheckBox exibirTotalGeral =
+    	    new JCheckBox("Exibir total geral", true);
+
+    	private final JButton filtrar =
+    	    new JButton("Filtrar");
+
 
     public TelaDRE() {
 
@@ -43,90 +79,161 @@ public class TelaDRE extends JPanel {
         );
 
         montar();
+        
+        carregarDadosTeste();
     }
 
-    private void montar() {
 
-        JPanel topo = new JPanel(new BorderLayout(8, 8));
+private void montar() {
 
-        JPanel botoes = new JPanel(
-            new FlowLayout(FlowLayout.LEFT)
-        );
+    JPanel topo = new JPanel(
+        new BorderLayout(8, 8)
+    );
 
-        botoes.add(novo);
-        botoes.add(editar);
+   
 
-        botoes.add(Box.createHorizontalStrut(15));
+    JPanel filtros = new JPanel(
+        new FlowLayout(FlowLayout.LEFT, 8, 5)
+    );
 
-        botoes.add(itens);
+    filtros.setBorder(
+        BorderFactory.createTitledBorder("Filtros")
+    );
 
-        JPanel busca = new JPanel(
-            new FlowLayout(FlowLayout.LEFT)
-        );
+    filtros.add(new JLabel("DRE *"));
+    filtros.add(dre);
 
-        busca.add(new JLabel("Pesquisar:"));
-        busca.add(pesquisa);
+    filtros.add(new JLabel("Tipo de agrupamento"));
+    filtros.add(tipoAgrupamento);
 
+    filtros.add(new JLabel("Período *"));
+    filtros.add(dataInicial);
 
-        topo.add(botoes, BorderLayout.NORTH);
-        topo.add(busca, BorderLayout.SOUTH);
+    filtros.add(new JLabel("até"));
+    filtros.add(dataFinal);
 
-        add(topo, BorderLayout.NORTH);
+    filtros.add(new JLabel("Minha empresa *"));
+    filtros.add(empresa);
 
-        JPanel centro = new JPanel(new BorderLayout());
+    JPanel opcoes = new JPanel(
+        new FlowLayout(FlowLayout.LEFT)
+    );
 
-        centro.setBorder(
-            BorderFactory.createTitledBorder(
-                "DREs cadastradas"
-            )
-        );
+    opcoes.add(exibirTotalGeral);
 
-        centro.add(
-            new JScrollPane(tabela),
-            BorderLayout.CENTER
-        );
+    opcoes.add(filtrar);
 
-        add(centro, BorderLayout.CENTER);
+    topo.add(filtros, BorderLayout.CENTER);
+    topo.add(opcoes, BorderLayout.SOUTH);
 
-        tabela.setSelectionMode(
-            ListSelectionModel.SINGLE_SELECTION
-        );
-    }
+    add(topo, BorderLayout.NORTH);
 
-    public JTable getTabela() {
-        return tabela;
-    }
+   
 
-    public JTextField getPesquisa() {
-        return pesquisa;
-    }
+    JPanel centro = new JPanel(
+        new BorderLayout()
+    );
 
-    public JButton getNovo() {
-        return novo;
-    }
+    centro.setBorder(
+        BorderFactory.createTitledBorder(
+            "Demonstrativo de Resultado"
+        )
+    );
 
-    public JButton getEditar() {
-        return editar;
-    }
+    tabela.setSelectionMode(
+        ListSelectionModel.SINGLE_SELECTION
+    );
+
+    tabela.setFillsViewportHeight(true);
+
+    tabela.setAutoCreateRowSorter(false);
+
+    tabela.getTableHeader()
+        .setReorderingAllowed(false);
     
-    public JButton getItens() {
-        return itens;
+    RendererDRE renderer = new RendererDRE();
+
+    for (int i = 0; i < tabela.getColumnCount(); i++) {
+        tabela.getColumnModel().getColumn(i).setCellRenderer(renderer);
     }
 
-    public void limparTabela() {
-        modelo.setRowCount(0);
-    }
+    centro.add(
+        new JScrollPane(tabela),
+        BorderLayout.CENTER
+    );
 
-    public void adicionarLinha(
-            DRE dre) {
+    add(centro, BorderLayout.CENTER);
+}
 
-        modelo.addRow(
-            new Object[] {
-                dre.getId(),
-                dre.getDescricao(),
-                dre.isFavorito()
-            }
-        );
-    
-    }
+
+public void adicionarLinha(
+        String descricao,
+        String totalGeral) {
+
+    modelo.addRow(
+        new Object[] {
+            descricao,
+            totalGeral
+        }
+    );
+}
+
+public void limparTabela() {
+    modelo.setRowCount(0);
+}
+
+
+
+private void carregarDadosTeste() {
+
+    adicionarLinha("RECEITA BRUTA", "2.972,50");
+    adicionarLinha("  Receita de Vendas", "2.972,50");
+
+    adicionarLinha("DEDUÇÕES DAS RECEITAS", "0,00");
+
+    adicionarLinha("RECEITA LÍQUIDA", "2.972,50");
+
+    adicionarLinha("CUSTOS", "-5,56");
+    adicionarLinha("  Custos dos Produtos Vendidos", "-5,56");
+
+    adicionarLinha("LUCRO BRUTO", "2.966,94");
+
+    adicionarLinha("DESPESAS OPERACIONAIS", "-2,60");
+    adicionarLinha("  Despesas Administrativas", "-2,60");
+
+    adicionarLinha("LUCRO OPERACIONAL", "2.964,34");
+
+    adicionarLinha("RESULTADO DO EXERCÍCIO", "2.964,34");
+}
+
+
+
+public JComboBox<String> getDre() {
+    return dre;
+}
+
+public JComboBox<String> getTipoAgrupamento() {
+    return tipoAgrupamento;
+}
+
+public String getDataInicial() {
+    return dataInicial.getText();
+}
+
+public String getDataFinal() {
+    return dataFinal.getText();
+}
+
+public JComboBox<String> getEmpresa() {
+    return empresa;
+}
+
+public boolean isExibirTotalGeral() {
+    return exibirTotalGeral.isSelected();
+}
+
+public JButton getFiltrar() {
+    return filtrar;
+}
+
 }

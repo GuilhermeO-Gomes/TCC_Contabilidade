@@ -1,32 +1,32 @@
 package view;
 
-import model.Reavaliacao;
-//import controller.ReavaliacaoController
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import model.Reavaliacao;
 
 public class TelaReavaliacao extends JPanel{
 
  
 	private static final long serialVersionUID = 1L;
 
-	private final JTextField idBem = new JTextField(7),
-      situacaoAntes = new JTextField(21),
-      situacaoLaudo = new JTextField(21),
-      valorHistorico = new JTextField(21),
-      novoValor = new JTextField(21),
-      depreAcumulada = new JTextField(21),
-      tempoRemanescente = new JTextField(7),
-      valorContabil = new JTextField(21),
-      valorReavaliado = new JTextField(21);
+	private final JTextField idBem = new JTextField(45),
+      situacaoAntes = new JTextField(45),
+      situacaoLaudo = new JTextField(45),
+      valorHistorico = new JTextField(45),
+      novoValor = new JTextField(45),
+      depreAcumulada = new JTextField(45),
+      tempoRemanescente = new JTextField(45),
+      valorContabil = new JTextField(45),
+      valorReavaliado = new JTextField(45);
 
       private final DefaultTableModel modelo = new DefaultTableModel(
          new Object[] {"ID","Valor da nova avaliação", "Valor contábil", "Resultado da Reavaliação"},
         0
       ) {
+        @Override
         public boolean isCellEditable(int l, int c) {
             return false;
         }
@@ -36,8 +36,8 @@ public class TelaReavaliacao extends JPanel{
       //private final ReavaliacaoController controller;
    
 
-      public TelaReavaliacao(int idBem) {
-        this.idBem.setText(String.valueOf(idBem));
+      public TelaReavaliacao() {
+  
 
         setLayout(new BorderLayout(8,8));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -53,10 +53,17 @@ public class TelaReavaliacao extends JPanel{
         GridBagConstraints g = new GridBagConstraints();
         add(f, BorderLayout.NORTH);
 
-        g.insets = new Insets(4, 4, 4,4 );
-        componente(f, g, 0, "Código:", idBem);
-        componente(f, g, 1, "Situação do bem antes do laudo:", situacaoAntes);
-        componente(f, g, 2, "Situação do bem apresentada no laudo:", situacaoLaudo);
+        situacaoAntes.setEditable(false);
+        valorHistorico.setEditable(false);
+        depreAcumulada.setEditable(false);
+        tempoRemanescente.setEditable(false);
+        valorContabil.setEditable(false); 
+        
+        g.anchor = GridBagConstraints.WEST;
+        g.insets = new Insets(4, 4, 4, 4);
+        componente(f, g, 0, "Código do bem:", idBem);
+        componente(f, g, 1, "Situação antes laudo:", situacaoAntes);
+        componente(f, g, 2, "Situação apresentada no laudo:", situacaoLaudo);
         componente(f, g, 3, "Valor histórico:", valorHistorico);
         componente(f, g, 4, "Novo valor do bem:", novoValor);
         componente(f, g, 5, "Depreciação acumulada:", depreAcumulada);
@@ -65,25 +72,26 @@ public class TelaReavaliacao extends JPanel{
         g.gridx = 1;
         g.gridy = 8;
         
+        g.fill = GridBagConstraints.NONE;
+        g.anchor = GridBagConstraints.WEST;
+        g.insets = new Insets(4, 4, 4, 4);
+
+
+     
+        JButton salvar = new JButton ("Salvar");
+        f.add(salvar, g);
+
+        
 
         JPanel c = new JPanel(new BorderLayout());
         c.add(new JScrollPane(tabela));
         add(c);
         tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         
-        JPanel b = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JButton salvar = new JButton ("Salvar");
-        b.add(salvar);
-        f.add(b);
-
-        salvar.addActionListener(
-            new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    //controller.salvar();
-                }
-            }
-
-        );
+    
+        salvar.addActionListener((ActionEvent e) -> {
+            //controller.salvar();
+        });
         
         
       }
@@ -100,12 +108,13 @@ public class TelaReavaliacao extends JPanel{
         g.gridy = y;
         g.weightx = 0;
         g.fill = GridBagConstraints.NONE;
+
         p.add(new JLabel(r), g);
         g.gridx = 1;
         g.gridy = y;
         g.weightx = 1;
-        g.fill = GridBagConstraints.HORIZONTAL;
         p.add(t, g);
+       
 
       }
 
@@ -126,7 +135,7 @@ public class TelaReavaliacao extends JPanel{
         for (i=0; i<l.size(); i++) {
             Reavaliacao u = l.get(i);
             modelo.addRow(new Object[]{
-                Integer.valueOf(u.getId()),
+                u.getId(),
                 u.getNovoValor(),
                 //u.getValorContabil(),
                 u.getValorReavaliado(),
@@ -137,7 +146,7 @@ public class TelaReavaliacao extends JPanel{
       public int getId() {
         try {
             return Integer.parseInt(idBem.getText());
-        }  catch (Exception e) {
+        }  catch (NumberFormatException e) {
             return  0;
         }
       }

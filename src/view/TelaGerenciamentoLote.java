@@ -1,11 +1,9 @@
 package view;
 
 //import controller.GerenciamentoLoteController;
-import model.LancamentoLote;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -14,6 +12,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import model.LancamentoLote;
 
 public class TelaGerenciamentoLote extends JPanel {
 
@@ -24,6 +23,7 @@ public class TelaGerenciamentoLote extends JPanel {
         new Object[] {"ID", "Nome", "Descrição", "Data abertura", "Data inicial", "Data final", "Débito", "Crédito", "Diferença", "Bloqueado"},
         0
     ) {
+       @Override
        public boolean isCellEditable(int l, int c) {
         return false;
        }
@@ -65,45 +65,29 @@ public class TelaGerenciamentoLote extends JPanel {
         b.add(bloquear);
         add(b, BorderLayout.SOUTH);
         
-        excluir.addActionListener(
-            new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    //controller.excluir();
-                }
-            }
-        );
+        excluir.addActionListener((ActionEvent e) -> {
+            //controller.excluir();
+        });
 
-        novo.addActionListener(
-            new ActionListener() {
-                public void actionPerformed(ActionEvent e){
-                  // controller.novo();  -> para ir para a tela Lancamento de lote
-                    
-                }
-            }
-        );
+        novo.addActionListener((ActionEvent e) -> {
+            // controller.novo();  -> para ir para a tela Lancamento de lote
+        });
 
         
 
 
-        buscar.addActionListener(
-            new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    //controller.buscar();
-                }
-            }
-        );
+        buscar.addActionListener((ActionEvent e) -> {
+            //controller.buscar();
+        });
 
-        todos.addActionListener(
-            new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    pesquisa.setText("");
-                    //controller.listar();
-                }
-            }
-        );
+        todos.addActionListener((ActionEvent e) -> {
+            pesquisa.setText("");
+            //controller.listar();
+        });
 
         tabela.addMouseListener(
             new MouseAdapter() {
+                @Override
                 public void mouseClicked(MouseEvent e) {
                     //controller.selecionar();
                 }
@@ -118,7 +102,7 @@ public class TelaGerenciamentoLote extends JPanel {
         for (i=0; i<l.size(); i++){
           LancamentoLote m = l.get(i);
         modelo.addRow(new Object[]{
-            Integer.valueOf(m.getId()),
+            m.getId(),
             m.getNomeLote(),
             m.getDescriLote(),
             m.getDataAbertura(),

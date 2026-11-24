@@ -48,6 +48,9 @@ public class diaBalancoPatrimonialItem
 
     private final JButton salvar =
         new JButton("Salvar");
+    
+    private final JButton cancelar =
+    	    new JButton("Cancelar");
 
 
     public diaBalancoPatrimonialItem(
@@ -166,9 +169,10 @@ public class diaBalancoPatrimonialItem
             );
 
 
-        botoes.add(
-            salvar
-        );
+        botoes.add(salvar);
+        botoes.add(cancelar);
+
+        cancelar.addActionListener(e -> dispose());
 
 
         JPanel principal =
@@ -193,6 +197,19 @@ public class diaBalancoPatrimonialItem
             BorderLayout.CENTER
         );
     }
+    
+    
+    public void limpar() {
+        id.setText("");
+        ordem.setText("");
+
+        codigoAglutinacao.setSelectedIndex(-1);
+        grupo.setSelectedIndex(0);
+        itemSuperior.setSelectedIndex(0);
+
+        ativo.setSelected(true);
+    }
+    
     
     public void limparCodigosAglutinacao() {
 
@@ -323,6 +340,10 @@ public class diaBalancoPatrimonialItem
 
     public JButton getSalvar() {
         return salvar;
+    }
+    
+    public JButton getCancelar() {
+        return cancelar;
     }
 
 

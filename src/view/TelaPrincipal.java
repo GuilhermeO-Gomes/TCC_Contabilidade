@@ -42,7 +42,7 @@ public class TelaPrincipal extends JFrame {
         painelPrincipal = new JPanel(cardLayout);
 
  
-        painelPrincipal.add(new TelaExerciciosSociais(), "Historico Padrão");
+        painelPrincipal.add(new TelaIntegracaoFiscalContabil(), "Historico Padrão");
 
 
         add(painelPrincipal);

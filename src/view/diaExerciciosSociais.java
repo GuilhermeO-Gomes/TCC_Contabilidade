@@ -32,6 +32,9 @@ public class diaExerciciosSociais extends JDialog {
 
     private final JButton salvar =
         new JButton("Salvar");
+    
+    private final JButton cancelar =
+    	    new JButton("Cancelar");
 
 
     public diaExerciciosSociais(
@@ -145,7 +148,9 @@ public class diaExerciciosSociais extends JDialog {
             );
 
         b.add(salvar);
+        b.add(cancelar);
 
+        cancelar.addActionListener(e -> dispose());
 
         JPanel n =
             new JPanel(
@@ -166,6 +171,19 @@ public class diaExerciciosSociais extends JDialog {
             n,
             BorderLayout.CENTER
         );
+    }
+    
+    public void limpar() {
+        id.setText("");
+        anoReferencia.setText("");
+        dataInicio.setValue(null);
+        dataFinal.setValue(null);
+
+        setStatusContabil(
+            ExercicioSocial.StatusContabil.NAO_INICIADO
+        );
+
+        ativo.setSelected(true);
     }
 
 
@@ -220,6 +238,12 @@ public class diaExerciciosSociais extends JDialog {
             g
         );
     }
+    
+    public ExercicioSocial.StatusContabil getStatusContabil() {
+        return ExercicioSocial.StatusContabil.valueOf(
+            statusContabil.getText()
+        );
+    }
 
 
     public long getId() {
@@ -259,6 +283,10 @@ public class diaExerciciosSociais extends JDialog {
 
     public JButton getSalvar() {
         return salvar;
+    }
+    
+    public JButton getCancelar() {
+        return cancelar;
     }
 
 

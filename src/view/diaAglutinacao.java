@@ -31,6 +31,9 @@ public class diaAglutinacao extends JDialog {
 
     private final JButton salvar =
         new JButton("Salvar");
+    
+    private final JButton cancelar =
+    	    new JButton("Cancelar");
 
 
     public diaAglutinacao(
@@ -138,9 +141,10 @@ public class diaAglutinacao extends JDialog {
                 )
             );
 
-        botoes.add(
-            salvar
-        );
+        botoes.add(salvar);
+        botoes.add(cancelar);
+        
+        cancelar.addActionListener(e -> dispose());
 
 
         JPanel principal =
@@ -203,7 +207,13 @@ public class diaAglutinacao extends JDialog {
         );
     }
 
-
+    public void limpar() {
+        id.setText("");
+        valor.setText("");
+        descricao.setText("");
+        observacao.setText("");
+        ativo.setSelected(true);
+    }
  
 
     public long getId() {
@@ -243,6 +253,10 @@ public class diaAglutinacao extends JDialog {
 
     public JButton getSalvar() {
         return salvar;
+    }
+    
+    public JButton getCancelar() {
+        return cancelar;
     }
 
 

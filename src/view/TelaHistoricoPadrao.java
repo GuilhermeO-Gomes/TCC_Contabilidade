@@ -355,6 +355,38 @@ public class TelaHistoricoPadrao extends JPanel {
             return 0;
         }
     }
+    
+    public String getDescricaoSelecionada() {
+        int linha = tabela.getSelectedRow();
+
+        if (linha == -1) {
+            return null;
+        }
+
+        int linhaModelo = tabela.convertRowIndexToModel(linha);
+
+        return modelo.getValueAt(linhaModelo, 1).toString();
+    }
+
+    public boolean isAtivoSelecionado() {
+        int linha = tabela.getSelectedRow();
+
+        if (linha == -1) {
+            return false;
+        }
+
+        int linhaModelo = tabela.convertRowIndexToModel(linha);
+
+        return Boolean.parseBoolean(
+            modelo.getValueAt(linhaModelo, 2).toString()
+        );
+    }
+
+    public void preencherFormulario(HistoricoPadrao historico) {
+        setId(historico.getId());
+        setDescricao(historico.getDescricao());
+        setAtivo(historico.isAtivo());
+    }
 
 
     public String getDescricao() {

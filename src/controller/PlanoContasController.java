@@ -2,6 +2,7 @@ package controller;
 
 import java.awt.Window;
 import view.TelaAdicionarConta;
+import view.TelaAplicaRateio;
 import view.TelaAtualizarConta;
 import view.TelaLivroRazao;
 
@@ -21,5 +22,9 @@ public class PlanoContasController {
 	public void abrirLivroRazao(Window janela_pai) {
 		TelaLivroRazao dialog = new TelaLivroRazao(janela_pai);
 	    dialog.setVisible(true);
+	} 
+	public void abrirAplicaRateio (Window janela_pai) {
+		TelaAplicaRateio dialog = new TelaAplicaRateio(janela_pai);
+		dialog.setVisible(true);
 	} 
 }

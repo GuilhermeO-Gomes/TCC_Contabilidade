@@ -14,12 +14,9 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
-import javax.swing.table.DefaultTableModel;
 
 public class TelaAtualizarCustos extends JDialog {
 	private static final long serialVersionUID = 1L;
@@ -30,10 +27,7 @@ public class TelaAtualizarCustos extends JDialog {
 	{periodo_1.setEditor(editor_1);}
     private final JTextField txt_centro_custo = new JTextField(15), txt_custo_atual = new JTextField(15),
     txt_novo_custo = new JTextField(15), txt_variacao = new JTextField(15);
-    
-    private final DefaultTableModel modeloTabela = new DefaultTableModel(
-    	    new Object[] {"Data", "Período", "Custo Anterior", "Novo Custo", "Variação"}, 0);
-    		private JTable TabelaHistorico;
+
     public TelaAtualizarCustos(Window janela_pai) {
     	super(janela_pai, "Atualizar Custo", ModalityType.APPLICATION_MODAL);
     	setLayout(new BorderLayout(8,8));
@@ -74,8 +68,6 @@ public class TelaAtualizarCustos extends JDialog {
     	botoes.add(btn_limpar);
     	botoes.add(btn_cancelar);
     	
-    	TabelaHistorico = new JTable(modeloTabela);
-        JScrollPane scrollPane =new JScrollPane(TabelaHistorico);
         gbc_form.gridy = 5;
         gbc_form.gridx = 0;
         gbc_form.gridwidth = 2;
@@ -84,7 +76,7 @@ public class TelaAtualizarCustos extends JDialog {
     	
     	
         add(jp_form, BorderLayout.NORTH);
-        add(scrollPane, BorderLayout.CENTER);
+       
     }
 public void adicionar_componente( 
 	int y, 

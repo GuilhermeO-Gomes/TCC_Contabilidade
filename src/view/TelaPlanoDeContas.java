@@ -102,6 +102,10 @@ public class TelaPlanoDeContas extends JPanel {
         	Window janela_pai = SwingUtilities.getWindowAncestor(this);
         	controller.abrirLivroRazao(janela_pai); });
         
+        btn_rateio.addActionListener(e -> {
+        	Window janela_pai = SwingUtilities.getWindowAncestor(this);
+        	controller.abrirAplicaRateio(janela_pai); });
+        
         botoes.add(btn_criar_conta);
         botoes.add(btn_atualizar_conta);
         botoes.add(btn_inativar_conta);

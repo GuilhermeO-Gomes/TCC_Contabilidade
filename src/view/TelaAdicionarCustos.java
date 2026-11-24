@@ -18,7 +18,7 @@ import javax.swing.JTextField;
 
 public class TelaAdicionarCustos extends JDialog {
 	 private static final long serialVersionUID = 1L;
-	    private final JTextField txt_descricao = new JTextField(15);
+	    private final JTextField txt_descricao = new JTextField(15), txt_codigo = new JTextField(15);
 	    public TelaAdicionarCustos(Window janela_pai) {
 	    	super(janela_pai, "Adicionar Novo Custo", ModalityType.APPLICATION_MODAL);
 	    	setLayout(new BorderLayout(8,8));
@@ -37,7 +37,8 @@ public class TelaAdicionarCustos extends JDialog {
 	    	gbc_principal.weightx = 0;
 	    	JPanel botoes = new JPanel(new FlowLayout(FlowLayout.LEFT));
 	    	JLabel lbl_descricao = new JLabel("Descrição*:"), 
-	    	lbl_centro_superior = new JLabel("Centro Superior:"),lbl_situacao = new JLabel("Situação*:");
+	    	lbl_centro_superior = new JLabel("Centro Superior:"),lbl_situacao = new JLabel("Situação*:"),
+	    	lbl_codigo = new JLabel("Código*:");
 	    
 	    	String[] obj_centros= {"Todos", "Administrativo", "Operacional", "Comercial", "Financeiro", "Logística", "Tecnologia", "Recursos Humanos", 
 	    			"Manutenção","Projetos", "Atendimento"};
@@ -50,9 +51,10 @@ public class TelaAdicionarCustos extends JDialog {
 	    	
 	    	btn_cancelar.addActionListener(e -> dispose());
 	    	
-	    	adicionar_componente(0, jp_principal, gbc_principal, lbl_descricao, txt_descricao);
-	    	adicionar_componente(1, jp_principal, gbc_principal, lbl_centro_superior, cmbBox_centro_superior);
-	    	adicionar_componente(2, jp_principal, gbc_principal, lbl_situacao, cmbBox_situacao);
+	    	adicionar_componente(0, jp_principal, gbc_principal, lbl_codigo, txt_codigo);
+	    	adicionar_componente(1, jp_principal, gbc_principal, lbl_descricao, txt_descricao);
+	    	adicionar_componente(2, jp_principal, gbc_principal, lbl_centro_superior, cmbBox_centro_superior);
+	    	adicionar_componente(3, jp_principal, gbc_principal, lbl_situacao, cmbBox_situacao);
 	    	
 	    	botoes.add(btn_cancelar);
 	    	botoes.add(btn_salvar);

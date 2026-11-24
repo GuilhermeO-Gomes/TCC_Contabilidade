@@ -25,7 +25,7 @@ import controller.RateioController;
 
 public class TelaRateio extends JDialog {
 	private static final long serialVersionUID = 1L;
-	private final JTextField txt_nome_rateio = new JTextField(15);
+	private final JTextField txt_nome_rateio = new JTextField(15), txt_descricao = new JTextField(15);
 	private final DefaultTableModel modeloTabela = new DefaultTableModel(
     new Object[] {"Centro de Custo", "Percentual(%)" }, 0);
 	private JTable TabelaRateio;
@@ -61,8 +61,9 @@ public class TelaRateio extends JDialog {
     	JPanel botoes = new JPanel(new FlowLayout(FlowLayout.CENTER));
     	
     	
-    	JLabel lbl_nome_rateio = new JLabel("Nome do Rateio:"), 
-    	lbl_criterio = new JLabel("Critério:"), lbl_situacao = new JLabel("Situação:"), lbl_total_percentual = new JLabel("Total Percentual(%): 100%");
+    	JLabel lbl_nome_rateio = new JLabel("Nome do Rateio*:"), 
+    	lbl_criterio = new JLabel("Critério*:"), lbl_situacao = new JLabel("Situação*:"), lbl_total_percentual = new JLabel("Total Percentual(%): 100%"),
+    	lbl_descricao = new JLabel("Descrição do Rateio*:");
     
     	
     	String[] obj_criterios= {"Todos", "Percentual"};
@@ -75,7 +76,8 @@ public class TelaRateio extends JDialog {
     	btn_cancelar = new JButton("Cancelar");
     	adicionar_componente(0, jp_config, gbc_config, lbl_nome_rateio, txt_nome_rateio);
     	adicionar_componente(1, jp_config, gbc_config, lbl_criterio, criterio);
-    	adicionar_componente(2, jp_config, gbc_config, lbl_situacao, situacao);
+    	adicionar_componente(2, jp_config, gbc_config, lbl_descricao, txt_descricao);
+    	adicionar_componente(3, jp_config, gbc_config, lbl_situacao, situacao);
     	
     	botoes_distribuicao.add(btn_adicionar_centro);
     	

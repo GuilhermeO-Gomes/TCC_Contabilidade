@@ -17,9 +17,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+
 public class TelaAtualizarConta extends JDialog {
 	private static final long serialVersionUID = 1L;
-    private final JTextField txt_descricao = new JTextField(15);
+    private final JTextField txt_descricao = new JTextField(15), txt_codigo = new JTextField(15);
     public TelaAtualizarConta(Window janela_pai) {
     	super(janela_pai, "Atualizar Conta", ModalityType.APPLICATION_MODAL);
     	setLayout(new BorderLayout(8,8));
@@ -43,7 +44,8 @@ public class TelaAtualizarConta extends JDialog {
     	lbl_natureza = new JLabel("Natureza:"), 
     	lbl_situacao = new JLabel("Situação:"),
     	lbl_tipo = new JLabel("Tipo:"),
-    	lbl_classificacao = new JLabel("Classificação Contábil:");
+    	lbl_classificacao = new JLabel("Classificação Contábil:"),
+    	lbl_codigo = new JLabel("Código:");
     	String[] obj_grupos= {"Todas","Ativos", "Passivos", "Custos", "Receita", "Despesa"};
     	String[] obj_naturezas = {"Todas","Devedora", "Credora"};
     	String[] obj_situacoes = {"Todas","Ativo", "Inativo"};
@@ -60,14 +62,18 @@ public class TelaAtualizarConta extends JDialog {
     	
     	btn_cancelar.addActionListener(e -> dispose());
     	
-    	adicionar_componente(0, jp_principal, gbc_principal, lbl_descricao, txt_descricao);
-    	adicionar_componente(1, jp_principal, gbc_principal, lbl_conta_superior, cmbBox_conta_superior);
-    	adicionar_componente(2, jp_principal, gbc_principal, lbl_grupo, cmbBox_grupo);
-    	adicionar_componente(3, jp_principal, gbc_principal, lbl_natureza, cmbBox_natureza);
-    	adicionar_componente(4, jp_principal, gbc_principal, lbl_classificacao, cmbBox_classificacao);
-    	adicionar_componente(5, jp_principal, gbc_principal, lbl_tipo, cmbBox_tipo);
-    	adicionar_componente(6, jp_principal, gbc_principal, lbl_situacao, cmbBox_situacao);
-    	
+    	adicionar_componente(0, jp_principal, gbc_principal, lbl_codigo, txt_codigo);
+    	adicionar_componente(1, jp_principal, gbc_principal, lbl_descricao, txt_descricao);
+    	adicionar_componente(2, jp_principal, gbc_principal, lbl_conta_superior, cmbBox_conta_superior);
+    	adicionar_componente(3, jp_principal, gbc_principal, lbl_grupo, cmbBox_grupo);
+    	adicionar_componente(4, jp_principal, gbc_principal, lbl_natureza, cmbBox_natureza);
+    	adicionar_componente(5, jp_principal, gbc_principal, lbl_classificacao, cmbBox_classificacao);
+    	adicionar_componente(6, jp_principal, gbc_principal, lbl_tipo, cmbBox_tipo);
+    	adicionar_componente(7, jp_principal, gbc_principal, lbl_situacao, cmbBox_situacao);
+        gbc_principal.gridy = 8;
+        gbc_principal.gridx = 0;
+        gbc_principal.gridwidth = 2;
+        jp_principal.add(botoes, gbc_principal);
     	
     	botoes.add(btn_limpar);
     	botoes.add(btn_atualizar);

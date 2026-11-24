@@ -20,7 +20,7 @@ import javax.swing.JTextField;
 public class TelaAdicionarConta extends JDialog {
 
 	    private static final long serialVersionUID = 1L;
-	    private final JTextField  txt_descricao = new JTextField(15);
+	    private final JTextField  txt_descricao = new JTextField(15), txt_codigo = new JTextField(15);
 	    public TelaAdicionarConta(Window janela_pai) {
 	    	super(janela_pai, "Adicionar Nova Conta", ModalityType.APPLICATION_MODAL);
 	    	setLayout(new BorderLayout(8,8));
@@ -44,12 +44,16 @@ public class TelaAdicionarConta extends JDialog {
 	    	lbl_natureza = new JLabel("Natureza*:"), 
 	    	lbl_situacao = new JLabel("Situação*:"),
 	    	lbl_tipo = new JLabel("Tipo*:"),
-	    	lbl_classificacao = new JLabel("Classificação Contábil*: ");
+	    	lbl_classificacao = new JLabel("Classificação Contábil*: "), 
+	    	lbl_conta_aglut = new JLabel("Conta Aglutinação:"),
+	    	lbl_codigo = new JLabel("Código*:");
+	    	String[] obj_conta_aglut = {"Ativo Circulante"};
 	    	String[] obj_grupos= {"Todas","Ativos", "Passivos", "Custos", "Receita", "Despesa"};
 	    	String[] obj_naturezas = {"Todas","Devedora", "Credora"};
 	    	String[] obj_situacoes = {"Todas","Ativo", "Inativo"};
 	    	String[] obj_tipos = {"Todas","Analítica", "Sintética"};
 	    	String [] obj_classificacoes = {"Todas", "Patrimonial", "De Resultado"};
+	    	JComboBox <String> cmbBox_conta_aglut = new JComboBox<>(obj_conta_aglut);
 	    	JComboBox <String> cmbBox_grupo = new JComboBox<>(obj_grupos);
 	    	JComboBox <String> cmbBox_conta_superior = new JComboBox<>(obj_grupos);
 	    	JComboBox <String> cmbBox_natureza = new JComboBox<>(obj_naturezas);
@@ -61,20 +65,22 @@ public class TelaAdicionarConta extends JDialog {
 	    	
 	    	btn_cancelar.addActionListener(e -> dispose());
 	    	
-
-	    	adicionar_componente(0, jp_principal, gbc_principal, lbl_descricao, txt_descricao);
-	    	adicionar_componente(1, jp_principal, gbc_principal, lbl_conta_superior, cmbBox_conta_superior);
-	    	adicionar_componente(2, jp_principal, gbc_principal, lbl_grupo, cmbBox_grupo);
-	    	adicionar_componente(3, jp_principal, gbc_principal, lbl_natureza, cmbBox_natureza);
-	    	adicionar_componente(4, jp_principal, gbc_principal, lbl_classificacao, cmbBox_classificacao);
-	    	adicionar_componente(5, jp_principal, gbc_principal, lbl_tipo, cmbBox_tipo);
-	    	adicionar_componente(6, jp_principal, gbc_principal, lbl_situacao, cmbBox_situacao);
+	    	//Fazer o campo de conta aglutinação dnv
+	    	adicionar_componente(0, jp_principal, gbc_principal, lbl_codigo, txt_codigo);
+	    	adicionar_componente(1, jp_principal, gbc_principal, lbl_descricao, txt_descricao);
+	    	adicionar_componente(2, jp_principal, gbc_principal, lbl_conta_superior, cmbBox_conta_superior);
+	    	adicionar_componente(3, jp_principal, gbc_principal, lbl_grupo, cmbBox_grupo);
+	    	adicionar_componente(4, jp_principal, gbc_principal, lbl_natureza, cmbBox_natureza);
+	    	adicionar_componente(5, jp_principal, gbc_principal, lbl_classificacao, cmbBox_classificacao);
+	    	adicionar_componente(6, jp_principal, gbc_principal, lbl_tipo, cmbBox_tipo);
+	    	adicionar_componente(7, jp_principal, gbc_principal, lbl_situacao, cmbBox_situacao);
+	    	adicionar_componente(8, jp_principal, gbc_principal, lbl_conta_aglut, cmbBox_conta_aglut);
 	  
 	    	
 	    	botoes.add(btn_cancelar);
 	    	botoes.add(btn_salvar);
 	    	
-	    	gbc_principal.gridy = 8;
+	    	gbc_principal.gridy = 9;
 	    	gbc_principal.gridx = 0;
 	    	gbc_principal.gridwidth = 2;
 	    	gbc_principal.weightx = 1;

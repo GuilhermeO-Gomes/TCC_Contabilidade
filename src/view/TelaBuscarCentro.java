@@ -45,11 +45,12 @@ public class TelaBuscarCentro extends JDialog{
     	gbc_pesquisa.weightx = 0;
     	JPanel botoes = new JPanel(new FlowLayout(FlowLayout.CENTER));
     	
-    	JLabel lbl_pesquisar = new JLabel("Pesquisar:");
+    	JLabel lbl_pesquisar = new JLabel("Pesquisar por Código:");
     
     	JButton btn_pesquisar = new JButton("Pesquisar"), btn_selecionar = new JButton("Selecionar"), 
     	btn_cancelar = new JButton("Cancelar");
     	
+    	txt_pesquisa.setEnabled(false);
     	adicionar_componente(0, jp_pesquisa, gbc_pesquisa, lbl_pesquisar, txt_pesquisa);
     	gbc_pesquisa.gridx = 2;
     	gbc_pesquisa.gridy = 0;

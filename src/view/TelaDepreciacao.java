@@ -7,8 +7,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 import javax.swing.*;
-import model.Depreciacao;
 import javax.swing.table.DefaultTableModel;
+import model.Depreciacao;
 
 public class TelaDepreciacao extends JPanel{
 
@@ -18,15 +18,17 @@ public class TelaDepreciacao extends JPanel{
 	private static final long serialVersionUID = 1L;
 
 
-	private final JTextField id = new JTextField(7),
-    taxa = new JTextField(10),
-    tempo = new JTextField(4);
+	private final JTextField id = new JTextField(45),
+    taxa = new JTextField(45),
+    tempo = new JTextField(45),
+    tipoBem = new JTextField(45);
 
 
     private final DefaultTableModel modelo = new DefaultTableModel(
         new Object[] {"Movimentação", "Débito", "Histórico Padrão", "Crédito", "Histórico Padrão", "Data de zeramento"},
         0
     ) {
+        @Override
         public boolean isCellEditable (int l, int c) {
             return false;
         }
@@ -44,75 +46,70 @@ public class TelaDepreciacao extends JPanel{
 
     private void montar() {
         JPanel f = new JPanel(new GridBagLayout());
-        f.setBorder(BorderFactory.createTitledBorder("Conta contábil"));
+        add(f, BorderLayout.NORTH);
+        f.setBorder(
+            BorderFactory.createTitledBorder("Conta contábil")
+        );
         GridBagConstraints g = new GridBagConstraints();
-        g.insets = new Insets(4,4,4,4);
-        componente(f, g, 0, "Número:", id);
-        add(f);
-        
-        JPanel a = new JPanel(new FlowLayout(FlowLayout.LEFT,0,0));
-        componente(a, g, 0, "Taxa Depreciação:", taxa);
-        componente(a, g, 0, "Tempo Depreciação(Meses):", tempo);
-        f.add(a);
+        g.insets = new Insets(3,4,3,4);
+        tipoBem.setEditable(false);
+
+        g.anchor = GridBagConstraints.WEST;
+        componente(f, g, 0, "Número do bem:", id);
+        componente(f, g, 1, "Tipo do bem:", tipoBem);
+        componente(f, g, 2, "Taxa Depreciação:", taxa);
+        componente(f, g, 3, "Tempo depreciação meses:", tempo);
+        g.gridx = 0;
+        g.gridy = 1;
+        g.gridwidth = 2;
+        g.fill = GridBagConstraints.HORIZONTAL;
+      
 
         JPanel b = new JPanel(new FlowLayout(FlowLayout.LEFT));
         b.add(new JLabel("Tipo de Diminuição:"));
         JRadioButton bDepreciacao = new JRadioButton("Depreciação"),
-          amortizacao = new JRadioButton("Amortização"),
-          exaustao = new JRadioButton("Exaustão");
+          amortizacao = new JRadioButton("Amortização");
         bDepreciacao.setOpaque(false);
         amortizacao.setOpaque(false);
-        exaustao.setOpaque(false);
+      
         b.add(bDepreciacao);
         b.add(amortizacao);
-        b.add(exaustao);
-        f.add(b);
 
         ButtonGroup bg = new ButtonGroup();
         bg.add(bDepreciacao);
         bg.add(amortizacao);
-        bg.add(exaustao);
+
+        g.gridx = 0;
+        g.gridy = 4;
+        f.add(b, g);
+       
         
 
         JPanel c = new JPanel(new BorderLayout());
         c.add(new JScrollPane(tabela));
-        f.add(c);
+        
         tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        add(f, BorderLayout.NORTH);
+        add(c, BorderLayout.CENTER);
 
         JButton salvar = new JButton("Salvar");
-        f.add(salvar);
+        g.gridy =5;
+        g.gridwidth = 2;
+        f.add(salvar, g);
 
-        salvar.addActionListener(
-            new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    //controller.salvar();
-                }
-            }
-        );
+        salvar.addActionListener((ActionEvent e) -> {
+            //controller.salvar();
+        });
 
-        bDepreciacao.addActionListener(
-            new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    //controller.bDepreciacao();
-                }
-            }
-        );
+        bDepreciacao.addActionListener((ActionEvent e) -> {
+            //controller.bDepreciacao();
+        });
 
-        amortizacao.addActionListener(
-            new ActionListener() {
-               public void actionPerformed(ActionEvent e) {
-                 //controller.amortizacao();
-               } 
-            }
-        );
+        amortizacao.addActionListener((ActionEvent e) -> {
+            //controller.amortizacao();
+        });
 
-        exaustao.addActionListener(
-            new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    //controller.exaustao();
-                }
-            }
-        );
+       
     }
 
     private void componente(
@@ -145,7 +142,7 @@ public class TelaDepreciacao extends JPanel{
         for (i = 0; i < l.size(); i++) {
            Depreciacao u = l.get(i);
            modelo.addRow(new Object[]{
-            Integer.valueOf(u.getId()),
+               u.getId(),
             u.getId(),
             u.getTaxa(),
             u.getTempo(),
@@ -157,7 +154,7 @@ public class TelaDepreciacao extends JPanel{
     public int getId() {
         try {
             return Integer.parseInt(id.getText());
-        }   catch (Exception e) {
+        }   catch (NumberFormatException e) {
             return 0;
         }
     }

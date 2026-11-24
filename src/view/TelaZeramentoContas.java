@@ -8,25 +8,7 @@ import java.awt.event.*;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-
 import model.ZeramentoContas;
-
-import javax.swing.BoxLayout;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.Component;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
 
 public class TelaZeramentoContas extends JPanel {
     
@@ -34,19 +16,22 @@ public class TelaZeramentoContas extends JPanel {
   private final JTextField id = new JTextField(7),
    contaReduzida = new JTextField(15),
    dataZeramento = new JTextField(8),
-   destinoDebito = new JTextField (32),
+   destinoDebito = new JTextField (21),
    destinoCredito = new JTextField(32),
    complementoD = new JTextField (32),
    complementoC = new JTextField (32),
-   prejuizoDebito = new JTextField (15),
-   prejuizoCredito = new JTextField (15),
+   prejuizoDebito = new JTextField (32),
+   prejuizoCredito = new JTextField (32),
    saldoDebito = new JTextField (15),
    saldoCredito = new JTextField (15),
    resultado = new JTextField (15);
   private final JCheckBox zerarSemSaldo = new JCheckBox("Zerar saldo para conta sem saldo", true);
   private final JCheckBox transferencia = new JCheckBox("Tranferência de saldo para conta do Patrimônio Líquido", true);
   @SuppressWarnings("rawtypes")
-private final JComboBox historicoPadrao = new JComboBox();
+private final JComboBox historicoPadraoC = new JComboBox();
+
+  @SuppressWarnings("rawtypes")
+private final JComboBox historicoPadraoD = new JComboBox();
 
   @SuppressWarnings({ "rawtypes", "unchecked" })
 private final JComboBox opcao = new JComboBox(new String[] {
@@ -59,6 +44,7 @@ private final JComboBox opcao = new JComboBox(new String[] {
     new Object[] {"ID","Conta Reduzida", "Descrição", "Início Zeramento", "Saldo do mês"},
     0
   ) {
+    @Override
     public boolean isCellEditable(int l, int c) {
        return false;
     }
@@ -74,82 +60,85 @@ private final JComboBox opcao = new JComboBox(new String[] {
   }
 
   private void montar() {
-    JPanel f = new JPanel(new BorderLayout(8,8));
+    JPanel f = new JPanel();
+    f.setLayout(new BoxLayout(f, BoxLayout.Y_AXIS));
     f.setBorder(BorderFactory.createEmptyBorder(8,8,8,8));
+    add(f, BorderLayout.NORTH);
 
     JPanel f2 = new JPanel(new GridBagLayout());
-    f2.setBorder(BorderFactory.createTitledBorder("Parâmetros"));
+    f2.setBorder(BorderFactory.createTitledBorder("Parâmentros"));
     GridBagConstraints g = new GridBagConstraints();
-    g.insets = new Insets(4,4,4,4);
+    
+
     g.anchor = GridBagConstraints.WEST;
-
-    componente(f2, g, 0, "Data do Zeramento(dd/MM/yyyy):", dataZeramento);
-    componente(f2, g, 1, "Conta reduzida:", contaReduzida);
+    g.insets = new Insets(4, 4, 4, 4);
+    componente(f2, g, 0, "Data do Zeramento:", dataZeramento);
+    componente(f2, g, 1, "Conta Reduzida:", contaReduzida);
     componente(f2, g, 2, "Opção:", opcao);
-
+    f.add(f2);
 
     JPanel f3 = new JPanel(new GridBagLayout());
-    f3.setBorder(BorderFactory.createTitledBorder("Destino zeramento"));
-    f3.setLayout(new BoxLayout(f3, BoxLayout.Y_AXIS));
-
-    JPanel destinos = new JPanel(new FlowLayout(FlowLayout.LEFT,0,0));
+     f3.setBorder(BorderFactory.createTitledBorder("Destino zeramento"));
+     GridBagConstraints g2 = new GridBagConstraints();
+     g2.anchor = GridBagConstraints.WEST;
+     g2.insets = new Insets(4, 4, 4, 4);
+     componente(f3, g2, 4, "Destino(Débito):", destinoDebito);
+     componente(f3, g2, 5, "Histórico:", historicoPadraoD);
+     componente(f3, g2, 6, "Complemento:", complementoD);
+     componente(f3, g2, 7, "Destino(Débito):", destinoCredito);
+     componente(f3, g2, 8, "Histórico:", historicoPadraoC);
+     componente(f3, g2, 9, "Complemento:", complementoC);
+     f.add(f3);
     
-    JLabel lblDebito = new JLabel("Destino (Débito): ");
+    JPanel f4 = new JPanel(new GridBagLayout()); 
+    f4.setBorder(BorderFactory.createTitledBorder(""));
+    f4.setBorder(BorderFactory.createEmptyBorder(4, 4, 10, 4));
     
-    destinos.add(lblDebito);
-
-    destinos.add(new JLabel("Destino (Crédito): "));
-
-    f3.add(destinos);
-  
-
-    JPanel historicos = new JPanel(new FlowLayout(FlowLayout.LEFT, 1, 1));
-    historicos.add(new JLabel("Historico Padrão:"));
-
-    historicos.add(new JLabel("Historico Padrão:"));
-
-    f3.add(historicos);
-
-    JPanel complementos = new JPanel(new FlowLayout(FlowLayout.LEFT, 2,2));  
-    complementos.add(new JLabel("Complemento:"));
-
-    complementos.add(new JLabel("Complemento:"));
-
-    f3.add(complementos);
-
-    JPanel fs = new JPanel(new GridLayout(1,2,8,8));
-    fs.add(f2);
-    fs.add(f3);
-    
-    f.add(fs, BorderLayout.CENTER);
-
     JPanel b = new JPanel(new FlowLayout(FlowLayout.LEFT));
     b.add(zerarSemSaldo);
     b.add(transferencia);
     f.add(b);
-
-
-    JPanel prejuizos = new JPanel(new FlowLayout(FlowLayout.LEFT));
-     prejuizos.add(new JLabel("Prejuízo (Débito):"));
-
-     prejuizos.add(new JLabel("Prejuízo (Crédito):"));
-
-     f.add(prejuizos);
+ 
+     componente(f4, g2, 11, "Prejuízo (Débito):", prejuizoDebito);
+     componente(f4, g2, 12, "Prejuízo (Crédito):", prejuizoCredito);
+    
+    f.add(f4);
 
     JPanel c = new JPanel(new BorderLayout());
-     c.add(f, BorderLayout.NORTH);
      c.add(new JScrollPane(tabela));
+     add(c, BorderLayout.CENTER);
+     c.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+     tabela.setPreferredScrollableViewportSize(new Dimension(900, 255));
+     
      f.add(c);
 
+     JPanel f5 = new JPanel(new GridBagLayout());
+     f5.setBorder(BorderFactory.createTitledBorder(""));
+     GridBagConstraints g5 = new GridBagConstraints();
+     g5.insets = new Insets(4, 8, 4, 8);
+     g5.anchor = GridBagConstraints.WEST;
+     saldoDebito.setEditable(false);
+     saldoCredito.setEditable(false);
+     resultado.setEditable(false);
 
-    JPanel saldo = new JPanel(new FlowLayout(FlowLayout.LEFT));
-     saldo.add(new JLabel("Saldo (Débito):"));
+     g5.gridx = 0;
+     g5.gridy = 0;
 
-     saldo.add(new JLabel("Saldo (Crédito)"));
+     f5.add(new JLabel("Saldo (Débito):"), g5);
+     g5.gridx = 1;
+     f5.add(saldoDebito, g5);
 
-     saldo.add(new JLabel("Resultado:"));
-
-     f.add(saldo);
+     g5.gridx = 2;
+     f5.add(new JLabel("Saldo (Crédito):"), g5);
+     g5.gridx = 3;
+     f5.add(saldoCredito, g5);
+     
+     g5.gridx=4;
+     f5.add(new JLabel("Resultado:"), g5);
+     g5.gridx = 5;
+     f5.add(resultado, g5);
+     
+    f.add(f5);
 
     JPanel b2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
     JButton bmostrar = new JButton("Mostrar"),
@@ -159,49 +148,31 @@ private final JComboBox opcao = new JComboBox(new String[] {
     b2.add(validar);
     b2.add(processar);
     f.add(b2);
+   
 
-    zerarSemSaldo.addActionListener(
-      new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-           //controller.zerarSemSaldo();
-        }
-      }
-    );
+    zerarSemSaldo.addActionListener((ActionEvent e) -> {
+        //controller.zerarSemSaldo();
+    });
 
-    transferencia.addActionListener(
-      new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-          //controller.transferir();
-        }
-      }
-    );
+    transferencia.addActionListener((ActionEvent e) -> {
+        //controller.transferir();
+    });
 
-    bmostrar.addActionListener(
-      new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-          //controller.bmostrar();
-        }
-      }
-    );
+    bmostrar.addActionListener((ActionEvent e) -> {
+        //controller.bmostrar();
+    });
 
-    validar.addActionListener(
-      new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-          //controller.validar();
-        }
-      }
-    );
+    validar.addActionListener((ActionEvent e) -> {
+        //controller.validar();
+    });
 
-    processar.addActionListener(
-      new ActionListener() {
-        public void actionPerformed(ActionEvent e){
-          //controller.processar();
-        }
-      }
-    );
+    processar.addActionListener((ActionEvent e) -> {
+        //controller.processar();
+    });
 
     tabela.addMouseListener(
       new MouseAdapter() {
+        @Override
         public void mouseClicked(MouseEvent e) {
           //controller.selecionar();
         }
@@ -254,7 +225,7 @@ private final JComboBox opcao = new JComboBox(new String[] {
       for (i = 0; i<l.size(); i++) {
       ZeramentoContas u = l.get(i);
       modelo.addRow(new Object[] {
-        Integer.valueOf(u.getId()),
+          u.getId(),
         u.getContaReduzida(),
         //u.getDescricao(),
         u.getDataZeramento(),
@@ -282,7 +253,7 @@ private final JComboBox opcao = new JComboBox(new String[] {
  public int getId() {
     try {
       return Integer.parseInt(id.getText());
-    } catch (Exception e) {
+    } catch (NumberFormatException e) {
       return 0;
     }
   }
@@ -332,8 +303,13 @@ private final JComboBox opcao = new JComboBox(new String[] {
   }
 
   @SuppressWarnings("rawtypes")
-public JComboBox getCmbHistoricoPadrao() {
-    return historicoPadrao;
+public JComboBox getCmbHistoricoPadraoC() {
+    return historicoPadraoC;
+  }
+
+    @SuppressWarnings("rawtypes")
+public JComboBox getCmbHistoricoPadraoD() {
+    return historicoPadraoD;
   }
 
   @SuppressWarnings("rawtypes")

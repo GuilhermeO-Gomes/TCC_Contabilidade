@@ -45,13 +45,15 @@ public class TelaAtualizarConta extends JDialog {
     	lbl_situacao = new JLabel("Situação:"),
     	lbl_tipo = new JLabel("Tipo:"),
     	lbl_classificacao = new JLabel("Classificação Contábil:"),
-    	lbl_codigo = new JLabel("Código:");
+    	lbl_codigo = new JLabel("Código:"), lbl_conta_aglut = new JLabel("Conta Aglutinação:");
+    	String[] obj_conta_aglut = {"Ativo Circulante"};
     	String[] obj_grupos= {"Todas","Ativos", "Passivos", "Custos", "Receita", "Despesa"};
     	String[] obj_naturezas = {"Todas","Devedora", "Credora"};
     	String[] obj_situacoes = {"Todas","Ativo", "Inativo"};
     	String[] obj_tipos = {"Todas","Analítica", "Sintética"};
     	String[] obj_classificacoes = {"Todas", "Patrimonial", "De Resultado"};
     	JComboBox <String> cmbBox_grupo = new JComboBox<>(obj_grupos);
+    	JComboBox <String> cmbBox_conta_aglut = new JComboBox<>(obj_conta_aglut);
     	JComboBox <String> cmbBox_conta_superior = new JComboBox<>(obj_grupos);
     	JComboBox <String> cmbBox_natureza = new JComboBox<>(obj_naturezas);
     	JComboBox <String> cmbBox_situacao = new JComboBox<>(obj_situacoes);
@@ -70,6 +72,7 @@ public class TelaAtualizarConta extends JDialog {
     	adicionar_componente(5, jp_principal, gbc_principal, lbl_classificacao, cmbBox_classificacao);
     	adicionar_componente(6, jp_principal, gbc_principal, lbl_tipo, cmbBox_tipo);
     	adicionar_componente(7, jp_principal, gbc_principal, lbl_situacao, cmbBox_situacao);
+    	adicionar_componente(8, jp_principal, gbc_principal, lbl_conta_aglut, cmbBox_conta_aglut);
         gbc_principal.gridy = 8;
         gbc_principal.gridx = 0;
         gbc_principal.gridwidth = 2;
@@ -78,7 +81,7 @@ public class TelaAtualizarConta extends JDialog {
     	botoes.add(btn_limpar);
     	botoes.add(btn_atualizar);
     	botoes.add(btn_cancelar);    	
-    	gbc_principal.gridy = 8;
+    	gbc_principal.gridy = 9;
     	gbc_principal.gridx = 0;
     	gbc_principal.gridwidth = 2;
     	gbc_principal.weightx = 1;

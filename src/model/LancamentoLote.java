@@ -10,13 +10,7 @@ public class LancamentoLote {
     private double  debito; //soma de todos os debitos dos lançamentos que estão no lote
     private double credito; //soma de todos os creditos  dos lançamentos que estão no lote
     private double diferenca; // diferença entre debito e credito, em si não é para existir, no documento explica melhor
-    private boolean bloqueado; // caso já tenha feito todos os lançamentos, ajustes e apurações nesse lote, pode bloquear o lote para que nenhum outro usuário faça qualquer modificação
 
-
-    public LancamentoLote() {
-        this.bloqueado=true;
-
-    }
 
 
     public int getId() {
@@ -90,14 +84,6 @@ public class LancamentoLote {
    public void setDiferenca(double diferenca) {
     this.diferenca = diferenca;
    }
-
-   public boolean isBloqueado() {
-    return bloqueado;
-   }
-    
-   public void setBloqueado(boolean bloqueado) {
-    this.bloqueado = bloqueado;
-  }
 
   public String toString() {
     return nomeLote;

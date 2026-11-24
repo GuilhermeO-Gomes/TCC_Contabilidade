@@ -1,4 +1,4 @@
-package view.DevGuilherme;
+package view;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -18,7 +18,7 @@ import javax.swing.JTextField;
 
 public class TelaAdicionarCustos extends JDialog {
 	 private static final long serialVersionUID = 1L;
-	    private final JTextField txt_codigo = new JTextField(5), txt_descricao = new JTextField(15);
+	    private final JTextField txt_descricao = new JTextField(15), txt_codigo = new JTextField(15);
 	    public TelaAdicionarCustos(Window janela_pai) {
 	    	super(janela_pai, "Adicionar Novo Custo", ModalityType.APPLICATION_MODAL);
 	    	setLayout(new BorderLayout(8,8));
@@ -36,8 +36,9 @@ public class TelaAdicionarCustos extends JDialog {
 	    	gbc_principal.anchor = GridBagConstraints.WEST;
 	    	gbc_principal.weightx = 0;
 	    	JPanel botoes = new JPanel(new FlowLayout(FlowLayout.LEFT));
-	    	JLabel lbl_codigo = new JLabel("Código:"), lbl_descricao = new JLabel("Descrição:"), 
-	    	lbl_centro_superior = new JLabel("Centro Superior:"),lbl_situacao = new JLabel("Situação:");
+	    	JLabel lbl_descricao = new JLabel("Descrição*:"), 
+	    	lbl_centro_superior = new JLabel("Centro Superior:"),lbl_situacao = new JLabel("Situação*:"),
+	    	lbl_codigo = new JLabel("Código*:");
 	    
 	    	String[] obj_centros= {"Todos", "Administrativo", "Operacional", "Comercial", "Financeiro", "Logística", "Tecnologia", "Recursos Humanos", 
 	    			"Manutenção","Projetos", "Atendimento"};

@@ -1,4 +1,4 @@
-package view.DevGuilherme;
+package view;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -9,22 +9,19 @@ import java.awt.Insets;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 import javax.swing.table.DefaultTableModel;
 
 public class TelaBalancete extends JPanel {
 	private static final long serialVersionUID = 1L;
-	private final JTextField txt_conta = new JTextField(15);
 	private final DefaultTableModel modeloTabela = new DefaultTableModel(
-    new Object[] {"Conta", "Descrição", "Débitos", "Créditos", "Saldo"}, 0);
+    new Object[] {"Conta","Natureza(D/C)", "Saldo Anterior D", "Saldo Anterior C", "Movimentações D", "Movimentações C", "Saldo Atual D", "Saldo Atual C"}, 0);
 	private JTable TabelaBalancete;
             
 	//JSpinner serve para ser um campo de formulário de data sem precisar converter
@@ -55,7 +52,7 @@ public class TelaBalancete extends JPanel {
     	gbc_principal.anchor = GridBagConstraints.WEST;
     	gbc_principal.weightx = 0;
     	JPanel jp_pesquisa = new JPanel(new GridBagLayout());
-    	jp_pesquisa.setBorder(BorderFactory.createTitledBorder("Filtros e pesquisa"));
+    	jp_pesquisa.setBorder(BorderFactory.createTitledBorder("Gerar Balancete"));
     	GridBagConstraints gbc_pesquisa = new GridBagConstraints();
     	gbc_pesquisa.insets = new Insets(5, 2, 5, 2);
     	gbc_pesquisa.anchor = GridBagConstraints.WEST;
@@ -68,41 +65,26 @@ public class TelaBalancete extends JPanel {
     	gbc_lancamento.weightx = 0;
     	JPanel botoes_pesquisa = new JPanel(new FlowLayout(FlowLayout.LEFT));
     	JPanel jp_dados = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    	JPanel jp_dados2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
     	
-    	JLabel lbl_conta = new JLabel("Conta:"), lbl_periodo = new JLabel("Período:"),
-    	lbl_ate = new JLabel("até"), lbl_grupo = new JLabel("Grupo:"), lbl_nivel = new JLabel("Nível:"),
-    	lbl_total_debito = new JLabel("TOTAL DÉBITO:"), lbl_total_credito = new JLabel("TOTAL CRÉDITO:"), 
+    	JLabel lbl_data_ini = new JLabel("Data inicial*:"), lbl_data_fim = new JLabel("Data Final*:"),
+    	lbl_total_saldo_anterior_D = new JLabel("TOTAL SALDO ANTERIOR DEVEDOR:"), lbl_total_saldo_anterior_C = new JLabel("TOTAL SALDO ANTERIOR CREDOR:"),
+    	lbl_total_movimentacoes_D = new JLabel("TOTAL MOVIMENTAÇÕES DE DÉBITO:"), lbl_total_movimentacoes_C = new JLabel ("TOTAL MOVIMENTAÇÕES DE CRÉDITO:"),
+    	lbl_total_saldo_atual_D = new JLabel ("TOTAL SALDO ATUAL DEVEDOR:"), lbl_total_saldo_atual_C = new JLabel("TOTAL SALDO ATUAL CREDOR:"),
     	lbl_placeholder = new JLabel("R$Placholder"), lbl_placeholder2 = new JLabel("R$Placholder"),
     	lbl_situacao = new JLabel("SITUAÇÃO:"), lbl_placeholder3 = new JLabel("Placholders conferidos"),
-    	lbl_saldo_inicial = new JLabel("SALDO INICIAL: "), lbl_placeholder4 = new JLabel("R$Placeholder");
+    	lbl_placeholder4 = new JLabel("R$Placeholder"), 
+    	lbl_placeholder5 = new JLabel("R$Placeholder"), lbl_placeholder6 = new JLabel("R$Placeholder"),
+    	lbl_placeholder7 = new JLabel("R$Placeholder");
     	
-    	
-    	
-    
-    	String[] obj_grupos= {"Grupo 1", "Grupo 2"};
-    	String[] obj_niveis = {"Nível 1", "Nível 2"};
-
-    	JComboBox <String> cmbBox_grupo = new JComboBox<>(obj_grupos);
-    	JComboBox <String> cmbBox_nivel = new JComboBox<>(obj_niveis);
     	JCheckBox chkBox_conta_movimento = new JCheckBox("Exibir contas sem movimento");
     	JButton btn_balancete = new JButton("Gerar Balancete"), btn_limpar = new JButton("Limpar"), 
     	btn_exportar = new JButton("Exportar"), btn_imprimir = new JButton("Imprimir");
     	//Adicionar Jchkbox
-    	adicionar_componente(0, jp_pesquisa, gbc_pesquisa, lbl_conta, txt_conta);
-    	adicionar_componente(1, jp_pesquisa, gbc_pesquisa, lbl_periodo, periodo_1);
-    	gbc_pesquisa.gridx = 2;
-    	gbc_pesquisa.gridy = 1;
-    	gbc_pesquisa.weightx = 0;
-    	gbc_pesquisa.fill = GridBagConstraints.NONE;
-    	jp_pesquisa.add(lbl_ate, gbc_pesquisa);
+  
+    	adicionar_componente(0, jp_pesquisa, gbc_pesquisa, lbl_data_ini, periodo_1);
+    	adicionar_componente(1, jp_pesquisa, gbc_pesquisa, lbl_data_fim, periodo_2);
 
-    	gbc_pesquisa.gridx = 3;
-    	gbc_pesquisa.gridy = 1;
-    	gbc_pesquisa.weightx = 1;
-    	gbc_pesquisa.fill = GridBagConstraints.HORIZONTAL;
-    	jp_pesquisa.add(periodo_2, gbc_pesquisa);
-    	adicionar_componente(2, jp_pesquisa, gbc_pesquisa, lbl_grupo, cmbBox_grupo);
-    	adicionar_componente(3, jp_pesquisa, gbc_pesquisa, lbl_nivel, cmbBox_nivel);
     	gbc_pesquisa.gridx = 1;
     	gbc_pesquisa.gridy = 4;
     	gbc_pesquisa.weightx = 0;
@@ -140,13 +122,19 @@ public class TelaBalancete extends JPanel {
         gbc_lancamento.fill = GridBagConstraints.BOTH;
         jp_lancamento.add(scrollPane, gbc_lancamento);
         
-        
-        jp_dados.add(lbl_total_debito);
+        //Futuramente, trocar isso por uma row na tabela
+        jp_dados.add(lbl_total_saldo_anterior_D);
         jp_dados.add(lbl_placeholder);
-        jp_dados.add(lbl_total_credito);       
-        jp_dados.add(lbl_placeholder2);
-        jp_dados.add(lbl_saldo_inicial);
+        jp_dados2.add(lbl_total_saldo_anterior_C);       
+        jp_dados2.add(lbl_placeholder2);
+        jp_dados.add(lbl_total_movimentacoes_D);
         jp_dados.add(lbl_placeholder4);
+        jp_dados2.add(lbl_total_movimentacoes_C);
+        jp_dados2.add(lbl_placeholder7);
+        jp_dados.add(lbl_total_saldo_atual_D);
+        jp_dados.add(lbl_placeholder5);
+        jp_dados2.add(lbl_total_saldo_atual_C);
+        jp_dados2.add(lbl_placeholder6);
         jp_dados.add(lbl_situacao);
         jp_dados.add(lbl_placeholder3);
         
@@ -157,17 +145,16 @@ public class TelaBalancete extends JPanel {
         gbc_lancamento.gridwidth = 0;
         gbc_lancamento.fill = GridBagConstraints.BOTH;
         jp_lancamento.add(jp_dados, gbc_lancamento);
+        
+        gbc_lancamento.gridx = 0;
+        gbc_lancamento.gridy = 2;
+        gbc_lancamento.weightx = 0;
+        gbc_lancamento.weighty = 0;
+        gbc_lancamento.gridwidth = 0;
+        gbc_lancamento.fill = GridBagConstraints.BOTH;
+        jp_lancamento.add(jp_dados2, gbc_lancamento);
          
-    	gbc_principal.gridy = 2;
-    	gbc_principal.weighty = 0;
-    	gbc_principal.fill = GridBagConstraints.BOTH;
-    	gbc_principal.weighty = 1;
-
-    	
-    	gbc_principal.gridy = 3;
-    	gbc_principal.weighty = 0;
-    	gbc_principal.fill = GridBagConstraints.HORIZONTAL;
-    	gbc_principal.weightx = 1;
+    
 
     	 	
         add(jp_pesquisa, BorderLayout.NORTH);

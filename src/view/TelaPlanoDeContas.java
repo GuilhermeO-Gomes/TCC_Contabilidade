@@ -1,4 +1,4 @@
-package view.DevGuilherme;
+package view;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -28,7 +28,7 @@ public class TelaPlanoDeContas extends JPanel {
     private static final long serialVersionUID = 1L;
     private final JTextField txt_codigo = new JTextField(5), txt_descricao = new JTextField(15);
     private final DefaultTableModel modeloTabela = new DefaultTableModel(
-            new Object[] {"Código", "Descrição", "Conta Superior", "Nível", "Grupo", "Natureza", "Tipo da Conta", "Situação", "Conta Aglutinação"
+            new Object[] {"Código", "Descrição", "Conta Superior","Classificação Contábil", "Grupo", "Natureza", "Tipo da Conta", "Situação"
             },
             0
     );
@@ -41,7 +41,7 @@ public class TelaPlanoDeContas extends JPanel {
     	setLayout(new BorderLayout(8,8));
     	setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         montar_tela();
-        controller = new PlanoContasController();
+        //controller = new PlanoContasController();
     
     }
 
@@ -55,25 +55,18 @@ public class TelaPlanoDeContas extends JPanel {
     	gbc_form.weightx = 0;
     	JPanel botoes_filtro = new JPanel(new FlowLayout(FlowLayout.LEFT, 1, 5));
     	JPanel botoes = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    	JLabel lbl_codigo = new JLabel("Código:"), lbl_descricao = new JLabel("Descrição:"), 
-    	lbl_grupo = new JLabel("Grupo:"), 
-    	lbl_natureza = new JLabel("Natureza:"), 
-    	lbl_situacao = new JLabel("Situação:");
-    	String[] obj_grupos= {"Todas", "Ativos", "Passivos", "Custos", "Receita", "Despesa", "Patrimônio liquído"};
-    	String[] obj_naturezas = {"Todas", "Devedora", "Credora"};
-      	String[] obj_situacoes = {"Todas","Ativo", "Inativo"};
-    	JComboBox <String> cmbBox_grupo = new JComboBox<>(obj_grupos);
-    	JComboBox <String> cmbBox_natureza = new JComboBox<>(obj_naturezas);
-    	JComboBox <String> cmbBox_situacao = new JComboBox<>(obj_situacoes);
+    	JLabel lbl_codigo = new JLabel("Código*:"), lbl_descricao = new JLabel("Descrição*:"), 
+    	lbl_tipo = new JLabel("Tipo da Conta:");
+      	String[] obj_tipos = {"Analítica", "Sintética"};
+    	JComboBox <String> cmbBox_tipo = new JComboBox<>(obj_tipos);
     	JButton btn_pesquisar = new JButton("Pesquisar conta"), btn_mostrar_todos = new JButton("Mostrar todas"),
     	btn_criar_conta = new JButton("Adicionar conta"), btn_atualizar_conta = new JButton("Atualizar conta"),
-    	btn_inativar_conta = new JButton("Inativar conta"), btn_razao = new JButton("Consultar razão");
+    	btn_inativar_conta = new JButton("Inativar conta"), btn_razao = new JButton("Consultar razão"), 
+    	btn_rateio = new JButton("Aplicar Rateio");
     	
     	adicionar_componente(1, jp_form, gbc_form, lbl_codigo, txt_codigo);
     	adicionar_componente(2, jp_form, gbc_form, lbl_descricao, txt_descricao);
-    	adicionar_componente(3, jp_form, gbc_form, lbl_grupo, cmbBox_grupo);
-    	adicionar_componente(4, jp_form, gbc_form, lbl_natureza, cmbBox_natureza);
-    	adicionar_componente(5, jp_form, gbc_form, lbl_situacao, cmbBox_situacao);
+    	adicionar_componente(3, jp_form, gbc_form, lbl_tipo, cmbBox_tipo);
     	
     	botoes_filtro.add(btn_pesquisar);
     	botoes_filtro.add(btn_mostrar_todos);
@@ -97,21 +90,26 @@ public class TelaPlanoDeContas extends JPanel {
         jp_inferior.add(botoes, BorderLayout.NORTH);
         jp_inferior.add(scrollPane, BorderLayout.CENTER);
         
-        btn_criar_conta.addActionListener(e -> {
-        	Window janela_pai = SwingUtilities.getWindowAncestor(this);
-        	controller.abrirAdicionarConta(janela_pai); });
+        //btn_criar_conta.addActionListener(e -> {
+        	//Window janela_pai = SwingUtilities.getWindowAncestor(this);
+        	//controller.abrirAdicionarConta(janela_pai); });
         
-        btn_atualizar_conta.addActionListener(e -> {
-        	Window janela_pai = SwingUtilities.getWindowAncestor(this);
-        	controller.abrirAtualizarConta(janela_pai); });
+        //btn_atualizar_conta.addActionListener(e -> {
+        	//Window janela_pai = SwingUtilities.getWindowAncestor(this);
+        	//controller.abrirAtualizarConta(janela_pai); });
         
-        btn_razao.addActionListener(e -> {
-        	Window janela_pai = SwingUtilities.getWindowAncestor(this);
-        	controller.abrirLivroRazao(janela_pai); });
+        //btn_razao.addActionListener(e -> {
+        	//Window janela_pai = SwingUtilities.getWindowAncestor(this);
+        	//controller.abrirLivroRazao(janela_pai); });
+        
+        //btn_rateio.addActionListener(e -> {
+        	//Window janela_pai = SwingUtilities.getWindowAncestor(this);
+        	//controller.abrirAplicaRateio(janela_pai); });
         
         botoes.add(btn_criar_conta);
         botoes.add(btn_atualizar_conta);
         botoes.add(btn_inativar_conta);
+        botoes.add(btn_rateio);
         
 
    

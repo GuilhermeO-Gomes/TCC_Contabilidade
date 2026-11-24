@@ -1,4 +1,4 @@
-package view.DevGuilherme;
+package view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -21,16 +21,15 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
-import controller.RateioController;
+//import controller.RateioController;
 
 public class TelaRateio extends JDialog {
 	private static final long serialVersionUID = 1L;
-	private final JTextField txt_nome_rateio = new JTextField(15);
-	private final JTextField txt_conta_contabil = new JTextField(15);
+	private final JTextField txt_nome_rateio = new JTextField(15), txt_descricao = new JTextField(15);
 	private final DefaultTableModel modeloTabela = new DefaultTableModel(
     new Object[] {"Centro de Custo", "Percentual(%)" }, 0);
 	private JTable TabelaRateio;
-	private RateioController controller;
+	//private RateioController controller;
             
     public TelaRateio(Window janela_pai) {
     	super(janela_pai, "Rateio", ModalityType.APPLICATION_MODAL);
@@ -41,7 +40,7 @@ public class TelaRateio extends JDialog {
         setMinimumSize(new Dimension(700, 500)); 
         pack();
         setLocationRelativeTo(janela_pai);
-        controller = new RateioController();
+        //controller = new RateioController();
     }
 
     private void montar_tela() {
@@ -62,8 +61,9 @@ public class TelaRateio extends JDialog {
     	JPanel botoes = new JPanel(new FlowLayout(FlowLayout.CENTER));
     	
     	
-    	JLabel lbl_nome_rateio = new JLabel("Nome do Rateio:"), lbl_conta_contabil = new JLabel("Conta Contábil:"),
-    	lbl_criterio = new JLabel("Critério:"), lbl_situacao = new JLabel("Situação:"), lbl_total_percentual = new JLabel("Total Percentual(%): 100%");
+    	JLabel lbl_nome_rateio = new JLabel("Nome do Rateio*:"), 
+    	lbl_criterio = new JLabel("Critério*:"), lbl_situacao = new JLabel("Situação*:"), lbl_total_percentual = new JLabel("Total Percentual(%): 100%"),
+    	lbl_descricao = new JLabel("Descrição do Rateio*:");
     
     	
     	String[] obj_criterios= {"Todos", "Percentual"};
@@ -73,21 +73,10 @@ public class TelaRateio extends JDialog {
     	JComboBox <String> situacao = new JComboBox<>(obj_situacoes);
     	JButton btn_adicionar_centro = new JButton("Adicionar Centro"), btn_atualizar = new JButton("Atualizar"), 
     	btn_remover = new JButton("Remover"), btn_salvar = new JButton("Salvar"), btn_limpar = new JButton("Limpar"), 
-    	btn_cancelar = new JButton("Cancelar"), btn_buscar_conta = new JButton ("Buscar Conta");
+    	btn_cancelar = new JButton("Cancelar");
     	adicionar_componente(0, jp_config, gbc_config, lbl_nome_rateio, txt_nome_rateio);
-    	adicionar_componente(1, jp_config, gbc_config, lbl_conta_contabil, txt_conta_contabil);
-    	
-    	gbc_config.gridx = 2;
-    	gbc_config.gridy = 1;
-    	gbc_config.weightx = 0;
-    	gbc_config.fill = GridBagConstraints.NONE;
-    	btn_buscar_conta.addActionListener(e -> {
-        	Window janela_pai = SwingUtilities.getWindowAncestor(this);
-        	controller.abrirBuscaConta(janela_pai);
-            });
-    	
-    	jp_config.add(btn_buscar_conta, gbc_config);
-    	adicionar_componente(2, jp_config, gbc_config, lbl_criterio, criterio);
+    	adicionar_componente(1, jp_config, gbc_config, lbl_criterio, criterio);
+    	adicionar_componente(2, jp_config, gbc_config, lbl_descricao, txt_descricao);
     	adicionar_componente(3, jp_config, gbc_config, lbl_situacao, situacao);
     	
     	botoes_distribuicao.add(btn_adicionar_centro);
@@ -95,10 +84,10 @@ public class TelaRateio extends JDialog {
     	botoes_distribuicao.add(btn_atualizar);
     	botoes_distribuicao.add(btn_remover);
     	
-    	btn_adicionar_centro.addActionListener(e -> {
-        	Window janela_pai = SwingUtilities.getWindowAncestor(this);
-        	controller.abrirAdicionarCentro(janela_pai);
-        	});
+    	//btn_adicionar_centro.addActionListener(e -> {
+        	//Window janela_pai = SwingUtilities.getWindowAncestor(this);
+        	//controller.abrirAdicionarCentro(janela_pai);
+        	//});
   
     	TabelaRateio = new JTable(modeloTabela);
         JScrollPane scrollPane =new JScrollPane(TabelaRateio);
